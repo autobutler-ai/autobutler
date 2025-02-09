@@ -32,7 +32,7 @@ jobs:
       run: npm run generate
       
     - name: Build Docker image
-      run: docker build -t exoflow .
+      run: docker build -f Dockerfile.dev -t exoflow .
       
     # - name: Push Docker image
     #   run: |
