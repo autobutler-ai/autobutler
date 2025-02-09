@@ -1,17 +1,9 @@
 {
-  "name": "nuxt-app",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
-  },
-  "dependencies": {
-    "nuxt": "^3.15.4",
-    "vue": "latest",
-    "vue-router": "latest"
-  }
+  "name": "exoflow",
+  "version": "0.0.0",
+  "description": "Welcome to the Exoflow monorepo! This repository contains multiple projects that tie together the Exoflow ecosystem.",
+  "directories": {},
+  "scripts": {},
+  "author": "ExoKomodo",
+  "license": "CC0"
 }
