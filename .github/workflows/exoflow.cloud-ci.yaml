@@ -29,16 +29,16 @@ jobs:
       run: |
         npm ci
 
+    - name: Build
+      working-directory: ${{ env.WORKING_DIR }}
+      run: |
+        npm run build
+
     - name: Lint
       working-directory: ${{ env.WORKING_DIR }}
       run: |
         npm run lint
 
-    - name: Build
-      working-directory: ${{ env.WORKING_DIR }}
-      run: |
-        npm run build
-      
     - name: Generate
       working-directory: ${{ env.WORKING_DIR }}
       run: |
