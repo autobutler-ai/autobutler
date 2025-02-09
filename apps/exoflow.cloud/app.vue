@@ -1,16 +1,16 @@
 <template>
   <div class="app">
-    <Home />
+    <ExoFlowHome />
   </div>
 </template>
 
-<script>
-import Home from './components/Home.vue';
+<script lang="ts">
+import ExoFlowHome from "./components/ExoFlowHome.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    Home,
+    ExoFlowHome,
   },
 };
 </script>
