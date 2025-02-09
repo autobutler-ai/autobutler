@@ -16,7 +16,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  WORKING_DIR: ${{ github.workspace }}
+  WORKING_DIR: ${{ github.workspace }}/apps/exoflow.cloud
 
 jobs:
   package:
