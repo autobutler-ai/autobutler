@@ -1,4 +1,4 @@
-name: devcontainer
+name: Build devcontainer
 
 on:
   pull_request:
@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  package:
+  devcontainer:
     runs-on: ubuntu-latest
 
     steps:
