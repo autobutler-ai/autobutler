@@ -15,17 +15,32 @@ BIN_DIR := ${HOME}/.local/bin
 TF := tofu
 
 .PHONY: setup
-setup:
+setup: ## Install all tools and dependencies
 ifeq ($(UNAME_S),Linux)
-	@echo "Setting up Linux"
+	@echo "[setup] ${UNAME_S}"
 endif
 ifeq ($(UNAME_S),Darwin)
-	@echo "Setting up Darwin"
+	@echo "[setup] ${UNAME_S}"
 endif
-	@echo "Common platform setup"
+	@echo "[setup] Common"
+	@$(MAKE) setup/opentofu
+	@$(MAKE) setup/terramate
+	@$(MAKE) setup/aws
+
+.PHONY: setup/opentofu
+setup/opentofu: ## Install opentofu tools and dependencies
+	@echo "[setup] Opentofu"
 	@curl --fail -L ${OPENTOFU_URL} | tar -xz - ${TF}
 	@mkdir -p ${BIN_DIR}
 	@mv -v ${TF} ${BIN_DIR}/${TF}
+
+.PHONY: setup/terramate
+setup/terramate: ## Install terramate tools and dependencies
+	@echo "[setup] Terramate"
+
+.PHONY: setup/aws
+setup/aws: ## Setup AWS tools and dependencies
+	@echo "[setup] AWS"
 
 .PHONY: help
 help: ## Displays help info
