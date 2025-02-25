@@ -35,7 +35,7 @@ RUN ./configure \
     --with-lto=full \
     --with-computed-gotos \
     > /dev/null
-RUN make -j > /dev/null 2>&1
+RUN make -j
 RUN make install > /dev/null
 
 FROM ${IMAGE}:${TAG} AS go-builder
