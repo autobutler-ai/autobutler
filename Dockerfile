@@ -28,7 +28,14 @@ RUN curl --fail -s https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${
 WORKDIR /tmp/Python-${PYTHON_VERSION}
 RUN ./configure \
     --enable-optimizations \
-    --without-system-libmpdec > /dev/null
+    --without-system-libmpdec \
+    --enable-loadable-sqlite-extensions \
+    --enable-experimental-jit=yes \
+    --with-ensurepip=install \
+    --with-lto=full \
+    --enable-bolt \
+    --with-computed-gotos \
+    > /dev/null
 RUN make -j > /dev/null 2>&1
 RUN make install > /dev/null
 
