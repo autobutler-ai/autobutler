@@ -68,9 +68,6 @@ COPY --from=python-builder /usr/local/bin/pip3 /usr/local/bin/pip3
 
 COPY --from=go-builder /usr/local/go /usr/local/go
 
-ENV PATH=/usr/local/go/bin:$PATH
-ENV PIP_ROOT_USER_ACTION=ignore
-
 SHELL ["/usr/bin/zsh", "-o", "pipefail", "-c"]
 
 # Install NVM
@@ -82,5 +79,8 @@ RUN touch /root/.zshrc && echo ". /root/.nvm/nvm.sh" >> /root/.zshrc
 FROM ${IMAGE}:${TAG} AS final
 
 COPY --from=install / /
+
+ENV PATH=/usr/local/go/bin:$PATH
+ENV PIP_ROOT_USER_ACTION=ignore
 
 CMD /usr/bin/zsh
