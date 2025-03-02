@@ -2,13 +2,13 @@
   <header class="exo-header">
     <div class="header-content">
       <div class="logo">
-        <a href="/" class="logo-link">ExoFlow</a>
+        <NuxtLink to="/" class="logo-link">ExoFlow</NuxtLink>
       </div>
       <nav class="header-links">
-        <a href="/features">Features</a>
-        <a href="/docs">Documentation</a>
-        <a href="/pricing">Pricing</a>
-        <a href="/login" class="login-link">Login</a>
+        <NuxtLink to="/features">Features</NuxtLink>
+        <NuxtLink to="/docs">Documentation</NuxtLink>
+        <NuxtLink to="/pricing">Pricing</NuxtLink>
+        <NuxtLink to="/login" class="login-link">Login</NuxtLink>
       </nav>
     </div>
   </header>

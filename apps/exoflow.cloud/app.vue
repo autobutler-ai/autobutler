@@ -1,24 +1,16 @@
 <template>
   <div class="app">
     <ExoHeader />
-    <ExoFlowHome />
+    <main class="main-content">
+      <NuxtPage />
+    </main>
     <ExoFooter />
   </div>
 </template>
 
-<script lang="ts">
-import ExoFlowHome from "./components/ExoFlowHome.vue";
-import ExoFooter from "./components/ExoFooter.vue";
+<script setup lang="ts">
 import ExoHeader from "./components/ExoHeader.vue";
-
-export default {
-  name: "App",
-  components: {
-    ExoFlowHome,
-    ExoFooter,
-    ExoHeader,
-  },
-};
+import ExoFooter from "./components/ExoFooter.vue";
 </script>
 
 <style>
@@ -34,5 +26,10 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  width: 100%;
 }
 </style>
