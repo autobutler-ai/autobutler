@@ -1,16 +1,22 @@
 <template>
   <div class="app">
+    <ExoHeader />
     <ExoFlowHome />
+    <ExoFooter />
   </div>
 </template>
 
 <script lang="ts">
 import ExoFlowHome from "./components/ExoFlowHome.vue";
+import ExoFooter from "./components/ExoFooter.vue";
+import ExoHeader from "./components/ExoHeader.vue";
 
 export default {
   name: "App",
   components: {
     ExoFlowHome,
+    ExoFooter,
+    ExoHeader,
   },
 };
 </script>
@@ -25,5 +31,8 @@ body {
 
 .app {
   font-family: Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 </style>
