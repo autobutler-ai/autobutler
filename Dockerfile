@@ -38,13 +38,13 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
 ENV PYTHON_VERSION=3.13.2
 RUN curl --fail -s https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tar.xz | tar -C /tmp -xJf -
 WORKDIR /tmp/Python-${PYTHON_VERSION}
-RUN ./configure \
+RUN CC=/usr/local/bin/clang ./configure \
     --enable-optimizations \
     --without-system-libmpdec \
     --enable-loadable-sqlite-extensions \
     --enable-experimental-jit=yes \
     --with-ensurepip=install \
-    --with-lto=full \
+    --with-lto=thin \
     --with-computed-gotos \
     > /dev/null
 
