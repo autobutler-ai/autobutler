@@ -44,7 +44,7 @@ RUN ./configure \
     --enable-loadable-sqlite-extensions \
     --enable-experimental-jit=yes \
     --with-ensurepip=install \
-    --with-lto=thin \
+    --with-lto=full \
     --with-computed-gotos \
     > /dev/null
 
