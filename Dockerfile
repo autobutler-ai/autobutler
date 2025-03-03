@@ -51,8 +51,7 @@ RUN if [ -z "$MAKE_JOBS" ]; then \
         else \
             CORES=2; \
         fi && \
-        MAKE_JOBS=$(( CORES * 1 / 2 > 2 ? 2 : CORES * 1 / 2 )); \
-        MAKE_JOBS=$(( MAKE_JOBS < 1 ? 1 : MAKE_JOBS )); \
+        MAKE_JOBS=$(( CORES < 1 ? 1 : CORES )); \
     fi && \
     echo "Building with ${MAKE_JOBS} jobs" && \
     make -j${MAKE_JOBS} > /dev/null 2>&1 && \
