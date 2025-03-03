@@ -58,7 +58,7 @@ RUN if [ -z "$MAKE_JOBS" ]; then \
     fi && \
     echo "Building with ${MAKE_JOBS} jobs" && \
     make -j${MAKE_JOBS} && \
-        # > /dev/null 2>&1 && \
+        > /dev/null 2>&1 && \
     make install > /dev/null
 
 FROM ${IMAGE}:${TAG} AS go-builder
