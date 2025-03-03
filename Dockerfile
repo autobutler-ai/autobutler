@@ -17,6 +17,7 @@ FROM ${IMAGE}:${TAG} AS python-builder
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     apt-get install -y -qq \
         build-essential \
+        clang-18 \
         libbz2-dev \
         libffi-dev \
         liblzma-dev \
@@ -25,6 +26,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
         libreadline-dev \
         libsqlite3-dev \
         libssl-dev \
+        llvm \
         make \
         tk-dev \
         xz-utils \
@@ -42,6 +44,7 @@ RUN ./configure \
     --enable-loadable-sqlite-extensions \
     --enable-experimental-jit=yes \
     --with-ensurepip=install \
+    --with-lto=full \
     --with-computed-gotos \
     > /dev/null
 
