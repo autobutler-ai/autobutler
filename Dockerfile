@@ -45,8 +45,8 @@ RUN ./configure \
     --enable-experimental-jit=yes \
     --with-ensurepip=install \
     --with-lto=thin \
-    --with-computed-gotos
-    # > /dev/null
+    --with-computed-gotos \
+    > /dev/null
 
 RUN if [ -z "$MAKE_JOBS" ]; then \
         if [ -f /proc/cpuinfo ]; then \
@@ -61,7 +61,8 @@ RUN if [ -z "$MAKE_JOBS" ]; then \
         MAKE_JOBS=$(( CORES < 1 ? 1 : CORES )); \
     fi && \
     echo "Building with ${MAKE_JOBS} jobs" && \
-    make -j${MAKE_JOBS} && \
+    make -j${MAKE_JOBS} \
+        > /dev/null 2>&1 && \
     make install > /dev/null
 
 FROM ${IMAGE}:${TAG} AS go-builder
