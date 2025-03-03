@@ -35,3 +35,24 @@ jobs:
     - name: Lint
       run: |
         make lint
+
+  pass:
+    name: Pass?
+    runs-on: ubuntu-latest
+    if: always()
+    needs:
+    - lint
+
+    env:
+      RESULT: ${{ needs.lint.result }}
+
+    steps:
+    - name: Pass
+      if: ${{ env.RESULT != 'failure' }}
+      run: |
+        echo "[PASS] Linting" >> ${GITHUB_STEP_SUMMARY}
+
+    - name: Fail
+      if: ${{ env.RESULT == 'failure' }}
+      run: |
+        echo "[FAIL] Linting" >> ${GITHUB_STEP_SUMMARY}

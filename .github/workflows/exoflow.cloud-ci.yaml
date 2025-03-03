@@ -48,3 +48,24 @@ jobs:
       working-directory: ${{ env.WORKING_DIR }}
       run: |
         npm run generate
+
+  pass:
+    name: Pass?
+    runs-on: ubuntu-latest
+    if: always()
+    needs:
+    - build
+
+    env:
+      RESULT: ${{ needs.build.result }}
+
+    steps:
+    - name: Pass
+      if: ${{ env.RESULT != 'failure' }}
+      run: |
+        echo "[PASS] Linting" >> ${GITHUB_STEP_SUMMARY}
+
+    - name: Fail
+      if: ${{ env.RESULT == 'failure' }}
+      run: |
+        echo "[FAIL] Linting" >> ${GITHUB_STEP_SUMMARY}
