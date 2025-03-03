@@ -94,17 +94,19 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
         > /dev/null 2>&1 && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-COPY --from=python-builder /usr/local/bin/python3 /usr/local/bin/python3
-COPY --from=python-builder /usr/local/lib/python3.13 /usr/local/lib/python3.13
-COPY --from=python-builder /usr/local/include/python3.13 /usr/local/include/python3.13
-COPY --from=python-builder /usr/local/bin/pip3 /usr/local/bin/pip3
+COPY --link --from=python-builder /usr/local/bin/python3 /usr/local/bin/python
+COPY --link --from=python-builder /usr/local/bin/python3 /usr/local/bin/python3
+COPY --link --from=python-builder /usr/local/lib/python3.13 /usr/local/lib/python3.13
+COPY --link --from=python-builder /usr/local/include/python3.13 /usr/local/include/python3.13
+COPY --link --from=python-builder /usr/local/bin/pip3 /usr/local/bin/pip3
 
 COPY --from=go-builder /usr/local/go /usr/local/go
 
-COPY --from=node-builder /root/.bun/bin/bun /usr/local/bin/bun
-RUN ln -sf /usr/local/bin/bun /usr/local/bin/node && \
-    ln -sf /usr/local/bin/bun /usr/local/bin/npm && \
-    ln -sf /usr/local/bin/bun /usr/local/bin/npx
+COPY --link --from=node-builder /root/.bun/bin/bun /usr/local/bin/bun
+COPY --link --from=node-builder /root/.bun/bin/bun /usr/local/bin/bun
+COPY --link --from=node-builder /usr/local/bin/bun /usr/local/bin/node
+COPY --link --from=node-builder /usr/local/bin/bun /usr/local/bin/npm
+COPY --link --from=node-builder /usr/local/bin/bunx /usr/local/bin/npx
 
 ENV PATH=/usr/local/go/bin:$PATH
 ENV PIP_ROOT_USER_ACTION=ignore
