@@ -7,4 +7,7 @@ services:
     volumes:
       - .:/code
     working_dir: /code
-    command: ["tail", "-f", "/dev/null"]
+    command:
+      - tail
+      - -f
+      - /dev/null

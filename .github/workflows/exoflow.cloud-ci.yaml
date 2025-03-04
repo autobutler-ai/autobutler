@@ -1,71 +1,58 @@
 name: exoflow.cloud - CI
-
 on:
   push:
     branches:
-    - main
+      - main
   pull_request:
     branches:
-    - main
+      - main
   workflow_dispatch:
     inputs:
       image-tag:
         description: Image tag to run
         type: string
-
 env:
   WORKING_DIR: ${{ github.workspace }}/apps/exoflow.cloud
-
 defaults:
   run:
     shell: bash
-
 jobs:
   build:
     runs-on: ubuntu-latest
     container:
       image: exokomodo/exoflow-devcontainer:${{ inputs.image-tag || (github.event_name == 'pull_request' && 'latest') || (github.head_ref || github.ref_name) }}
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - uses: actions/setup-node@v4
-      with:
-        node-version-file: .nvmrc
-
-    - name: Install dependencies
-      working-directory: ${{ env.WORKING_DIR }}
-      run: |
-        npm ci
-
-    - name: Build
-      working-directory: ${{ env.WORKING_DIR }}
-      run: |
-        npm run build
-
-    - name: Generate
-      working-directory: ${{ env.WORKING_DIR }}
-      run: |
-        npm run generate
-
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Install dependencies
+        working-directory: ${{ env.WORKING_DIR }}
+        run: |
+          npm ci
+      - name: Build
+        working-directory: ${{ env.WORKING_DIR }}
+        run: |
+          npm run build
+      - name: Generate
+        working-directory: ${{ env.WORKING_DIR }}
+        run: |
+          npm run generate
   pass:
     name: Pass?
     runs-on: ubuntu-latest
     if: always()
     needs:
-    - build
-
+      - build
     env:
       RESULT: ${{ needs.build.result }}
-
     steps:
-    - name: Pass
-      if: ${{ env.RESULT != 'failure' }}
-      run: |
-        echo "[PASS] Linting" >> ${GITHUB_STEP_SUMMARY}
-
-    - name: Fail
-      if: ${{ env.RESULT == 'failure' }}
-      run: |
-        echo "[FAIL] Linting" >> ${GITHUB_STEP_SUMMARY}
+      - name: Pass
+        if: ${{ env.RESULT != 'failure' }}
+        run: |
+          echo "[PASS] Linting" >> ${GITHUB_STEP_SUMMARY}
+      - name: Fail
+        if: ${{ env.RESULT == 'failure' }}
+        run: |
+          echo "[FAIL] Linting" >> ${GITHUB_STEP_SUMMARY}

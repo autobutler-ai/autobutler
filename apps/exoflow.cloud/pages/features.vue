@@ -3,9 +3,9 @@
     <h1>Features</h1>
     <div class="features-grid">
       <div
-        class="feature-card"
         v-for="(feature, index) in features"
         :key="index"
+        class="feature-card"
       >
         <h3>{{ feature.title }}</h3>
         <p>{{ feature.description }}</p>

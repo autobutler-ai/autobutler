@@ -4,13 +4,23 @@
   "description": "Welcome to the Exoflow monorepo! This repository contains multiple projects that tie together the Exoflow ecosystem.",
   "directories": {},
   "scripts": {
+    "fix": "concurrently -m1 npm:fix:*",
+    "fix:eslint": "echo Skipping...",
+    "fix:md": "markdownlint-cli2 --fix .",
+    "fix:prettier": "prettier --write .",
     "lint": "concurrently -m1 npm:lint:*",
+    "lint:eslint": "echo Skipping...",
+    "lint:prettier": "prettier --check .",
     "lint:md": "markdownlint-cli2 ."
   },
   "author": "ExoKomodo",
   "license": "CC0",
   "devDependencies": {
+    "@svrbc/eslint-config": "^1.2.1",
+    "concurrently": "^9.0.1",
     "markdownlint-cli2": "^0.17.2",
-    "concurrently": "9.1.2"
+    "prettier": "^3.4.2",
+    "typescript": "5.6.2",
+    "vue-tsc": "2.0.29"
   }
 }
