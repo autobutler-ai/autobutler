@@ -2,7 +2,7 @@
   <div class="pricing-page">
     <h1>Pricing Plans</h1>
     <div class="pricing-grid">
-      <div class="pricing-card" v-for="(plan, index) in plans" :key="index">
+      <div v-for="(plan, index) in plans" :key="index" class="pricing-card">
         <h3>{{ plan.name }}</h3>
         <div class="price">${{ plan.price }}/mo</div>
         <ul>

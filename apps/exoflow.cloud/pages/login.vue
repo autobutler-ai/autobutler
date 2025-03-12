@@ -2,14 +2,14 @@
   <div class="login-page">
     <div class="login-container">
       <h1>Login</h1>
-      <form @submit.prevent="handleSubmit" class="login-form">
+      <form class="login-form" @submit.prevent="handleSubmit">
         <div class="form-group">
           <label for="email">Email</label>
-          <input type="email" id="email" v-model="email" required />
+          <input id="email" v-model="email" type="email" required />
         </div>
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" id="password" v-model="password" required />
+          <input id="password" v-model="password" type="password" required />
         </div>
         <button type="submit">Login</button>
       </form>

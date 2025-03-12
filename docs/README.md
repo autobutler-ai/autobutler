@@ -42,7 +42,7 @@ metadata:
   provider:
     current: aws
     failover-chain:
-    - azure
+      - azure
 # Platform provider login specifics. When doing failovers, or initial deployments,
 # it will utilize this config to deploy the compute to a platform
 providers:
@@ -61,9 +61,9 @@ compute:
     # meaning this most prefers available k8s, then vms,
     # then edge if neither is available.
     affinity:
-    - k8s
-    - vms
-    - edge
+      - k8s
+      - vms
+      - edge
 app:
   container:
     image: docker.io/exokomodo/reformer
@@ -77,8 +77,8 @@ app:
 monitoring:
   # List of monitoring targets, so you can utilize and configure multiple monitoring platforms
   targets:
-  - platform: grafana
-    # NOTE: Missing is whatever config is needed to say, hey, put logs and metrics into grafana, and define some alerts
+    - platform: grafana
+      # NOTE: Missing is whatever config is needed to say, hey, put logs and metrics into grafana, and define some alerts
 ```
 
 #### Reliability

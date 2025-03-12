@@ -5,9 +5,9 @@ ARG MAKE_JOBS=2
 FROM ${IMAGE}:${TAG} AS node-builder
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     apt-get install -y -qq \
-        curl \
-        unzip \
-        > /dev/null 2>&1 && \
+    curl \
+    unzip \
+    > /dev/null 2>&1 && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN curl -fsSL https://bun.sh/install | bash
 
@@ -16,21 +16,21 @@ FROM ${IMAGE}:${TAG} AS python-builder
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     apt-get install -y -qq \
-        build-essential \
-        libbz2-dev \
-        libffi-dev \
-        liblzma-dev \
-        libncurses5-dev \
-        libncursesw5-dev \
-        libreadline-dev \
-        libsqlite3-dev \
-        libssl-dev \
-        make \
-        tk-dev \
-        xz-utils \
-        zlib1g-dev \
-        curl \
-        > /dev/null 2>&1 && \
+    build-essential \
+    libbz2-dev \
+    libffi-dev \
+    liblzma-dev \
+    libncurses5-dev \
+    libncursesw5-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    libssl-dev \
+    make \
+    tk-dev \
+    xz-utils \
+    zlib1g-dev \
+    curl \
+    > /dev/null 2>&1 && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ENV PYTHON_VERSION=3.13.2
@@ -45,28 +45,28 @@ RUN ./configure \
     > /dev/null
 
 RUN if [ -z "$MAKE_JOBS" ]; then \
-        if [ -f /proc/cpuinfo ]; then \
-            CORES=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || echo 2); \
-        elif command -v nproc > /dev/null; then \
-            CORES=$(nproc 2>/dev/null || echo 2); \
-        elif command -v sysctl > /dev/null; then \
-            CORES=$(sysctl -n hw.ncpu 2>/dev/null || echo 2); \
-        else \
-            CORES=2; \
-        fi && \
-        MAKE_JOBS=$(( CORES < 1 ? 1 : CORES )); \
+    if [ -f /proc/cpuinfo ]; then \
+    CORES=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || echo 2); \
+    elif command -v nproc > /dev/null; then \
+    CORES=$(nproc 2>/dev/null || echo 2); \
+    elif command -v sysctl > /dev/null; then \
+    CORES=$(sysctl -n hw.ncpu 2>/dev/null || echo 2); \
+    else \
+    CORES=2; \
+    fi && \
+    MAKE_JOBS=$(( CORES < 1 ? 1 : CORES )); \
     fi && \
     echo "Building with ${MAKE_JOBS} jobs" && \
     make -j${MAKE_JOBS} \
-        > /dev/null 2>&1 && \
+    > /dev/null 2>&1 && \
     make install > /dev/null
 
 FROM ${IMAGE}:${TAG} AS go-builder
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     apt-get install -y -qq \
-        curl \
-        > /dev/null 2>&1 && \
+    curl \
+    > /dev/null 2>&1 && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ENV GO_VERSION=1.23.6
@@ -77,17 +77,18 @@ FROM ${IMAGE}:${TAG} AS install
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     apt-get install -y -qq \
-        apt-transport-https \
-        build-essential \
-        ca-certificates \
-        curl \
-        git \
-        gnupg-agent \
-        make \
-        software-properties-common \
-        sudo \
-        zsh \
-        > /dev/null 2>&1 && \
+    apt-transport-https \
+    build-essential \
+    ca-certificates \
+    curl \
+    git \
+    gnupg-agent \
+    jq \
+    make \
+    software-properties-common \
+    sudo \
+    zsh \
+    > /dev/null 2>&1 && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY --link --from=python-builder /usr/local/bin/python3 /usr/local/bin/python
@@ -95,6 +96,8 @@ COPY --link --from=python-builder /usr/local/bin/python3 /usr/local/bin/python3
 COPY --link --from=python-builder /usr/local/lib/python3.13 /usr/local/lib/python3.13
 COPY --link --from=python-builder /usr/local/include/python3.13 /usr/local/include/python3.13
 COPY --link --from=python-builder /usr/local/bin/pip3 /usr/local/bin/pip3
+ARG TARGETARCH
+RUN curl --fail -s https://github.com/mikefarah/yq/releases/latest/download/yq_linux_${TARGETARCH} -o /usr/local/bin/yq && chmod +x /usr/local/bin/yq
 
 COPY --from=go-builder /usr/local/go /usr/local/go
 

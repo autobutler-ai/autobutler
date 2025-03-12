@@ -35,16 +35,17 @@ docker compose up
 
 - [Create an issue](https://github.com/ExoKomodo/exoflow/issues/new) if you find a bug or have an enhancement suggestion.
 - [Ask a question in the Discussions](https://github.com/ExoKomodo/exoflow/discussions) if you need to know something
-a bit more specific or discuss a larger topic.
-    - If a thread evolves into something actionable, an [issue can be created from a discussion](https://github.com/orgs/community/discussions/2861#discussioncomment-696235)
-    - Don't feel the need to only start discussions that may become issues.
+  a bit more specific or discuss a larger topic.
+  - If a thread evolves into something actionable,
+    an [issue can be created from a discussion](https://github.com/orgs/community/discussions/2861#discussioncomment-696235)
+  - Don't feel the need to only start discussions that may become issues.
 
 ## Additional Guidelines
 
 - Keep contributions minimal and focused.
-    - We do linear commit history with (generally) single commit pull requests.
-    - Sometimes we will accept a multi-commit PR as a linear rebase of commits.
-    - [This guide](https://www.bitsnbites.eu/a-tidy-linear-git-history/) explains our reasoning quite completely.
+  - We do linear commit history with (generally) single commit pull requests.
+  - Sometimes we will accept a multi-commit PR as a linear rebase of commits.
+  - [This guide](https://www.bitsnbites.eu/a-tidy-linear-git-history/) explains our reasoning quite completely.
 - Avoid guidelines that are overly specific to a particular technology or tool chain.
 - Follow the project's existing structure and naming conventions.
 

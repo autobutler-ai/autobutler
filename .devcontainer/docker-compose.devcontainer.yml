@@ -4,7 +4,6 @@ services:
       # Mount SSH dir to enable git
       - ~/.ssh:/root/.ssh
       - ~/.zshrc:/root/.zshrc
-
     # [Optional] Required for ptrace-based debuggers like C++, Go, and Rust
     cap_add:
       - SYS_PTRACE
