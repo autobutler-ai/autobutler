@@ -9,6 +9,7 @@ The repository is organized as follows:
 ```plaintext
 exoflow/
 ├── app/
+│   ├── autobutler.org/
 │   ├── exoflow.cloud/
 ├── docs/
 ├── infra/
@@ -21,3 +22,4 @@ exoflow/
 - [`docs/`](./docs/) - Documentation for the general project.
 - [`infra/`](./infra/) - Infrastructure code for the ExoKomodo organization running ExoFlow.
 - [`libs/`](./libs/) - Shared libraries and code.
+
