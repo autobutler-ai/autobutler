@@ -5,7 +5,6 @@
       <p class="intro"></p>
       <h2>Key Features</h2>
       <ul class="features-list">
-        <li></li>
         <li>TODO</li>
       </ul>
     </div>
