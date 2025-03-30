@@ -8,6 +8,7 @@ on:
 jobs:
   pr-label:
     permissions:
+      contents: read
       pull-requests: write
     name: Label PR
     runs-on: ubuntu-latest
@@ -20,7 +21,8 @@ jobs:
         with:
           filters: |
             autobutler:
-              - 'apps/autobutler**'
+              - 'apps/autobutler-app/**'
+              - 'apps/autobutler.ai/**'
       - name: Add "autobutler" label if applicable
         if: ${{ steps.filter.outputs.autobutler == 'true' }}
         uses: actions/github-script@v6

@@ -3,4 +3,4 @@
 ## App Directory
 
 - [`autobutler-app/`](./exoflow.cloud/) - Autobutler client-server app
-- [`autobutler.org/`](./autobutler.org/) - Autobutler consumer website
+- [`autobutler.ai/`](./autobutler.ai/) - Autobutler consumer website
