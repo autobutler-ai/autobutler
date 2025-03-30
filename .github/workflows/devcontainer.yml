@@ -46,7 +46,6 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
   pass-devcontainer:
-    name: Pass?
     runs-on: ubuntu-latest
     if: always()
     needs:

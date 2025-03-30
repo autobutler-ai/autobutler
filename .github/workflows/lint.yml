@@ -29,7 +29,6 @@ jobs:
         run: |
           make lint
   pass-lint:
-    name: Pass?
     runs-on: ubuntu-latest
     if: always()
     needs:

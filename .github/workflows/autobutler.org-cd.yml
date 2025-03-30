@@ -56,7 +56,6 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
   pass-autobutler-org-cd:
-    name: Pass?
     runs-on: ubuntu-latest
     if: always()
     needs:
