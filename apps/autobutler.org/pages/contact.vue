@@ -2,14 +2,14 @@
   <div class="contact-page">
     <h1>Contact Us</h1>
     <div class="contact-container">
-      <form @submit.prevent="handleSubmit" class="contact-form">
+      <form class="contact-form" @submit.prevent="handleSubmit">
         <div class="form-group">
           <label for="name">Name</label>
-          <input type="text" id="name" v-model="name" required />
+          <input id="name" v-model="name" type="text" required />
         </div>
         <div class="form-group">
           <label for="email">Email</label>
-          <input type="email" id="email" v-model="email" required />
+          <input id="email" v-model="email" type="email" required />
         </div>
         <div class="form-group">
           <label for="message">Message</label>

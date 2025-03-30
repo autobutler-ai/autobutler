@@ -1,16 +1,16 @@
 <template>
   <div class="layout">
-    <Header />
+    <ButlerHeader />
     <div class="page-container">
       <slot />
     </div>
-    <Footer />
+    <ButlerFooter />
   </div>
 </template>
 
 <script setup lang="ts">
-import Footer from "../components/Footer.vue";
-import Header from "../components/Header.vue";
+import ButlerFooter from "../components/ButlerFooter.vue";
+import ButlerHeader from "../components/ButlerHeader.vue";
 </script>
 
 <style scoped>

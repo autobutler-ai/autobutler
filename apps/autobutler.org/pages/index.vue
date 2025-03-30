@@ -1,11 +1,11 @@
 <template>
   <div class="home">
-    <Home />
+    <ButlerHome />
   </div>
 </template>
 
 <script setup lang="ts">
-import Home from "../components/Home.vue";
+import ButlerHome from "../components/ButlerHome.vue";
 </script>
 
 <style scoped>

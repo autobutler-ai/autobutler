@@ -5,7 +5,7 @@
     <section>
       <h2>System Requirements</h2>
       <ul>
-          <li>TODO</li>
+        <li>TODO</li>
       </ul>
     </section>
   </div>

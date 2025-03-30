@@ -4,6 +4,6 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ["@nuxt/eslint"],
   ssr: {
-      enabled: true,
+    enabled: true,
   },
 });
