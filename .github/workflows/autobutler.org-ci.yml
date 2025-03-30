@@ -36,7 +36,7 @@ jobs:
         working-directory: ${{ env.WORKING_DIR }}
         run: |
           bun run generate
-  pass:
+  pass-autobutler-org-ci:
     name: Pass?
     runs-on: ubuntu-latest
     if: always()

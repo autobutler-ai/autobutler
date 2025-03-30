@@ -2,5 +2,5 @@
 
 ## App Directory
 
-- [`exoflow.cloud/`](./exoflow.cloud/) - Main consumer website
-- [`exoflow-app/`](./exoflow-app/) - App abstraction for consumers
+- [`autobutler-app/`](./exoflow.cloud/) - Autobutler client-server app
+- [`autobutler.org/`](./autobutler.org/) - Autobutler consumer website
