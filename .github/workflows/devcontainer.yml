@@ -45,7 +45,7 @@ jobs:
           tags: ${{ env.TAGS }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-  pass:
+  pass-devcontainer:
     name: Pass?
     runs-on: ubuntu-latest
     if: always()
