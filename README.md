@@ -9,6 +9,7 @@ The repository is organized as follows:
 ```plaintext
 exoflow/
 ├── app/
+│   ├── autobutler-app/
 │   ├── autobutler.org/
 ├── docs/
 ├── infra/
