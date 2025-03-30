@@ -1,4 +1,4 @@
-name: autobutler.org - CD
+name: autobutler.ai - CD
 on:
   push:
     branches:
@@ -16,7 +16,7 @@ concurrency:
   group: pages
   cancel-in-progress: false
 env:
-  WORKING_DIR: ${{ github.workspace }}/apps/autobutler.org
+  WORKING_DIR: ${{ github.workspace }}/apps/autobutler.ai
 defaults:
   run:
     shell: bash

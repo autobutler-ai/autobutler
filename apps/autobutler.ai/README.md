@@ -1,4 +1,4 @@
-# [`autobutler.org`](https://autobutler.org)
+# [`autobutler.ai`](https://autobutler.ai)
 
 ## Setup
 
