@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # Exit on any error
-set -e
+set -euox pipefail
 
 echo "Starting Docker installation on Raspberry Pi..."
 
 # Update package list
 echo "Updating package list..."
-sudo apt-get update
+sudo apt-get update -y
 
 # Install required packages
 echo "Installing required packages..."
@@ -20,13 +20,16 @@ sudo apt-get install -y \
 
 # Add Docker's official GPG key
 echo "Adding Docker's GPG key..."
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
 
 # Set up the stable repository
 echo "Setting up Docker repository..."
 echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 # Update package list again
 echo "Updating package list with Docker repository..."
@@ -34,7 +37,12 @@ sudo apt-get update
 
 # Install Docker Engine
 echo "Installing Docker Engine..."
-sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+sudo apt-get install -y \
+	docker-ce \
+	docker-ce-cli \
+	containerd.io \
+	docker-buildx-plugin \
+	docker-compose-plugin
 
 # Add current user to docker group
 echo "Adding current user to docker group..."
