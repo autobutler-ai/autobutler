@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Exit on any error
-set -euox pipefail
+set -euo pipefail
 
 echo "Starting Docker installation on Raspberry Pi..."
 
@@ -60,3 +60,4 @@ docker compose version
 
 echo "Docker installation completed successfully!"
 echo "Please log out and log back in for group changes to take effect." 
+

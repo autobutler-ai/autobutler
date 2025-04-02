@@ -35,3 +35,9 @@ if ! [[ -d "${REPO_LOCAL}" ]]; then
 		-- --recurse-submodules
 fi
 
+if command -v docker >> /dev/null; then
+	echo "Skipping docker installation...already installed"
+else
+	${REPO_LOCAL}/apps/ab-home/autobutler-infra/install_docker_pi.sh
+fi
+
