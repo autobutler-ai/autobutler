@@ -5,4 +5,4 @@
   tasks:
     - name: Print system information
       debug:
-        msg: "Hello from {{ inventory_hostname }}! OS: {{ ansible_distribution }} {{ ansible_distribution_version }}" 
+        msg: 'Hello from {{ inventory_hostname }}! OS: {{ ansible_distribution }} {{ ansible_distribution_version }}'
