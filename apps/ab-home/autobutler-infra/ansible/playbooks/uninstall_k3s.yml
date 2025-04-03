@@ -2,6 +2,8 @@
 - name: Uninstall k3s
   hosts: raspberry_pis
   become: true
+  become_method: sudo
+  become_user: root
   gather_facts: true
   tasks:
     - name: Stop k3s service
