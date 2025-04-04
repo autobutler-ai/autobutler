@@ -8,7 +8,7 @@
   tasks:
     - name: Stop k3s service
       systemd:
-        name: "{{ 'k3s' if inventory_hostname == 'hostname0' else 'k3s-agent' }}"
+        name: "{{ 'k3s' if inventory_hostname == 'butler0' else 'k3s-agent' }}"
         state: stopped
       ignore_errors: true
     - name: Uninstall k3s
