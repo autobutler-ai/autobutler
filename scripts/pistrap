@@ -24,9 +24,7 @@ python3 -m pipx --version
 vim --version
 
 python3 -m pipx ensurepath
-
 python3 -m pipx install --include-deps ansible
-
 
 ORG=exokomodo
 REPO=exoflow
@@ -56,15 +54,19 @@ if ! grep "${CGROUP_ARGS}" /boot/firmware/cmdline.txt; then
 	sudo shutdown -r now
 fi
 
-if [[ -f "${HOME}/.kube/config" ]]; then
-	helm repo add \
-		kubernetes-dashboard \
-		https://kubernetes.github.io/dashboard/
-	helm upgrade \
-		--install kubernetes-dashboard \
-		kubernetes-dashboard/kubernetes-dashboard \
-		--create-namespace \
-		--namespace kubernetes-dashboard
-	echo 'To access the dashboard: kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443'
+if ! [[ -f "${HOME}/.kube/config" ]]; then
+	pushd ${REPO_LOCAL}/apps/ab-home/autobutler-infra/ansible
+	ansible-playbook -i inventory/hosts ./playbooks/test_connection.yml
+	ansible-playbook -i inventory/hosts ./playbooks/install_k3s.yml
+	popd
 fi
 
+helm repo add \
+	kubernetes-dashboard \
+	https://kubernetes.github.io/dashboard/
+helm upgrade \
+	--install kubernetes-dashboard \
+	kubernetes-dashboard/kubernetes-dashboard \
+	--create-namespace \
+	--namespace kubernetes-dashboard
+echo 'To access the dashboard: kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443'
