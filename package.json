@@ -5,8 +5,8 @@
   "directories": {},
   "private": true,
   "workspaces": [
-    "apps/autobutler.ai",
-    "apps/autobutler-home/user"
+    "src/autobutler/ui",
+    "src/autobutler.ai"
   ],
   "scripts": {
     "build": "echo Skipping...",
