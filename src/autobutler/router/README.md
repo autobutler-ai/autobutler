@@ -17,6 +17,7 @@ This is the backend service for the chat application that will integrate with a 
 ## Running the Service
 
 To run the service:
+
 ```bash
 go run main.go
 ```
@@ -26,42 +27,49 @@ The server will start on port 8080 by default, or the port specified in your `.e
 ## API Endpoints
 
 ### POST /api/chat
+
 Send a chat message to the service.
 
 Request body:
+
 ```json
 {
-    "message": "Your message here"
+  "message": "Your message here"
 }
 ```
 
 Response:
+
 ```json
 {
-    "response": "Service response"
+  "response": "Service response"
 }
 ```
 
 ### GET /health
+
 Health check endpoint.
 
 Response:
+
 ```json
 {
-    "status": "ok"
+  "status": "ok"
 }
 ```
 
 ## Development
 
 The service is built with:
+
 - Gin web framework
 - Environment variable support
 - CORS enabled for frontend integration
 
 ## TODO
+
 - [ ] Integrate with local LLM
 - [ ] Add authentication
 - [ ] Add rate limiting
 - [ ] Add request validation
-- [ ] Add proper error handling 
+- [ ] Add proper error handling

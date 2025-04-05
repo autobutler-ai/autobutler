@@ -1,12 +1,11 @@
-version: '3.8'
-
+version: "3.8"
 services:
   llm:
     build:
       context: ./llm
       dockerfile: Dockerfile
     ports:
-      - "8081:8081"
+      - 8081:8081
     volumes:
       - ./llm:/app
     deploy:
@@ -14,13 +13,12 @@ services:
         limits:
           memory: 4G
     restart: unless-stopped
-
   router:
     build:
       context: ./router
       dockerfile: Dockerfile
     ports:
-      - "8082:8082"
+      - 8082:8082
     volumes:
       - ./router:/app
     environment:
@@ -28,17 +26,16 @@ services:
     depends_on:
       - llm
     restart: unless-stopped
-
   ui:
     build:
       context: ./ui
       dockerfile: Dockerfile
     ports:
-      - "8083:8083"
+      - 8083:8083
     volumes:
       - ./ui:/app
     environment:
       - ROUTER_URL=http://router:8082
     depends_on:
       - router
-    restart: unless-stopped 
+    restart: unless-stopped
