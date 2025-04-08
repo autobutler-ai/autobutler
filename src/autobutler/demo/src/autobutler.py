@@ -1,6 +1,7 @@
 import os
 import requests
 import sys
+from enum import Enum
 
 # Configuration
 HA_URL = os.getenv(
@@ -13,6 +14,7 @@ OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")  # Ollama API URL
 TOPICS = {
     "fridge": ["sensor.fridge_milk", "sensor.fridge_eggs", "sensor.fridge_cheese"],
     "temperature": ["sensor.living_room_temperature", "sensor.bedroom_temperature"],
+    "light": True
 }
 
 
@@ -52,6 +54,32 @@ def usage():
     for topic in TOPICS:
         print(f"  - {topic}", file=sys.stderr)
 
+SMARTBULB_ENTITY = os.getenv("SMARTBULB_ENTITY", "light.smartbulb")
+
+class LightState(Enum):
+    OFF = "off"
+    ON = "on"
+
+def call_light_service(service: str):
+    """Call a Home Assistant light service."""
+    url = f"{HA_URL}/api/services/light/{service}"
+    headers = {
+        "Authorization": f"Bearer {HA_TOKEN}",
+        "Content-Type": "application/json",
+    }
+    data = {"entity_id": SMARTBULB_ENTITY}
+    response = requests.post(url, headers=headers, json=data)
+    if response.ok:
+        print(f"Smart light {service.replace('_', ' ')} command executed.")
+    else:
+        print(f"Failed to execute command: {response.content}")
+
+def lightctl(state: LightState):
+    """Turn the smart light on using Home Assistant service call."""
+    if state == LightState.OFF:
+        call_light_service("turn_off")
+    elif state == LightState.ON:
+        call_light_service("turn_on")
 
 def main() -> int:
     is_running = True
@@ -68,6 +96,15 @@ def main() -> int:
             topic = topic.strip().lower()
             question = question.strip()
             if topic in TOPICS:
+                if topic == "light":
+                    lower_question = question.lower()
+                    if "on" in lower_question:
+                        lightctl(LightState.ON)
+                    elif "off" in lower_question:
+                        lightctl(LightState.OFF)
+                    else:
+                        print("Invalid command for light. Use 'on' or 'off'.")
+                        continue
                 entity_ids = TOPICS[topic]
                 context = get_context(entity_ids)
                 prompt = f"You are AutoButler, a home assistant. Use the following context to answer the user's question.\n\nContext: {context}\n\nUser: {question}\n\nAssistant:"
