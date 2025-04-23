@@ -33,6 +33,7 @@ func loadURLs() map[string]string {
 	defaultURLs := map[string]string{
 		"chat":       "/api/chat",
 		"health":     "/health",
+		"dummy":      "/api/dummy",
 		"llm_server": "http://llm:8081/generate",
 	}
 
