@@ -129,7 +129,7 @@ const messages = ref([
 
 const newMessage = ref("");
 const isLoading = ref(false);
-const isDummy = ref(false);
+let isDummy = false;
 
 const sendMessage = async () => {
   if (!newMessage.value.trim() || isLoading.value) return;
@@ -149,8 +149,8 @@ const sendMessage = async () => {
   isLoading.value = true;
 
   try {
-    const endpoint = isDummy.value ? DUMMY_ENDPOINT : CHAT_ENDPOINT;
-    console.log(`Sending message to ${endpoint}: ${messageToSend}`);
+    const endpoint = isDummy ? DUMMY_ENDPOINT : CHAT_ENDPOINT;
+    console.debug(`Sending message to ${endpoint}: ${messageToSend}`);
     const response = await fetch(endpoint, {
       method: "POST",
       headers: {
