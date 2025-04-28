@@ -21,7 +21,7 @@ services:
       context: ./router
       dockerfile: Dockerfile
     ports:
-      - "127.0.0.1:8082:8080"
+      - 127.0.0.1:8082:8080
     volumes:
       - ./router:/app/src
     environment:
@@ -35,7 +35,7 @@ services:
       context: ./ui
       dockerfile: Dockerfile
     ports:
-      - "127.0.0.1:8083:3000"
+      - 127.0.0.1:8083:3000
     volumes:
       - ./ui:/app/src
     environment:
@@ -48,8 +48,8 @@ services:
   nginx:
     image: nginx:alpine
     ports:
-      - "8443:443"
-      - "8080:80"
+      - 8443:443
+      - 8080:80
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
       - ./nginx/ssl:/etc/nginx/ssl

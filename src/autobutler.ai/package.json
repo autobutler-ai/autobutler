@@ -2,7 +2,7 @@
   "name": "autobutler.ai",
   "type": "module",
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.8.0"
   },
   "scripts": {
     "build": "nuxt build",
