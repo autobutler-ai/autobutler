@@ -26,7 +26,7 @@ services:
       - ./router:/app/src
     environment:
       - PATH=/usr/local/bin:$PATH
-      - LLM_URL=http://llm:8081
+      - LLM_URL=http://127.0.0.1:8081/generate
     depends_on:
       - llm
     restart: unless-stopped
