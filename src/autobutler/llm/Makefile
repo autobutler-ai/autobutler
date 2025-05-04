@@ -9,9 +9,12 @@ PYTHON ?= python3
 PORT ?= 8081
 
 run: server.py ## Run the server
-	$(PYTHON) -m venv venv
-	. ./venv/bin/activate
-	pip install -r ./requirements.txt
+	if [ ! -d "venv" ]; then \
+		$(PYTHON) -m venv venv; \
+	fi
+	source ./venv/bin/activate && \
+	pip install --upgrade pip && \
+	pip install -r ./requirements.txt && \
 	$(PYTHON) $< | tee ./service.log
 
 kill: ## Kill the server
