@@ -1,4 +1,5 @@
 """A demonstration 'hub' that connects several devices."""
+
 from __future__ import annotations
 
 # In a real implementation, this would be in an external library that's on PyPI.

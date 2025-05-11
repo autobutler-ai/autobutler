@@ -1,4 +1,5 @@
 """Platform for sensor integration."""
+
 # This file shows the setup for the sensors associated with the cover.
 # They are setup in the same way with the call to the async_setup_entry function
 # via HA from the module __init__. Each sensor has a device_class, this tells HA how
@@ -7,13 +8,8 @@
 # battery), the unit_of_measurement should match what's expected.
 import random
 
-from homeassistant.components.sensor import (
-    SensorDeviceClass,
-)
-from homeassistant.const import (
-    PERCENTAGE,
-    LIGHT_LUX,
-)
+from homeassistant.components.sensor import SensorDeviceClass
+from homeassistant.const import LIGHT_LUX, PERCENTAGE
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.entity_platform import AddEntitiesCallback

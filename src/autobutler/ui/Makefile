@@ -13,7 +13,7 @@ run:
 	if ! [[ -d ./node_modules ]]; then \
 		$(JS_EXEC) $(JS_INSTALL); \
 	fi; \
-	$(JS_EXEC) run dev | tee ./service.log &
+	$(JS_EXEC) run dev | tee ./service.log
 
 kill:
 	killall $$(lsof -i :$(PORT) | tail -n 1 | awk '{print $1}') || true

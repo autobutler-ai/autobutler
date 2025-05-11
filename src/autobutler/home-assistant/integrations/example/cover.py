@@ -1,4 +1,5 @@
 """Platform for sensor integration."""
+
 from __future__ import annotations
 
 from typing import Any
@@ -7,8 +8,8 @@ from typing import Any
 # See below for how they are used.
 from homeassistant.components.cover import (
     ATTR_POSITION,
-    CoverEntityFeature,
     CoverEntity,
+    CoverEntityFeature,
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -45,7 +46,11 @@ class HelloWorldCover(CoverEntity):
     # imported above, we can tell HA the features that are supported by this entity.
     # If the supported features were dynamic (ie: different depending on the external
     # device it connected to), then this should be function with an @property decorator.
-    supported_features = CoverEntityFeature.SET_POSITION | CoverEntityFeature.OPEN | CoverEntityFeature.CLOSE
+    supported_features = (
+        CoverEntityFeature.SET_POSITION
+        | CoverEntityFeature.OPEN
+        | CoverEntityFeature.CLOSE
+    )
 
     def __init__(self, roller) -> None:
         """Initialize the sensor."""
