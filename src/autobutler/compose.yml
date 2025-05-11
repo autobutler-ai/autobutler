@@ -1,57 +1,17 @@
 services:
-  # llm:
-  #   build:
-  #     context: ./llm
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "127.0.0.1:8081:8081"
-  #   # deploy:
-  #   #   resources:
-  #   #     limits:
-  #   #       memory: 3G
-  #   #       cpus: '2'
-  #   environment:
-  #     - PATH=/usr/local/bin:$PATH
-  #   restart: unless-stopped
-  router:
+  backend:
     build:
-      context: ./router
+      context: ./backend
       dockerfile: Dockerfile
     ports:
-      - 127.0.0.1:8082:8080
-    volumes:
-      - ./router:/app/src
-    environment:
-      - PATH=/usr/local/bin:$PATH
-      - LLM_URL=http://192.168.5.236:8081/generate
-    # depends_on:
-    #   - llm
+      - 127.0.0.1:8000:8000
     restart: unless-stopped
   ui:
     build:
       context: ./ui
       dockerfile: Dockerfile
     ports:
-      - 127.0.0.1:8083:3000
+      - 127.0.0.1:3000:3000
     volumes:
       - ./ui:/app/src
-    environment:
-      - ROUTER_URL=http://router:8082
-      - PATH=/usr/local/bin:$PATH
-      - HOST=0.0.0.0
-    depends_on:
-      - router
     restart: unless-stopped
-  # nginx:
-  #   image: nginx:alpine
-  #   ports:
-  #     - 8443:443
-  #     - 8080:80
-  #   volumes:
-  #     - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-  #     - ./nginx/ssl:/etc/nginx/ssl
-  #   depends_on:
-  #     - ui
-  #     - router
-  #     # - llm
-  #   restart: unless-stopped

@@ -26,7 +26,7 @@
 
     <!-- Chat Messages -->
     <div class="flex-1 overflow-y-auto p-4">
-      <div class="max-w-4xl mx-auto space-y-4">
+      <div ref="chatbox" class="max-w-4xl mx-auto space-y-4">
         <div
           v-for="(message, index) in messages"
           :key="index"
@@ -112,10 +112,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, useTemplateRef } from "vue";
 import appConfig from "../config/appConfig";
 
-const DUMMY_ENDPOINT = `${appConfig.apiUrl}/dummy`;
+const DUMMY_ENDPOINT = `${appConfig.apiUrl}/health`;
 const CHAT_ENDPOINT = `${appConfig.apiUrl}/chat`;
 
 const messages = ref([
@@ -132,6 +132,16 @@ const messages = ref([
 const newMessage = ref("");
 const isLoading = ref(false);
 const isDummy = ref(false);
+const chatbox = useTemplateRef("chatbox");
+
+const scrollToBottom = () => {
+  if (chatbox.value) {
+    chatbox.value.lastElementChild?.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+    });
+  }
+};
 
 const sendMessage = async () => {
   if (!newMessage.value.trim() || isLoading.value) return;
@@ -151,6 +161,7 @@ const sendMessage = async () => {
 
   // Show loading indicator
   isLoading.value = true;
+  scrollToBottom();
 
   try {
     const endpoint = isDummy.value ? DUMMY_ENDPOINT : CHAT_ENDPOINT;
@@ -160,7 +171,7 @@ const sendMessage = async () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ message: messageToSend }),
+      body: JSON.stringify({ prompt: messageToSend }),
     });
 
     if (!response.ok) {
@@ -177,6 +188,7 @@ const sendMessage = async () => {
       isError: false,
       timestamp: new Date().toLocaleTimeString(),
     });
+    scrollToBottom();
   } catch (error) {
     console.error("Error sending message:", error);
 
