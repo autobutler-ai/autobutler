@@ -1,20 +1,25 @@
 <template>
   <PageContainer>
     <div class="features-page">
-      <section class="feature-section" id="own-intelligence">
+      <section id="own-intelligence" class="feature-section">
         <div class="feature-content">
           <h2>Own Your Intelligence</h2>
           <p class="feature-description">
-            Smart home automation that learns from you, stores nothing in corporate clouds.
+            Smart home automation that learns from you, stores nothing in
+            corporate clouds.
           </p>
           <div class="feature-details">
             <p>
-              Powered by Home Assistant, your smart home becomes truly intelligent while maintaining complete privacy. 
-              Unlike cloud-based solutions that send your data to corporate servers, our system processes everything locally.
+              Powered by Home Assistant, your smart home becomes truly
+              intelligent while maintaining complete privacy. Unlike cloud-based
+              solutions that send your data to corporate servers, our system
+              processes everything locally.
             </p>
             <p>
-              Your home learns your preferences, schedules, and patterns—all while keeping that information within your walls. 
-              No data is sent to third parties, no behavior analysis is shared, and no privacy is compromised.
+              Your home learns your preferences, schedules, and patterns—all
+              while keeping that information within your walls. No data is sent
+              to third parties, no behavior analysis is shared, and no privacy
+              is compromised.
             </p>
           </div>
           <div class="feature-image">
@@ -24,7 +29,7 @@
         </div>
       </section>
 
-      <section class="feature-section" id="subscription-freedom">
+      <section id="subscription-freedom" class="feature-section">
         <div class="feature-content">
           <h2>Break Subscription Chains</h2>
           <p class="feature-description">
@@ -32,14 +37,16 @@
           </p>
           <div class="feature-details">
             <p>
-              Tired of paying monthly fees for services that sell your data? Our one-time purchase model gives you 
-              complete ownership of your digital infrastructure. No recurring charges, no hidden fees, and no 
-              subscription traps.
+              Tired of paying monthly fees for services that sell your data? Our
+              one-time purchase model gives you complete ownership of your
+              digital infrastructure. No recurring charges, no hidden fees, and
+              no subscription traps.
             </p>
             <p>
-              Your investment in our system is just that—an investment. As we improve the software, you get the 
-              updates. As we add features, they're yours. No more monthly bills, no more service interruptions, 
-              and no more data held hostage behind paywalls.
+              Your investment in our system is just that—an investment. As we
+              improve the software, you get the updates. As we add features,
+              they're yours. No more monthly bills, no more service
+              interruptions, and no more data held hostage behind paywalls.
             </p>
           </div>
           <div class="feature-image">
@@ -49,22 +56,26 @@
         </div>
       </section>
 
-      <section class="feature-section" id="privacy-design">
+      <section id="privacy-design" class="feature-section">
         <div class="feature-content">
           <h2>True Privacy by Design</h2>
           <p class="feature-description">
-            Your family calendar, photos, and personal data never leave your control.
+            Your family calendar, photos, and personal data never leave your
+            control.
           </p>
           <div class="feature-details">
             <p>
-              Privacy isn't just a feature—it's the foundation of our entire system. Every component, from your 
-              family calendar to photo storage, is designed with privacy as the primary consideration. Your data 
-              stays on your hardware, in your home, under your control.
+              Privacy isn't just a feature—it's the foundation of our entire
+              system. Every component, from your family calendar to photo
+              storage, is designed with privacy as the primary consideration.
+              Your data stays on your hardware, in your home, under your
+              control.
             </p>
             <p>
-              With our VPN solution, you can access your data securely from anywhere while maintaining the same 
-              level of privacy. Only authorized devices on your private network can access your information, 
-              ensuring your family's data remains protected.
+              With our VPN solution, you can access your data securely from
+              anywhere while maintaining the same level of privacy. Only
+              authorized devices on your private network can access your
+              information, ensuring your family's data remains protected.
             </p>
           </div>
           <div class="feature-image">
@@ -74,21 +85,24 @@
         </div>
       </section>
 
-      <section class="feature-section" id="platform-freedom">
+      <section id="platform-freedom" class="feature-section">
         <div class="feature-content">
           <h2>Escape Platform Lock-in</h2>
           <p class="feature-description">
-            Your data works everywhere, integrates with anything, owned by you alone.
+            Your data works everywhere, integrates with anything, owned by you
+            alone.
           </p>
           <div class="feature-details">
             <p>
-              Our system is built on open standards and protocols, ensuring your data isn't trapped in proprietary 
-              formats. Whether you're using iOS, Android, Windows, or Linux, your data remains accessible and 
+              Our system is built on open standards and protocols, ensuring your
+              data isn't trapped in proprietary formats. Whether you're using
+              iOS, Android, Windows, or Linux, your data remains accessible and
               usable across all your devices.
             </p>
             <p>
-              The open architecture means you can integrate with any service or device that supports standard 
-              protocols. No vendor lock-in, no forced ecosystem, and no artificial barriers to your data's 
+              The open architecture means you can integrate with any service or
+              device that supports standard protocols. No vendor lock-in, no
+              forced ecosystem, and no artificial barriers to your data's
               portability.
             </p>
           </div>
@@ -99,21 +113,24 @@
         </div>
       </section>
 
-      <section class="feature-section" id="ad-blocking">
+      <section id="ad-blocking" class="feature-section">
         <div class="feature-content">
           <h2>Block Ad Surveillance</h2>
           <p class="feature-description">
-            Stop every tracker at the DNS level. No ads, no data leaks, no corporate spying.
+            Stop every tracker at the DNS level. No ads, no data leaks, no
+            corporate spying.
           </p>
           <div class="feature-details">
             <p>
-              Our Pi-hole integration blocks ads and trackers at the network level, protecting every device in 
-              your home. No more targeted ads, no more tracking pixels, and no more data collection without 
-              your consent.
+              Our Pi-hole integration blocks ads and trackers at the network
+              level, protecting every device in your home. No more targeted ads,
+              no more tracking pixels, and no more data collection without your
+              consent.
             </p>
             <p>
-              The system maintains a comprehensive blocklist of known trackers and ad servers, automatically 
-              updating to stay ahead of new threats. Your browsing habits remain private, and your network 
+              The system maintains a comprehensive blocklist of known trackers
+              and ad servers, automatically updating to stay ahead of new
+              threats. Your browsing habits remain private, and your network
               stays clean of unwanted surveillance.
             </p>
           </div>
@@ -124,21 +141,25 @@
         </div>
       </section>
 
-      <section class="feature-section" id="data-vault">
+      <section id="data-vault" class="feature-section">
         <div class="feature-content">
           <h2>Your Personal Data Vault</h2>
           <p class="feature-description">
-            Network-attached storage that you physically control. Your files, your hardware, your rules.
+            Network-attached storage that you physically control. Your files,
+            your hardware, your rules.
           </p>
           <div class="feature-details">
             <p>
-              Your personal NAS provides secure, high-performance storage for all your data. With our self-hosted 
-              solution, you maintain physical control of your storage hardware while enjoying enterprise-grade 
-              features like automatic backups, version control, and secure sharing.
+              Your personal NAS provides secure, high-performance storage for
+              all your data. With our self-hosted solution, you maintain
+              physical control of your storage hardware while enjoying
+              enterprise-grade features like automatic backups, version control,
+              and secure sharing.
             </p>
             <p>
-              The system includes a local LLM for processing your data, ensuring sensitive information never 
-              leaves your network. Whether you're searching through documents, analyzing data, or generating 
+              The system includes a local LLM for processing your data, ensuring
+              sensitive information never leaves your network. Whether you're
+              searching through documents, analyzing data, or generating
               insights, everything happens on your hardware, under your control.
             </p>
           </div>
