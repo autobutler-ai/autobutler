@@ -153,7 +153,7 @@
                       "properties": {
                         "productType": {
                           "type": "string",
-                          "enum": ["base_product", "support_subscription", "updates_subscription"]
+                          "enum": ["base_product"]
                         },
                         "quantity": {
                           "type": "integer",
@@ -281,59 +281,6 @@
               "description": "Purchase details",
               "schema": {
                 "$ref": "#/definitions/Purchase"
-              }
-            }
-          }
-        }
-      },
-      "/subscriptions": {
-        "get": {
-          "tags": ["Subscriptions"],
-          "summary": "Get active subscriptions",
-          "responses": {
-            "200": {
-              "description": "Active subscriptions",
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/definitions/Subscription"
-                }
-              }
-            }
-          }
-        }
-      },
-      "/subscriptions/{subscriptionId}/cancel": {
-        "post": {
-          "tags": ["Subscriptions"],
-          "summary": "Cancel subscription",
-          "parameters": [
-            {
-              "name": "subscriptionId",
-              "in": "path",
-              "required": true,
-              "type": "string"
-            },
-            {
-              "name": "body",
-              "in": "body",
-              "required": true,
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "cancelAtPeriodEnd": {
-                    "type": "boolean",
-                    "default": true
-                  }
-                }
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Subscription cancelled",
-              "schema": {
-                "$ref": "#/definitions/Subscription"
               }
             }
           }
@@ -742,7 +689,7 @@
               "properties": {
                 "productType": {
                   "type": "string",
-                  "enum": ["base_product", "support_subscription", "updates_subscription"]
+                  "enum": ["base_product"]
                 },
                 "description": {
                   "type": "string"
@@ -755,50 +702,6 @@
                 }
               }
             }
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "Subscription": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "stripeSubscriptionId": {
-            "type": "string"
-          },
-          "productType": {
-            "type": "string",
-            "enum": ["support_subscription", "updates_subscription"]
-          },
-          "status": {
-            "type": "string",
-            "enum": ["active", "past_due", "canceled", "unpaid"]
-          },
-          "currentPeriodStart": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "currentPeriodEnd": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "cancelAtPeriodEnd": {
-            "type": "boolean"
-          },
-          "amount": {
-            "type": "integer"
-          },
-          "currency": {
-            "type": "string"
           },
           "createdAt": {
             "type": "string",
@@ -928,10 +831,6 @@
           },
           "fileSize": {
             "type": "integer"
-          },
-          "requiresSubscription": {
-            "type": "string",
-            "enum": ["none", "support", "updates"]
           },
           "releaseDate": {
             "type": "string",

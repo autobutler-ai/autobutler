@@ -2,15 +2,13 @@
 
 ## Overview
 
-This is the customer-facing API for our SaaS platform. It handles authentication, purchases, subscriptions, and customer support for our $359 base product with optional $30/yr support and $20/yr update subscriptions.
+This is the customer-facing API for our SaaS platform. It handles authentication, purchases, and customer support for our $359 base product.
 
 **Base URL:** `https://customers.yoursite.com/api/v1`
 
 ## Business Model
 
 - **Base Product**: $359 one-time purchase
-- **Support Subscription**: $30/year (optional)
-- **Updates Subscription**: $20/year (optional)
 
 ## Authentication
 
@@ -41,10 +39,6 @@ We use **Auth0** for authentication with JWT bearer tokens.
 - `GET /purchases` - List all purchases (paginated)
 - `GET /purchases/{id}` - Get specific purchase details
 
-### Subscription Management
-- `GET /subscriptions` - List active subscriptions
-- `POST /subscriptions/{id}/cancel` - Cancel subscription
-
 ### Billing & Payments
 - `GET /billing/payment-methods` - List saved payment methods
 - `POST /billing/payment-methods` - Add new payment method
@@ -66,10 +60,8 @@ We use **Auth0** for authentication with JWT bearer tokens.
 
 ## Product Types
 
-The API handles three product types:
+The API handles one product type:
 - `base_product` - The main $359 software
-- `support_subscription` - $30/yr support plan
-- `updates_subscription` - $20/yr updates plan
 
 ## Key Data Models
 
@@ -92,18 +84,6 @@ The API handles three product types:
 }
 ```
 
-### Subscription
-```json
-{
-  "id": "sub_456",
-  "productType": "support_subscription",
-  "status": "active",
-  "currentPeriodEnd": "2025-12-15T00:00:00Z",
-  "amount": 3000,
-  "currency": "usd"
-}
-```
-
 ### License
 ```json
 {
@@ -119,7 +99,6 @@ The API handles three product types:
 
 ### Stripe Integration
 - Checkout sessions for one-time purchases
-- Subscriptions for recurring billing
 - Payment method management
 - Invoice generation
 
