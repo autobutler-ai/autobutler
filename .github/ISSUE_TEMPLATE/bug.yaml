@@ -3,6 +3,7 @@ description: File a bug report.
 title: "[Bug]: "
 labels: ["bug"]
 projects: ["exokomodo/8"]
+type: Bug
 assignees: []
 body:
   - type: markdown
@@ -43,6 +44,11 @@ body:
         - Safari
         - Microsoft Edge
         - Other
+  - type: input
+    id: url
+    attributes:
+      label: URL of problem
+      description: Provide a URL (local or remote) that demonstrates the problem
   - type: textarea
     id: logs
     attributes:
