@@ -21,5 +21,8 @@
     "lint:md": "markdownlint-cli2 *.{md,markdown} {src,docs,libs}/*.{md,markdown}"
   },
   "author": "ExoKomodo",
-  "license": "CC0"
+  "license": "CC0",
+  "dependencies": {
+    "@nuxt/content": "^3.5.1"
+  }
 }

@@ -7,6 +7,15 @@ export default defineNuxtConfig({
   css: [
     '~/assets/css/content.css'
   ],
+  app: {
+    head: {
+      link: [
+        { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon.png' },
+        { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png' },
+        { rel: 'shortcut icon', href: '/favicon.ico' }
+      ]
+    }
+  },
   content: {
     // Configure content module
     highlight: {
