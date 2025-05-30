@@ -37,62 +37,31 @@
     </div>
 
     <div class="docs-layout">
-      <aside class="sidebar" :class="{ 'sidebar-open': sidebarOpen }">
-        <nav>
-          <ul>
-            <li v-for="doc in sortedDocs" :key="doc._path">
-              <NuxtLink 
-                :to="doc._path"
-                :class="{ 'sidebar-active': isCurrentPath(doc._path) }"
-                @click="closeSidebar"
-              >
-                {{ doc.navigation?.title || doc.title }}
-              </NuxtLink>
-            </li>
-          </ul>
-        </nav>
-      </aside>
-      
-      <!-- Overlay for mobile sidebar -->
-      <div 
-        v-if="sidebarOpen" 
-        class="sidebar-overlay"
-        @click="closeSidebar"
-      ></div>
-      
-      <!-- Right-side page navigation drawer -->
-      <aside 
-        class="page-nav-drawer" 
-        :class="{ 'page-nav-drawer-open': pageNavOpen }"
-        v-if="data?.body?.toc?.links?.length"
-      >
-        <div class="page-nav-drawer-content">
-          <h4>On this page</h4>
-          <nav class="toc-nav">
+      <div class="left-content-container">
+        <aside class="sidebar" :class="{ 'sidebar-open': sidebarOpen }">
+          <nav>
             <ul>
-              <li v-for="link in data.body.toc.links" :key="link.id">
-                <a 
-                  :href="`#${link.id}`" 
-                  @click="closePageNav"
-                  :class="`toc-link depth-${link.depth}`"
+              <li v-for="doc in sortedDocs" :key="doc._path">
+                <NuxtLink 
+                  :to="doc._path"
+                  :class="{ 'sidebar-active': isCurrentPath(doc._path) }"
+                  @click="closeSidebar"
                 >
-                  {{ link.text }}
-                </a>
+                  {{ doc.navigation?.title || doc.title }}
+                </NuxtLink>
               </li>
             </ul>
           </nav>
-        </div>
-      </aside>
-      
-      <!-- Overlay for page navigation drawer -->
-      <div 
-        v-if="pageNavOpen" 
-        class="page-nav-overlay"
-        @click="closePageNav"
-      ></div>
-      
-      <main class="content">
-        <div class="content-wrapper">
+        </aside>
+        
+        <!-- Overlay for mobile sidebar -->
+        <div 
+          v-if="sidebarOpen" 
+          class="sidebar-overlay"
+          @click="closeSidebar"
+        ></div>
+        
+        <main class="content">
           <article class="main-content">
             <!-- Loading indicator -->
             <div v-if="pending" class="loading-indicator">
@@ -140,35 +109,76 @@
               <p>Welcome to the AutoButler documentation. Select a topic from the sidebar to begin.</p>
             </div>
           </article>
-          
-          <!-- Desktop page navigation -->
-          <aside 
-            class="page-nav desktop-only" 
-            v-if="data?.body?.toc?.links?.length"
-          >
-            <div class="page-nav-content">
-              <h4>On this page</h4>
-              <nav class="toc-nav">
-                <ul>
-                  <li v-for="link in data.body.toc.links" :key="link.id">
-                    <a 
-                      :href="`#${link.id}`" 
-                      :class="`toc-link depth-${link.depth}`"
-                    >
-                      {{ link.text }}
-                    </a>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-          </aside>
+        </main>
+      </div>
+      
+      <!-- Right-side page navigation drawer -->
+      <aside 
+        class="page-nav-drawer" 
+        :class="{ 'page-nav-drawer-open': pageNavOpen }"
+        v-if="data?.body?.toc?.links?.length"
+      >
+        <div class="page-nav-drawer-content">
+          <h4>On this page</h4>
+          <nav class="toc-nav">
+            <ul>
+              <li v-for="link in data.body.toc.links" :key="link.id">
+                <a 
+                  :href="`#${link.id}`" 
+                  @click="closePageNav"
+                  :class="`toc-link depth-${link.depth}`"
+                >
+                  {{ link.text }}
+                </a>
+              </li>
+            </ul>
+          </nav>
         </div>
-      </main>
+      </aside>
+      
+      <!-- Overlay for page navigation drawer -->
+      <div 
+        v-if="pageNavOpen" 
+        class="page-nav-overlay"
+        @click="closePageNav"
+      ></div>
+      
+      <!-- Desktop page navigation -->
+      <aside 
+        class="page-nav desktop-only" 
+        v-if="data?.body?.toc?.links?.length"
+      >
+        <div class="page-nav-content">
+          <h4>On this page</h4>
+          <nav class="toc-nav">
+            <ul>
+              <li v-for="link in data.body.toc.links" :key="link.id">
+                <a 
+                  :href="`#${link.id}`" 
+                  :class="`toc-link depth-${link.depth}`"
+                >
+                  {{ link.text }}
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </aside>
     </div>
   </PageContainer>
+  
+  <!-- Reverse sticky footer for docs - moved outside PageContainer -->
+  <ButlerFooter 
+    :showOnBottom="true" 
+    customScrollContainer=".content"
+    :compact="true"
+  />
 </template>
 
 <script setup>
+// Import the ButlerFooter component
+import ButlerFooter from '~/components/ButlerFooter.vue'
+
 // Reactive state
 const sidebarOpen = ref(false)
 const pageNavOpen = ref(false)
@@ -252,6 +262,93 @@ const togglePageNav = () => {
 const closePageNav = () => {
   pageNavOpen.value = false
 }
+
+// Prevent page scrolling and redirect to content area
+onMounted(() => {
+  // Prevent page from scrolling and hide main scrollbar
+  document.body.style.overflow = 'hidden'
+  document.documentElement.style.overflow = 'hidden'
+  
+  const handleWheel = (e) => {
+    e.preventDefault()
+    const contentArea = document.querySelector('.content')
+    if (contentArea) {
+      contentArea.scrollTop += e.deltaY
+    }
+  }
+  
+  const handleKeydown = (e) => {
+    const contentArea = document.querySelector('.content')
+    if (contentArea) {
+      switch(e.key) {
+        case 'ArrowDown':
+          e.preventDefault()
+          contentArea.scrollTop += 40
+          break
+        case 'ArrowUp':
+          e.preventDefault()
+          contentArea.scrollTop -= 40
+          break
+        case 'PageDown':
+          e.preventDefault()
+          contentArea.scrollTop += contentArea.clientHeight * 0.8
+          break
+        case 'PageUp':
+          e.preventDefault()
+          contentArea.scrollTop -= contentArea.clientHeight * 0.8
+          break
+        case 'Home':
+          if (e.ctrlKey) {
+            e.preventDefault()
+            contentArea.scrollTop = 0
+          }
+          break
+        case 'End':
+          if (e.ctrlKey) {
+            e.preventDefault()
+            contentArea.scrollTop = contentArea.scrollHeight
+          }
+          break
+      }
+    }
+  }
+  
+  const handleAnchorClick = (e) => {
+    const target = e.target
+    if (target.tagName === 'A' && target.getAttribute('href')?.startsWith('#')) {
+      e.preventDefault()
+      const targetId = target.getAttribute('href').substring(1)
+      const targetElement = document.getElementById(targetId)
+      const contentArea = document.querySelector('.content')
+      
+      if (targetElement && contentArea) {
+        // Calculate the position of the target element relative to the content area
+        const contentRect = contentArea.getBoundingClientRect()
+        const targetRect = targetElement.getBoundingClientRect()
+        const scrollOffset = targetRect.top - contentRect.top + contentArea.scrollTop - 20 // 20px offset from top
+        
+        contentArea.scrollTo({
+          top: scrollOffset,
+          behavior: 'smooth'
+        })
+      }
+    }
+  }
+  
+  // Add event listeners
+  window.addEventListener('wheel', handleWheel, { passive: false })
+  window.addEventListener('keydown', handleKeydown)
+  document.addEventListener('click', handleAnchorClick)
+  
+  // Cleanup on unmount
+  onUnmounted(() => {
+    document.body.style.overflow = ''
+    document.documentElement.style.overflow = ''
+    window.removeEventListener('wheel', handleWheel)
+    window.removeEventListener('keydown', handleKeydown)
+    document.removeEventListener('click', handleAnchorClick)
+  })
+})
 
 // SEO
 useSeoMeta({
@@ -359,13 +456,25 @@ useSeoMeta({
 
 .docs-layout {
   display: grid;
+  grid-template-columns: 1fr 250px;
+  gap: 2rem;
+  height: calc(100vh - 8rem);
+  overflow: hidden;
+}
+
+.left-content-container {
+  display: grid;
   grid-template-columns: 200px 1fr;
   gap: 2rem;
+  overflow: hidden;
+  height: 100%;
 }
 
 .sidebar {
   border-right: 1px solid rgba(255, 255, 255, 0.1);
   padding-right: 2rem;
+  overflow-y: auto;
+  height: 100%;
 }
 
 .sidebar ul {
@@ -405,22 +514,67 @@ useSeoMeta({
 
 .content {
   min-width: 0;
+  overflow-y: auto;
+  height: calc(100vh - 12rem);
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 255, 170, 0.3) transparent;
+  margin-bottom: 4rem;
+  border-radius: 0.5rem;
+  background: rgba(0, 0, 0, 0.1);
+  padding-bottom: 100px;
 }
 
-.content-wrapper {
-  display: grid;
-  grid-template-columns: 1fr 250px;
-  gap: 3rem;
+/* Custom scrollbar for WebKit browsers */
+.content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.content::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 170, 0.3);
+  border-radius: 3px;
+  transition: all 0.2s ease;
+}
+
+.content::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 255, 170, 0.6);
+  box-shadow: 0 0 8px rgba(0, 255, 170, 0.3);
 }
 
 .main-content {
   min-width: 0;
+  padding: 1rem;
+  padding-bottom: 2rem; /* Extra padding for footer space */
 }
 
 .page-nav {
-  position: sticky;
-  top: 2rem;
-  height: fit-content;
+  position: static;
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  padding: 2rem 0;
+}
+
+.page-nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+.page-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.page-nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+}
+
+.page-nav::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .page-nav-content {
@@ -428,7 +582,7 @@ useSeoMeta({
   padding-left: 1rem;
 }
 
-.page-nav h4 {
+.page-nav-content h4 {
   color: rgba(255, 255, 255, 0.6);
   font-size: 0.8rem;
   text-transform: uppercase;
@@ -587,7 +741,12 @@ useSeoMeta({
     display: flex;
   }
   
-  .content-wrapper {
+  .docs-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  
+  .left-content-container {
     grid-template-columns: 1fr;
     gap: 2rem;
   }
@@ -607,6 +766,12 @@ useSeoMeta({
 
 @media (max-width: 768px) {
   .docs-layout {
+    grid-template-columns: 1fr;
+    gap: 0;
+    height: auto;
+  }
+  
+  .left-content-container {
     grid-template-columns: 1fr;
     gap: 0;
   }
@@ -644,10 +809,12 @@ useSeoMeta({
   
   .content {
     padding: 1rem;
+    height: auto;
+    overflow-y: visible;
   }
   
-  .content-wrapper {
-    gap: 1.5rem;
+  .main-content {
+    padding: 0;
   }
 }
 
