@@ -4,10 +4,7 @@
     <div class="page-container">
       <slot />
     </div>
-    <ButlerFooter 
-      v-if="!isDocsPage"
-      :showOnBottom="true" 
-    />
+    <ButlerFooter v-if="!isDocsPage" :show-on-bottom="true" />
   </div>
 </template>
 
@@ -16,8 +13,8 @@ import ButlerFooter from "../components/ButlerFooter.vue";
 import ButlerHeader from "../components/ButlerHeader.vue";
 
 // Get current route to conditionally show footer
-const route = useRoute()
-const isDocsPage = computed(() => route.path.startsWith('/docs'))
+const route = useRoute();
+const isDocsPage = computed(() => route.path.startsWith("/docs"));
 </script>
 
 <style scoped>

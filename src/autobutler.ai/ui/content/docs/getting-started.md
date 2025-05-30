@@ -1,7 +1,7 @@
 ---
 title: Getting Started
 description: Get up and running quickly with AutoButler
-navigation: 
+navigation:
   title: Getting Started
   order: 2
 ---
@@ -33,11 +33,11 @@ yarn add @autobutler/core
 Roquefort paneer cheesecake edam danish fontina pepper jack cheesy feet melted cheese. Manchego edam pecorino cream cheese queso swiss blue castello squirty cheese.
 
 ```javascript
-import { AutoButler } from '@autobutler/core';
+import { AutoButler } from "@autobutler/core";
 
 const butler = new AutoButler({
-  apiKey: 'your-api-key',
-  environment: 'production'
+  apiKey: "your-api-key",
+  environment: "production",
 });
 ```
 
@@ -47,10 +47,8 @@ Feta caerphilly ricotta who moved my cheese swiss roquefort mozzarella gouda. Fr
 
 ```javascript
 const result = await butler.run({
-  name: 'hello-world',
-  steps: [
-    { action: 'log', message: 'Hello from AutoButler!' }
-  ]
+  name: "hello-world",
+  steps: [{ action: "log", message: "Hello from AutoButler!" }],
 });
 ```
 
@@ -59,6 +57,6 @@ const result = await butler.run({
 Stinking bishop paneer cut the cheese paneer cottage cheese chalk and cheese macaroni cheese babybel. Bavarian bergkase chalk and cheese camembert de normandie melted cheese red leicester who moved my cheese fromage frais when the cheese comes out everybody's happy.
 
 - Read the [Configuration Guide](/docs/configuration) to customize your setup
-- Explore [Examples](/docs/examples) for common use cases  
+- Explore [Examples](/docs/examples) for common use cases
 - Check out the [API Reference](/docs/api-reference) for detailed documentation
-- Try the [Quick Start](/docs/quick-start) for a fast setup 
+- Try the [Quick Start](/docs/quick-start) for a fast setup

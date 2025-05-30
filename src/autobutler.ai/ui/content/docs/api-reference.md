@@ -28,12 +28,12 @@ class AutoButler {
 
 #### Constructor Options
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `apiKey` | string | Yes | Your AutoButler API key |
-| `environment` | string | No | Environment name (default: 'development') |
-| `baseUrl` | string | No | Custom API base URL |
-| `timeout` | number | No | Request timeout in milliseconds |
+| Parameter     | Type   | Required | Description                               |
+| ------------- | ------ | -------- | ----------------------------------------- |
+| `apiKey`      | string | Yes      | Your AutoButler API key                   |
+| `environment` | string | No       | Environment name (default: 'development') |
+| `baseUrl`     | string | No       | Custom API base URL                       |
+| `timeout`     | number | No       | Request timeout in milliseconds           |
 
 #### Methods
 
@@ -43,12 +43,12 @@ Stinking bishop halloumi chalk and cheese the big cheese feta cheeseburger chees
 
 ```javascript
 const result = await butler.run({
-  name: 'process-data',
+  name: "process-data",
   steps: [
-    { action: 'fetch', url: 'https://api.example.com/data' },
-    { action: 'transform', mapping: { id: 'userId' } },
-    { action: 'save', destination: 'database' }
-  ]
+    { action: "fetch", url: "https://api.example.com/data" },
+    { action: "transform", mapping: { id: "userId" } },
+    { action: "save", destination: "database" },
+  ],
 });
 ```
 
@@ -161,22 +161,22 @@ Ricotta gouda everyone loves halloumi who moved my cheese fromage frais camember
 
 ### Available Events
 
-| Event | Description | Payload |
-|-------|-------------|---------|
-| `task:start` | Task execution begins | `{ taskId, name, timestamp }` |
-| `task:complete` | Task execution completes | `{ taskId, result, duration }` |
-| `task:error` | Task execution fails | `{ taskId, error, step }` |
-| `step:start` | Individual step begins | `{ taskId, stepId, action }` |
-| `step:complete` | Individual step completes | `{ taskId, stepId, result }` |
+| Event           | Description               | Payload                        |
+| --------------- | ------------------------- | ------------------------------ |
+| `task:start`    | Task execution begins     | `{ taskId, name, timestamp }`  |
+| `task:complete` | Task execution completes  | `{ taskId, result, duration }` |
+| `task:error`    | Task execution fails      | `{ taskId, error, step }`      |
+| `step:start`    | Individual step begins    | `{ taskId, stepId, action }`   |
+| `step:complete` | Individual step completes | `{ taskId, stepId, result }`   |
 
 ### Event Handling
 
 ```javascript
-butler.on('task:start', (event) => {
+butler.on("task:start", (event) => {
   console.log(`Task ${event.name} started at ${event.timestamp}`);
 });
 
-butler.on('task:error', (event) => {
+butler.on("task:error", (event) => {
   console.error(`Task failed: ${event.error.message}`);
 });
 ```
@@ -199,4 +199,4 @@ interface AutoButlerError {
   details?: Record<string, any>;
   cause?: Error;
 }
-``` 
+```

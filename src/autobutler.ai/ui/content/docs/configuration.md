@@ -38,13 +38,13 @@ Cottage cheese cheesecake macaroni cheese pepper jack edam queso cheeseburger ca
 advanced:
   concurrent: true
   maxConcurrency: 5
-  
+
   # Database connection
   database:
     type: "postgresql"
     host: "localhost"
     port: 5432
-    
+
   # API settings
   api:
     baseUrl: "https://api.autobutler.ai"
@@ -74,17 +74,17 @@ Cheesy feet goat melted cheese squirty cheese squirty cheese fromage brie dolcel
 ```javascript
 // Individual task configuration
 export default {
-  name: 'data-processor',
+  name: "data-processor",
   config: {
     timeout: 60000,
     retries: 5,
-    priority: 'high'
+    priority: "high",
   },
-  dependencies: ['database-connection'],
+  dependencies: ["database-connection"],
   run: async (context) => {
     // Task implementation
-  }
-}
+  },
+};
 ```
 
 ## Validation Rules
@@ -115,11 +115,11 @@ Cottage cheese airedale bavarian bergkase the big cheese edam melted cheese peco
 ```javascript
 // plugins/custom-logger.js
 export default {
-  name: 'custom-logger',
+  name: "custom-logger",
   initialize: (butler) => {
-    butler.on('task:start', (task) => {
+    butler.on("task:start", (task) => {
       console.log(`Starting task: ${task.name}`);
     });
-  }
-}
-``` 
+  },
+};
+```

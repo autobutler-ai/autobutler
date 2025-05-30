@@ -1,431 +1,477 @@
 <template>
-  <PageContainer>
-    <!-- Mobile navigation bar -->
-    <div class="mobile-nav-bar">
-      <!-- Menu button -->
-      <button 
-        class="hamburger-btn"
-        @click="toggleSidebar"
-        aria-label="Toggle navigation"
-      >
-        <div class="hamburger-icon">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-        <span class="hamburger-label">Menu</span>
-      </button>
-
-      <!-- On this page dropdown button -->
-      <button 
-        class="page-nav-toggle"
-        @click="togglePageNav"
-        aria-label="Toggle page navigation"
-        v-if="data?.body?.toc?.links?.length"
-      >
-        <span>On this page</span>
-        <svg 
-          class="chevron" 
-          :class="{ 'chevron-open': pageNavOpen }"
-          width="16" 
-          height="16" 
-          viewBox="0 0 16 16"
+  <div>
+    <PageContainer>
+      <!-- Mobile navigation bar -->
+      <div class="mobile-nav-bar">
+        <!-- Menu button -->
+        <button
+          class="hamburger-btn"
+          aria-label="Toggle navigation"
+          @click="toggleSidebar"
         >
-          <path d="M10 4l-4 4 4 4" stroke="currentColor" stroke-width="2" fill="none"/>
-        </svg>
-      </button>
-    </div>
+          <div class="hamburger-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <span class="hamburger-label">Menu</span>
+        </button>
 
-    <div class="docs-layout">
-      <div class="left-content-container">
-        <aside class="sidebar" :class="{ 'sidebar-open': sidebarOpen }">
-          <nav>
-            <ul>
-              <li v-for="doc in sortedDocs" :key="doc._path">
-                <NuxtLink 
-                  :to="doc._path"
-                  :class="{ 'sidebar-active': isCurrentPath(doc._path) }"
-                  @click="closeSidebar"
-                >
-                  {{ doc.navigation?.title || doc.title }}
-                </NuxtLink>
-              </li>
-            </ul>
-          </nav>
-        </aside>
-        
-        <!-- Overlay for mobile sidebar -->
-        <div 
-          v-if="sidebarOpen" 
-          class="sidebar-overlay"
-          @click="closeSidebar"
-        ></div>
-        
-        <main class="content">
-          <article class="main-content">
-            <!-- Loading indicator -->
-            <div v-if="pending" class="loading-indicator">
-              <div class="loading-spinner"></div>
-              <p>Loading documentation...</p>
-            </div>
-            
-            <!-- Document content -->
-            <div v-else-if="data" class="document-content">
-              <ContentRenderer :value="data" />
-            </div>
-            
-            <!-- Index page fallback with docs grid -->
-            <div v-else-if="isIndexPage" class="error-content">
-              <h1>Welcome to AutoButler Documentation</h1>
-              <p>Complete documentation for AutoButler automation platform.</p>
-              <div class="docs-grid">
-                <NuxtLink 
-                  v-for="doc in sortedDocs" 
-                  :key="doc._path"
-                  :to="doc._path"
-                  class="doc-card"
-                >
-                  <h3>{{ doc.navigation?.title || doc.title }}</h3>
-                  <p>{{ doc.description }}</p>
-                </NuxtLink>
-              </div>
-            </div>
-            
-            <!-- Error state for other pages -->
-            <div v-else-if="error" class="error-content">
-              <h1>Content Not Found</h1>
-              <p>The requested documentation page could not be found.</p>
-              <p>Available pages:</p>
+        <!-- On this page dropdown button -->
+        <button
+          v-if="data?.body?.toc?.links?.length"
+          class="page-nav-toggle"
+          aria-label="Toggle page navigation"
+          @click="togglePageNav"
+        >
+          <span>On this page</span>
+          <svg
+            class="chevron"
+            :class="{ 'chevron-open': pageNavOpen }"
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M10 4l-4 4 4 4"
+              stroke="currentColor"
+              stroke-width="2"
+              fill="none"
+            />
+          </svg>
+        </button>
+      </div>
+
+      <div class="docs-layout">
+        <div class="left-content-container">
+          <aside class="sidebar" :class="{ 'sidebar-open': sidebarOpen }">
+            <nav>
               <ul>
                 <li v-for="doc in sortedDocs" :key="doc._path">
-                  <NuxtLink :to="doc._path">{{ doc.title }}</NuxtLink>
+                  <NuxtLink
+                    :to="doc._path"
+                    :class="{ 'sidebar-active': isCurrentPath(doc._path) }"
+                    @click="closeSidebar"
+                  >
+                    {{ doc.navigation?.title || doc.title }}
+                  </NuxtLink>
                 </li>
               </ul>
-            </div>
-            
-            <!-- Default fallback -->
-            <div v-else class="error-content">
-              <h1>Documentation</h1>
-              <p>Welcome to the AutoButler documentation. Select a topic from the sidebar to begin.</p>
-            </div>
-          </article>
-        </main>
+            </nav>
+          </aside>
+
+          <!-- Overlay for mobile sidebar -->
+          <div
+            v-if="sidebarOpen"
+            class="sidebar-overlay"
+            @click="closeSidebar"
+          ></div>
+
+          <main class="content">
+            <article class="main-content">
+              <!-- Loading indicator -->
+              <div v-if="pending" class="loading-indicator">
+                <div class="loading-spinner"></div>
+                <p>Loading documentation...</p>
+              </div>
+
+              <!-- Document content -->
+              <div v-else-if="data" class="document-content">
+                <ContentRenderer :value="data" />
+              </div>
+
+              <!-- Index page fallback with docs grid -->
+              <div v-else-if="isIndexPage" class="error-content">
+                <h1>Welcome to AutoButler Documentation</h1>
+                <p>
+                  Complete documentation for AutoButler automation platform.
+                </p>
+                <div class="docs-grid">
+                  <NuxtLink
+                    v-for="doc in sortedDocs"
+                    :key="doc._path"
+                    :to="doc._path"
+                    class="doc-card"
+                  >
+                    <h3>{{ doc.navigation?.title || doc.title }}</h3>
+                    <p>{{ doc.description }}</p>
+                  </NuxtLink>
+                </div>
+              </div>
+
+              <!-- Error state for other pages -->
+              <div v-else-if="error" class="error-content">
+                <h1>Content Not Found</h1>
+                <p>The requested documentation page could not be found.</p>
+                <p>Available pages:</p>
+                <ul>
+                  <li v-for="doc in sortedDocs" :key="doc._path">
+                    <NuxtLink :to="doc._path">{{ doc.title }}</NuxtLink>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Default fallback -->
+              <div v-else class="error-content">
+                <h1>Documentation</h1>
+                <p>
+                  Welcome to the AutoButler documentation. Select a topic from
+                  the sidebar to begin.
+                </p>
+              </div>
+            </article>
+          </main>
+        </div>
+
+        <!-- Right-side page navigation drawer -->
+        <aside
+          v-if="data?.body?.toc?.links?.length"
+          class="page-nav-drawer"
+          :class="{ 'page-nav-drawer-open': pageNavOpen }"
+        >
+          <div class="page-nav-drawer-content">
+            <h4>On this page</h4>
+            <nav class="toc-nav">
+              <ul>
+                <li v-for="link in data.body.toc.links" :key="link.id">
+                  <a
+                    :href="`#${link.id}`"
+                    :class="`toc-link depth-${link.depth}`"
+                    @click="closePageNav"
+                  >
+                    {{ link.text }}
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </aside>
+
+        <!-- Overlay for page navigation drawer -->
+        <div
+          v-if="pageNavOpen"
+          class="page-nav-overlay"
+          @click="closePageNav"
+        ></div>
+
+        <!-- Desktop page navigation -->
+        <aside
+          v-if="data?.body?.toc?.links?.length"
+          class="page-nav desktop-only"
+        >
+          <div class="page-nav-content">
+            <h4>On this page</h4>
+            <nav class="toc-nav">
+              <ul>
+                <li v-for="link in data.body.toc.links" :key="link.id">
+                  <a
+                    :href="`#${link.id}`"
+                    :class="`toc-link depth-${link.depth}`"
+                  >
+                    {{ link.text }}
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </aside>
       </div>
-      
-      <!-- Right-side page navigation drawer -->
-      <aside 
-        class="page-nav-drawer" 
-        :class="{ 'page-nav-drawer-open': pageNavOpen }"
-        v-if="data?.body?.toc?.links?.length"
+    </PageContainer>
+
+    <!-- Reverse sticky footer for docs - moved outside PageContainer -->
+    <ButlerFooter
+      :show-on-bottom="true"
+      custom-scroll-container=".content"
+      :compact="true"
+    />
+
+    <!-- Mobile-only scroll to top button -->
+    <button
+      v-if="showScrollToTop"
+      class="scroll-to-top-btn mobile-only"
+      aria-label="Scroll to top"
+      @click="scrollToTop"
+    >
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
       >
-        <div class="page-nav-drawer-content">
-          <h4>On this page</h4>
-          <nav class="toc-nav">
-            <ul>
-              <li v-for="link in data.body.toc.links" :key="link.id">
-                <a 
-                  :href="`#${link.id}`" 
-                  @click="closePageNav"
-                  :class="`toc-link depth-${link.depth}`"
-                >
-                  {{ link.text }}
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </aside>
-      
-      <!-- Overlay for page navigation drawer -->
-      <div 
-        v-if="pageNavOpen" 
-        class="page-nav-overlay"
-        @click="closePageNav"
-      ></div>
-      
-      <!-- Desktop page navigation -->
-      <aside 
-        class="page-nav desktop-only" 
-        v-if="data?.body?.toc?.links?.length"
-      >
-        <div class="page-nav-content">
-          <h4>On this page</h4>
-          <nav class="toc-nav">
-            <ul>
-              <li v-for="link in data.body.toc.links" :key="link.id">
-                <a 
-                  :href="`#${link.id}`" 
-                  :class="`toc-link depth-${link.depth}`"
-                >
-                  {{ link.text }}
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </aside>
-    </div>
-  </PageContainer>
-  
-  <!-- Reverse sticky footer for docs - moved outside PageContainer -->
-  <ButlerFooter 
-    :showOnBottom="true" 
-    customScrollContainer=".content"
-    :compact="true"
-  />
-  
-  <!-- Mobile-only scroll to top button -->
-  <button 
-    v-if="showScrollToTop"
-    @click="scrollToTop"
-    class="scroll-to-top-btn mobile-only"
-    aria-label="Scroll to top"
-  >
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M18 15l-6-6-6 6"/>
-    </svg>
-  </button>
+        <path d="M18 15l-6-6-6 6" />
+      </svg>
+    </button>
+  </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 // Import the ButlerFooter component
-import ButlerFooter from '~/components/ButlerFooter.vue'
+import ButlerFooter from "~/components/ButlerFooter.vue";
 
 // Reactive state
-const sidebarOpen = ref(false)
-const pageNavOpen = ref(false)
-const showScrollToTop = ref(false)
+const sidebarOpen = ref(false);
+const pageNavOpen = ref(false);
+const showScrollToTop = ref(false);
 
 // Get route and params
-const route = useRoute()
+const route = useRoute();
 
 // Check if this is the index page (no slug or welcome slug)
-const isIndexPage = computed(() => {
-  return route.path === '/docs' || route.path === '/docs/' || 
-         (route.params.slug && route.params.slug[0] === 'welcome')
-})
+const isIndexPage = computed(
+  () =>
+    route.path === "/docs" ||
+    route.path === "/docs/" ||
+    (route.params.slug && route.params.slug[0] === "welcome"),
+);
 
 // Debug: Log the current route path
-console.log('Current route path:', route.path)
-console.log('Is index page:', isIndexPage.value)
+console.log("Current route path:", route.path);
+console.log("Is index page:", isIndexPage.value);
 
 // Try different approaches to fetch content
-let allDocs = []
-let data = null
-let pending = false
-let error = null
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let allDocs: any[] = [];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let data: any = null;
+const pending = false;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let error: any = null;
 
 try {
   // Fetch all documentation files with a more explicit query
-  const docsQuery = await queryContent('docs').find()
-  console.log('Docs query result:', docsQuery)
-  allDocs = docsQuery || []
-  
+  const docsQuery = await queryContent("docs").find();
+  console.log("Docs query result:", docsQuery);
+  allDocs = docsQuery || [];
+
   // Get current document based on route
   if (isIndexPage.value) {
     // For index page, try to get welcome content
-    console.log('Fetching welcome content for index page')
-    const welcomeDoc = await queryContent('docs/welcome').findOne().catch(() => null)
-    console.log('Welcome doc result:', welcomeDoc)
-    data = welcomeDoc
+    console.log("Fetching welcome content for index page");
+    const welcomeDoc = await queryContent("docs/welcome")
+      .findOne()
+      .catch(() => null);
+    console.log("Welcome doc result:", welcomeDoc);
+    data = welcomeDoc;
   } else {
     // For other pages, get content based on slug
-    const currentPath = route.path.replace('/docs/', 'docs/')
-    console.log('Querying for path:', currentPath)
-    
-    const currentDoc = await queryContent(currentPath).findOne()
-    console.log('Current doc result:', currentDoc)
-    data = currentDoc
+    const currentPath = route.path.replace("/docs/", "docs/");
+    console.log("Querying for path:", currentPath);
+
+    const currentDoc = await queryContent(currentPath).findOne();
+    console.log("Current doc result:", currentDoc);
+    data = currentDoc;
   }
 } catch (err) {
-  console.error('Content query error:', err)
-  error = err
+  console.error("Content query error:", err);
+  error = err;
 }
 
-console.log('Final allDocs:', allDocs)
-console.log('Final data:', data)
-console.log('TOC links:', data?.body?.toc?.links)
+console.log("Final allDocs:", allDocs);
+console.log("Final data:", data);
+console.log("TOC links:", data?.body?.toc?.links);
 
 // Computed properties
-const sortedDocs = computed(() => 
-  allDocs?.sort((a, b) => (a.navigation?.order || 999) - (b.navigation?.order || 999)) || []
-)
+const sortedDocs = computed(
+  () =>
+    allDocs
+      ?.slice()
+      .sort(
+        (a, b) => (a.navigation?.order || 999) - (b.navigation?.order || 999),
+      ) || [],
+);
 
-const isCurrentPath = (path) => {
+const isCurrentPath = (path: string) => {
   // For the welcome page, consider both /docs and /docs/welcome as current
-  if (path === '/docs/welcome' && (route.path === '/docs' || route.path === '/docs/')) {
-    return true
+  if (
+    path === "/docs/welcome" &&
+    (route.path === "/docs" || route.path === "/docs/")
+  ) {
+    return true;
   }
-  return route.path === path
-}
+  return route.path === path;
+};
 
 // Navigation functions
 const toggleSidebar = () => {
-  sidebarOpen.value = !sidebarOpen.value
-}
+  sidebarOpen.value = !sidebarOpen.value;
+};
 
 const closeSidebar = () => {
-  sidebarOpen.value = false
-}
+  sidebarOpen.value = false;
+};
 
 const togglePageNav = () => {
-  pageNavOpen.value = !pageNavOpen.value
-}
+  pageNavOpen.value = !pageNavOpen.value;
+};
 
 const closePageNav = () => {
-  pageNavOpen.value = false
-}
+  pageNavOpen.value = false;
+};
 
 // Scroll to top function for mobile
 const scrollToTop = () => {
   window.scrollTo({
     top: 0,
-    behavior: 'smooth'
-  })
-}
+    behavior: "smooth",
+  });
+};
 
 // Handle scroll detection for mobile scroll-to-top button
 const handleMobileScroll = () => {
-  const isDesktop = window.innerWidth >= 1024
-  if (isDesktop) return
-  
+  const isDesktop = window.innerWidth >= 1024;
+  if (isDesktop) return;
+
   // Show button when scrolled down more than 300px
-  showScrollToTop.value = window.scrollY > 300
-}
+  showScrollToTop.value = window.scrollY > 300;
+};
 
 // Prevent page scrolling and redirect to content area
 onMounted(() => {
   // Only apply custom scroll handling on desktop screens (1024px and above)
-  const isDesktop = () => window.innerWidth >= 1024
-  
+  const isDesktop = () => window.innerWidth >= 1024;
+
   if (!isDesktop()) {
     // On mobile/tablet, let browser handle scrolling normally
     // But add scroll listener for scroll-to-top button
-    window.addEventListener('scroll', handleMobileScroll)
-    
+    window.addEventListener("scroll", handleMobileScroll);
+
     // Cleanup on unmount for mobile
     onUnmounted(() => {
-      window.removeEventListener('scroll', handleMobileScroll)
-    })
-    
-    return
+      window.removeEventListener("scroll", handleMobileScroll);
+    });
+
+    return;
   }
-  
+
   // Wait for content area to be properly loaded before preventing page scroll
   const ensureContentReady = () => {
-    const contentArea = document.querySelector('.content')
+    const contentArea = document.querySelector(".content");
     if (!contentArea || contentArea.scrollHeight <= contentArea.clientHeight) {
       // Content area doesn't exist or has no scrollable content yet, try again
-      setTimeout(ensureContentReady, 100)
-      return
+      setTimeout(ensureContentReady, 100);
+      return;
     }
-    
+
     // Only prevent page scrolling once we confirm content area is ready
-    document.body.style.overflow = 'hidden'
-    document.documentElement.style.overflow = 'hidden'
-  }
-  
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+  };
+
   // Start checking for content readiness
-  ensureContentReady()
-  
-  const handleWheel = (e) => {
-    e.preventDefault()
-    const contentArea = document.querySelector('.content')
+  ensureContentReady();
+
+  const handleWheel = (e: WheelEvent) => {
+    e.preventDefault();
+    const contentArea = document.querySelector(".content");
     if (contentArea) {
-      contentArea.scrollTop += e.deltaY
+      contentArea.scrollTop += e.deltaY;
     }
-  }
-  
-  const handleKeydown = (e) => {
-    const contentArea = document.querySelector('.content')
+  };
+
+  const handleKeydown = (e: KeyboardEvent) => {
+    const contentArea = document.querySelector(".content");
     if (contentArea) {
-      switch(e.key) {
-        case 'ArrowDown':
-          e.preventDefault()
-          contentArea.scrollTop += 40
-          break
-        case 'ArrowUp':
-          e.preventDefault()
-          contentArea.scrollTop -= 40
-          break
-        case 'PageDown':
-          e.preventDefault()
-          contentArea.scrollTop += contentArea.clientHeight * 0.8
-          break
-        case 'PageUp':
-          e.preventDefault()
-          contentArea.scrollTop -= contentArea.clientHeight * 0.8
-          break
-        case 'Home':
+      switch (e.key) {
+        case "ArrowDown":
+          e.preventDefault();
+          contentArea.scrollTop += 40;
+          break;
+        case "ArrowUp":
+          e.preventDefault();
+          contentArea.scrollTop -= 40;
+          break;
+        case "PageDown":
+          e.preventDefault();
+          contentArea.scrollTop += contentArea.clientHeight * 0.8;
+          break;
+        case "PageUp":
+          e.preventDefault();
+          contentArea.scrollTop -= contentArea.clientHeight * 0.8;
+          break;
+        case "Home":
           if (e.ctrlKey) {
-            e.preventDefault()
-            contentArea.scrollTop = 0
+            e.preventDefault();
+            contentArea.scrollTop = 0;
           }
-          break
-        case 'End':
+          break;
+        case "End":
           if (e.ctrlKey) {
-            e.preventDefault()
-            contentArea.scrollTop = contentArea.scrollHeight
+            e.preventDefault();
+            contentArea.scrollTop = contentArea.scrollHeight;
           }
-          break
+          break;
       }
     }
-  }
-  
-  const handleAnchorClick = (e) => {
-    const target = e.target
-    if (target.tagName === 'A' && target.getAttribute('href')?.startsWith('#')) {
-      e.preventDefault()
-      const targetId = target.getAttribute('href').substring(1)
-      const targetElement = document.getElementById(targetId)
-      const contentArea = document.querySelector('.content')
-      
+  };
+
+  const handleAnchorClick = (e: Event) => {
+    const target = e.target as HTMLElement;
+    if (
+      target &&
+      target.tagName === "A" &&
+      (target as HTMLAnchorElement).getAttribute("href")?.startsWith("#")
+    ) {
+      e.preventDefault();
+      const targetId = (target as HTMLAnchorElement)
+        .getAttribute("href")
+        ?.substring(1);
+      const targetElement = targetId ? document.getElementById(targetId) : null;
+      const contentArea = document.querySelector(".content");
+
       if (targetElement && contentArea) {
         // Calculate the position of the target element relative to the content area
-        const contentRect = contentArea.getBoundingClientRect()
-        const targetRect = targetElement.getBoundingClientRect()
-        const scrollOffset = targetRect.top - contentRect.top + contentArea.scrollTop - 20 // 20px offset from top
-        
+        const contentRect = contentArea.getBoundingClientRect();
+        const targetRect = targetElement.getBoundingClientRect();
+        const scrollOffset =
+          targetRect.top - contentRect.top + contentArea.scrollTop - 20; // 20px offset from top
+
         contentArea.scrollTo({
           top: scrollOffset,
-          behavior: 'smooth'
-        })
+          behavior: "smooth",
+        });
       }
     }
-  }
-  
+  };
+
   // Add event listeners
-  window.addEventListener('wheel', handleWheel, { passive: false })
-  window.addEventListener('keydown', handleKeydown)
-  document.addEventListener('click', handleAnchorClick)
-  
+  window.addEventListener("wheel", handleWheel, { passive: false });
+  window.addEventListener("keydown", handleKeydown);
+  document.addEventListener("click", handleAnchorClick);
+
   // Cleanup on unmount
   onUnmounted(() => {
-    document.body.style.overflow = ''
-    document.documentElement.style.overflow = ''
-    window.removeEventListener('wheel', handleWheel)
-    window.removeEventListener('keydown', handleKeydown)
-    document.removeEventListener('click', handleAnchorClick)
-  })
-})
+    document.body.style.overflow = "";
+    document.documentElement.style.overflow = "";
+    window.removeEventListener("wheel", handleWheel);
+    window.removeEventListener("keydown", handleKeydown);
+    document.removeEventListener("click", handleAnchorClick);
+  });
+});
 
 // SEO
 useSeoMeta({
   title: computed(() => {
-    const currentData = unref(data)
+    const currentData = unref(data);
     if (isIndexPage.value) {
-      return 'AutoButler Documentation'
+      return "AutoButler Documentation";
     }
-    return currentData?.title ? `${currentData.title} - AutoButler Docs` : 'AutoButler Documentation'
+    return currentData?.title
+      ? `${currentData.title} - AutoButler Docs`
+      : "AutoButler Documentation";
   }),
   description: computed(() => {
-    const currentData = unref(data)
+    const currentData = unref(data);
     if (isIndexPage.value) {
-      return 'Welcome to AutoButler - your intelligent automation platform'
+      return "Welcome to AutoButler - your intelligent automation platform";
     }
-    return currentData?.description || 'Complete documentation for AutoButler automation platform'
+    return (
+      currentData?.description ||
+      "Complete documentation for AutoButler automation platform"
+    );
   }),
-})
+});
 </script>
 
 <style scoped>
@@ -722,8 +768,12 @@ useSeoMeta({
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .loading-indicator p {
@@ -732,7 +782,8 @@ useSeoMeta({
 }
 
 /* Content styles */
-.document-content, .error-content {
+.document-content,
+.error-content {
   line-height: 1.6;
 }
 
@@ -799,25 +850,25 @@ useSeoMeta({
   .mobile-nav-bar {
     display: flex;
   }
-  
+
   .docs-layout {
     grid-template-columns: 1fr;
     height: auto;
   }
-  
+
   .left-content-container {
     grid-template-columns: 1fr;
     gap: 2rem;
   }
-  
+
   .desktop-only {
     display: none;
   }
-  
+
   .page-nav-drawer {
     display: block;
   }
-  
+
   .page-nav-overlay {
     display: block;
   }
@@ -829,12 +880,12 @@ useSeoMeta({
     gap: 0;
     height: auto;
   }
-  
+
   .left-content-container {
     grid-template-columns: 1fr;
     gap: 0;
   }
-  
+
   .sidebar {
     position: fixed;
     top: 0;
@@ -850,11 +901,11 @@ useSeoMeta({
     z-index: 1000;
     overflow-y: auto;
   }
-  
+
   .sidebar-open {
     transform: translateX(0);
   }
-  
+
   .sidebar-overlay {
     display: block;
     position: fixed;
@@ -865,13 +916,13 @@ useSeoMeta({
     background: rgba(0, 0, 0, 0.5);
     z-index: 999;
   }
-  
+
   .content {
     padding: 1rem;
     height: auto;
     overflow-y: visible;
   }
-  
+
   .main-content {
     padding: 0;
   }
@@ -882,23 +933,23 @@ useSeoMeta({
     padding: 0.75rem;
     gap: 0.5rem;
   }
-  
+
   .page-nav-toggle {
     min-width: 120px;
     padding: 0.5rem;
     font-size: 0.85rem;
   }
-  
+
   .hamburger-btn {
     padding: 0.5rem;
     font-size: 0.85rem;
   }
-  
+
   .docs-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
-  
+
   .doc-card {
     padding: 1.25rem;
   }
@@ -938,7 +989,7 @@ useSeoMeta({
 }
 
 .toc-link:before {
-  content: '';
+  content: "";
   width: 6px;
   height: 6px;
   border-radius: 50%;
@@ -1028,4 +1079,4 @@ useSeoMeta({
     display: none !important;
   }
 }
-</style> 
+</style>

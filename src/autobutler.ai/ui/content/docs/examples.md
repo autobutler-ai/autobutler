@@ -18,29 +18,29 @@ Cheese strings when the cheese comes out everybody's happy jarlsberg. Taleggio c
 
 ```javascript
 const dataFetcher = {
-  name: 'fetch-user-data',
-  description: 'Fetch user data from API',
+  name: "fetch-user-data",
+  description: "Fetch user data from API",
   steps: [
     {
-      action: 'fetch',
-      name: 'get-users',
+      action: "fetch",
+      name: "get-users",
       params: {
-        url: 'https://jsonplaceholder.typicode.com/users',
-        method: 'GET'
-      }
+        url: "https://jsonplaceholder.typicode.com/users",
+        method: "GET",
+      },
     },
     {
-      action: 'transform',
-      name: 'format-users',
+      action: "transform",
+      name: "format-users",
       params: {
         mapping: {
-          'name': 'fullName',
-          'email': 'emailAddress',
-          'address.city': 'location'
-        }
-      }
-    }
-  ]
+          name: "fullName",
+          email: "emailAddress",
+          "address.city": "location",
+        },
+      },
+    },
+  ],
 };
 
 await butler.run(dataFetcher);
@@ -52,45 +52,45 @@ Pepper jack stilton cream cheese port-salut mascarpone halloumi feta emmental. C
 
 ```javascript
 const fileProcessor = {
-  name: 'process-csv-file',
+  name: "process-csv-file",
   steps: [
     {
-      action: 'read-file',
+      action: "read-file",
       params: {
-        path: './data/users.csv',
-        format: 'csv'
-      }
+        path: "./data/users.csv",
+        format: "csv",
+      },
     },
     {
-      action: 'validate',
+      action: "validate",
       params: {
         schema: {
-          type: 'array',
+          type: "array",
           items: {
-            type: 'object',
-            required: ['email', 'name']
-          }
-        }
-      }
+            type: "object",
+            required: ["email", "name"],
+          },
+        },
+      },
     },
     {
-      action: 'transform',
+      action: "transform",
       params: {
-        filter: 'item.active === true',
+        filter: "item.active === true",
         mapping: {
-          'email': 'email',
-          'name': 'displayName'
-        }
-      }
+          email: "email",
+          name: "displayName",
+        },
+      },
     },
     {
-      action: 'write-file',
+      action: "write-file",
       params: {
-        path: './output/processed-users.json',
-        format: 'json'
-      }
-    }
-  ]
+        path: "./output/processed-users.json",
+        format: "json",
+      },
+    },
+  ],
 };
 ```
 
@@ -102,60 +102,60 @@ Dolcelatte camembert de normandie smelly cheese cheesy feet red leicester hallou
 
 ```javascript
 const apiIntegration = {
-  name: 'sync-user-data',
-  description: 'Sync user data between systems',
+  name: "sync-user-data",
+  description: "Sync user data between systems",
   config: {
     timeout: 30000,
-    retries: 3
+    retries: 3,
   },
   steps: [
     {
-      action: 'fetch',
-      name: 'get-source-users',
+      action: "fetch",
+      name: "get-source-users",
       params: {
-        url: '${env.SOURCE_API}/users',
+        url: "${env.SOURCE_API}/users",
         headers: {
-          'Authorization': 'Bearer ${env.SOURCE_TOKEN}'
-        }
+          Authorization: "Bearer ${env.SOURCE_TOKEN}",
+        },
       },
       retry: {
         attempts: 5,
         delay: 2000,
-        backoff: 'exponential'
-      }
+        backoff: "exponential",
+      },
     },
     {
-      action: 'foreach',
-      name: 'process-each-user',
+      action: "foreach",
+      name: "process-each-user",
       params: {
-        items: '${steps.get-source-users.result}',
+        items: "${steps.get-source-users.result}",
         parallel: true,
-        maxConcurrency: 5
+        maxConcurrency: 5,
       },
       steps: [
         {
-          action: 'condition',
+          action: "condition",
           params: {
-            if: 'item.status === "active"'
+            if: 'item.status === "active"',
           },
           steps: [
             {
-              action: 'post',
+              action: "post",
               params: {
-                url: '${env.TARGET_API}/users',
+                url: "${env.TARGET_API}/users",
                 body: {
-                  id: '${item.id}',
-                  name: '${item.name}',
-                  email: '${item.email}',
-                  lastSync: '${Date.now()}'
-                }
-              }
-            }
-          ]
-        }
-      ]
-    }
-  ]
+                  id: "${item.id}",
+                  name: "${item.name}",
+                  email: "${item.email}",
+                  lastSync: "${Date.now()}",
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+  ],
 };
 ```
 
@@ -163,44 +163,44 @@ const apiIntegration = {
 
 ```javascript
 const databaseSync = {
-  name: 'database-sync',
-  dependencies: ['database-connection'],
+  name: "database-sync",
+  dependencies: ["database-connection"],
   steps: [
     {
-      action: 'query',
-      name: 'get-updated-records',
+      action: "query",
+      name: "get-updated-records",
       params: {
         sql: `
           SELECT id, name, email, updated_at 
           FROM users 
           WHERE updated_at > ?
         `,
-        params: ['${input.lastSyncTime}']
-      }
+        params: ["${input.lastSyncTime}"],
+      },
     },
     {
-      action: 'foreach',
-      name: 'sync-records',
+      action: "foreach",
+      name: "sync-records",
       params: {
-        items: '${steps.get-updated-records.result}'
+        items: "${steps.get-updated-records.result}",
       },
       steps: [
         {
-          action: 'upsert',
+          action: "upsert",
           params: {
-            table: 'user_cache',
+            table: "user_cache",
             data: {
-              user_id: '${item.id}',
-              name: '${item.name}',
-              email: '${item.email}',
-              last_updated: '${item.updated_at}'
+              user_id: "${item.id}",
+              name: "${item.name}",
+              email: "${item.email}",
+              last_updated: "${item.updated_at}",
             },
-            conflictColumns: ['user_id']
-          }
-        }
-      ]
-    }
-  ]
+            conflictColumns: ["user_id"],
+          },
+        },
+      ],
+    },
+  ],
 };
 ```
 
@@ -212,45 +212,45 @@ Melted cheese swiss roquefort mozzarella gouda cheese and wine danish fontina ch
 
 ```javascript
 const dataPipeline = {
-  name: 'customer-analytics-pipeline',
-  description: 'Process customer data for analytics',
+  name: "customer-analytics-pipeline",
+  description: "Process customer data for analytics",
   steps: [
     // Extract
     {
-      action: 'parallel',
-      name: 'extract-data',
+      action: "parallel",
+      name: "extract-data",
       steps: [
         {
-          action: 'fetch',
-          name: 'get-customers',
+          action: "fetch",
+          name: "get-customers",
           params: {
-            url: '${env.CRM_API}/customers',
-            headers: { 'API-Key': '${env.CRM_KEY}' }
-          }
+            url: "${env.CRM_API}/customers",
+            headers: { "API-Key": "${env.CRM_KEY}" },
+          },
         },
         {
-          action: 'fetch',
-          name: 'get-orders',
+          action: "fetch",
+          name: "get-orders",
           params: {
-            url: '${env.ECOMMERCE_API}/orders',
-            headers: { 'Authorization': 'Bearer ${env.ECOMMERCE_TOKEN}' }
-          }
+            url: "${env.ECOMMERCE_API}/orders",
+            headers: { Authorization: "Bearer ${env.ECOMMERCE_TOKEN}" },
+          },
         },
         {
-          action: 'query',
-          name: 'get-support-tickets',
+          action: "query",
+          name: "get-support-tickets",
           params: {
-            sql: 'SELECT * FROM support_tickets WHERE created_at >= ?',
-            params: ['${input.startDate}']
-          }
-        }
-      ]
+            sql: "SELECT * FROM support_tickets WHERE created_at >= ?",
+            params: ["${input.startDate}"],
+          },
+        },
+      ],
     },
-    
+
     // Transform
     {
-      action: 'transform',
-      name: 'merge-customer-data',
+      action: "transform",
+      name: "merge-customer-data",
       params: {
         script: `
           const customers = steps['extract-data'].results['get-customers'];
@@ -265,21 +265,21 @@ const dataPipeline = {
               .reduce((sum, o) => sum + o.amount, 0),
             supportTickets: tickets.filter(t => t.customerId === customer.id).length
           }));
-        `
-      }
+        `,
+      },
     },
-    
+
     // Load
     {
-      action: 'batch-insert',
-      name: 'save-analytics',
+      action: "batch-insert",
+      name: "save-analytics",
       params: {
-        table: 'customer_analytics',
-        data: '${steps.merge-customer-data.result}',
-        batchSize: 1000
-      }
-    }
-  ]
+        table: "customer_analytics",
+        data: "${steps.merge-customer-data.result}",
+        batchSize: 1000,
+      },
+    },
+  ],
 };
 ```
 
@@ -289,63 +289,63 @@ Cow boursin smelly cheese cheese and biscuits emmental cheesy feet. Ricotta caer
 
 ```javascript
 const notificationSystem = {
-  name: 'alert-system',
-  description: 'Monitor and send alerts',
+  name: "alert-system",
+  description: "Monitor and send alerts",
   config: {
-    schedule: '*/5 * * * *' // Every 5 minutes
+    schedule: "*/5 * * * *", // Every 5 minutes
   },
   steps: [
     {
-      action: 'query',
-      name: 'check-system-health',
+      action: "query",
+      name: "check-system-health",
       params: {
         sql: `
           SELECT service_name, status, last_check 
           FROM service_health 
           WHERE status != 'healthy'
-        `
-      }
+        `,
+      },
     },
     {
-      action: 'condition',
+      action: "condition",
       params: {
-        if: 'steps["check-system-health"].result.length > 0'
+        if: 'steps["check-system-health"].result.length > 0',
       },
       steps: [
         {
-          action: 'foreach',
-          name: 'send-alerts',
+          action: "foreach",
+          name: "send-alerts",
           params: {
-            items: '${steps.check-system-health.result}'
+            items: "${steps.check-system-health.result}",
           },
           steps: [
             {
-              action: 'post',
-              name: 'slack-notification',
+              action: "post",
+              name: "slack-notification",
               params: {
-                url: '${env.SLACK_WEBHOOK}',
+                url: "${env.SLACK_WEBHOOK}",
                 body: {
                   text: `🚨 Service Alert: ${item.service_name} is ${item.status}`,
-                  channel: '#alerts'
-                }
-              }
+                  channel: "#alerts",
+                },
+              },
             },
             {
-              action: 'post',
-              name: 'email-notification',
+              action: "post",
+              name: "email-notification",
               params: {
-                url: '${env.EMAIL_API}/send',
+                url: "${env.EMAIL_API}/send",
                 body: {
-                  to: '${env.ADMIN_EMAIL}',
-                  subject: 'Service Alert',
-                  body: `Service ${item.service_name} requires attention. Status: ${item.status}`
-                }
-              }
-            }
-          ]
-        }
-      ]
-    }
-  ]
+                  to: "${env.ADMIN_EMAIL}",
+                  subject: "Service Alert",
+                  body: `Service ${item.service_name} requires attention. Status: ${item.status}`,
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+  ],
 };
-``` 
+```

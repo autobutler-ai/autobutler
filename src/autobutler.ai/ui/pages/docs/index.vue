@@ -1,8 +1,10 @@
 <template>
-  <!-- This will redirect before rendering -->
+  <div>
+    <!-- This will redirect before rendering -->
+  </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 // Redirect to the welcome page which is handled by [...slug].vue
-await navigateTo('/docs/welcome')
-</script> 
+await navigateTo("/docs/welcome");
+</script>

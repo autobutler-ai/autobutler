@@ -36,12 +36,12 @@ Cow cut the cheese cheddar cut the cheese taleggio cheese slices everyone loves 
 ```javascript
 // tasks/hello.js
 export default {
-  name: 'hello',
+  name: "hello",
   run: async () => {
-    console.log('Hello AutoButler!');
-    return { status: 'success' };
-  }
-}
+    console.log("Hello AutoButler!");
+    return { status: "success" };
+  },
+};
 ```
 
 ## Run Your Task
@@ -56,4 +56,4 @@ That's it! You've successfully run your first AutoButler task. Check out the [Ge
 
 - Learn about [Configuration](/docs/configuration) options
 - Browse [Examples](/docs/examples) for inspiration
-- Dive into the [API Reference](/docs/api-reference) for advanced usage 
+- Dive into the [API Reference](/docs/api-reference) for advanced usage

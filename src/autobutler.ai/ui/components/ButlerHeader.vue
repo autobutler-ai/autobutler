@@ -5,7 +5,7 @@
       <div class="logo">
         <NuxtLink to="/" class="logo-link">AutoButler</NuxtLink>
       </div>
-      
+
       <!-- Desktop Navigation -->
       <nav class="header-links desktop-nav">
         <NuxtLink to="/features">Features</NuxtLink>
@@ -15,25 +15,25 @@
       </nav>
 
       <!-- Mobile Hamburger Button -->
-      <button 
+      <button
         class="mobile-menu-button"
-        @click="toggleMobileMenu"
         :aria-expanded="isMobileMenuOpen"
         aria-label="Toggle navigation menu"
+        @click="toggleMobileMenu"
       >
-        <span class="hamburger-line" :class="{ 'open': isMobileMenuOpen }"></span>
-        <span class="hamburger-line" :class="{ 'open': isMobileMenuOpen }"></span>
-        <span class="hamburger-line" :class="{ 'open': isMobileMenuOpen }"></span>
+        <span class="hamburger-line" :class="{ open: isMobileMenuOpen }"></span>
+        <span class="hamburger-line" :class="{ open: isMobileMenuOpen }"></span>
+        <span class="hamburger-line" :class="{ open: isMobileMenuOpen }"></span>
       </button>
     </div>
 
     <!-- Mobile Navigation Menu -->
-    <div class="mobile-nav" :class="{ 'open': isMobileMenuOpen }">
+    <div class="mobile-nav" :class="{ open: isMobileMenuOpen }">
       <div class="mobile-nav-header">
-        <button 
+        <button
           class="mobile-close-button"
-          @click="closeMobileMenu"
           aria-label="Close navigation menu"
+          @click="closeMobileMenu"
         >
           <span class="close-icon">×</span>
         </button>
@@ -42,46 +42,48 @@
         <NuxtLink to="/features" @click="closeMobileMenu">Features</NuxtLink>
         <NuxtLink to="/docs" @click="closeMobileMenu">Documentation</NuxtLink>
         <NuxtLink to="/pricing" @click="closeMobileMenu">Pricing</NuxtLink>
-        <NuxtLink to="/login" class="mobile-login-link" @click="closeMobileMenu">Login</NuxtLink>
+        <NuxtLink to="/login" class="mobile-login-link" @click="closeMobileMenu"
+          >Login</NuxtLink
+        >
       </nav>
     </div>
 
     <!-- Mobile Menu Overlay -->
-    <div 
-      class="mobile-overlay" 
-      :class="{ 'open': isMobileMenuOpen }"
+    <div
+      class="mobile-overlay"
+      :class="{ open: isMobileMenuOpen }"
       @click="closeMobileMenu"
     ></div>
   </header>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from "vue";
 
-const isMobileMenuOpen = ref(false)
+const isMobileMenuOpen = ref(false);
 
 const toggleMobileMenu = () => {
-  isMobileMenuOpen.value = !isMobileMenuOpen.value
-}
+  isMobileMenuOpen.value = !isMobileMenuOpen.value;
+};
 
 const closeMobileMenu = () => {
-  isMobileMenuOpen.value = false
-}
+  isMobileMenuOpen.value = false;
+};
 
 // Close mobile menu when clicking outside or on escape key
 onMounted(() => {
   const handleEscape = (e: KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      closeMobileMenu()
+    if (e.key === "Escape") {
+      closeMobileMenu();
     }
-  }
-  
-  document.addEventListener('keydown', handleEscape)
-  
+  };
+
+  document.addEventListener("keydown", handleEscape);
+
   onUnmounted(() => {
-    document.removeEventListener('keydown', handleEscape)
-  })
-})
+    document.removeEventListener("keydown", handleEscape);
+  });
+});
 </script>
 
 <style scoped>
@@ -328,7 +330,7 @@ onMounted(() => {
   .desktop-nav {
     display: none;
   }
-  
+
   .mobile-menu-button {
     display: flex;
   }
@@ -339,11 +341,11 @@ onMounted(() => {
     width: 280px;
     right: -280px;
   }
-  
+
   .header-content {
     padding: 0 1rem;
   }
-  
+
   .logo-link {
     font-size: 1.3rem;
   }

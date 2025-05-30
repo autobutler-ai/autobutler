@@ -1,11 +1,11 @@
 <template>
-  <footer 
-    class="footer"
-    :class="{ 
-      'footer-visible': isVisible,
-      'footer-compact': compact 
-    }"
+  <footer
     v-show="isVisible"
+    class="footer"
+    :class="{
+      'footer-visible': isVisible,
+      'footer-compact': compact,
+    }"
   >
     <div class="gradient-overlay"></div>
     <div class="footer-content">
@@ -33,8 +33,8 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   showOnBottom: false,
-  customScrollContainer: '',
-  compact: false
+  customScrollContainer: "",
+  compact: false,
 });
 
 const currentYear = computed(() => new Date().getFullYear());
@@ -46,73 +46,86 @@ let scrollHandler: ((e: Event) => void) | null = null;
 onMounted(() => {
   if (props.showOnBottom) {
     isVisible.value = false;
-    
+
     const handleScroll = (e: Event) => {
       let target: HTMLElement;
-      
+
       // If we have a custom scroll container, get it directly
       if (props.customScrollContainer) {
         target = e.target as HTMLElement;
-        console.log('Scroll event on custom container:', props.customScrollContainer);
-        console.log('Target element:', target);
+        console.log(
+          "Scroll event on custom container:",
+          props.customScrollContainer,
+        );
+        console.log("Target element:", target);
       } else {
         // For window scroll, use document.documentElement
         target = document.documentElement;
-        console.log('Scroll event on window');
+        console.log("Scroll event on window");
       }
-      
+
       // Check if we're at the bottom of the scroll area
       const scrollTop = target.scrollTop;
       const scrollHeight = target.scrollHeight;
       const clientHeight = target.clientHeight;
-      
+
       const distanceFromBottom = scrollHeight - clientHeight - scrollTop;
       const triggerDistance = 100; // Start showing 100px from bottom
-      
+
       // Calculate progress (0 to 1) as user approaches bottom
-      const progress = Math.max(0, Math.min(1, (triggerDistance - distanceFromBottom) / triggerDistance));
+      const progress = Math.max(
+        0,
+        Math.min(1, (triggerDistance - distanceFromBottom) / triggerDistance),
+      );
       const isAtBottom = distanceFromBottom < triggerDistance;
-      
-      console.log('Scroll debug:', {
+
+      console.log("Scroll debug:", {
         scrollTop,
         scrollHeight,
         clientHeight,
         distanceFromBottom,
         progress,
         isAtBottom,
-        currentVisible: isVisible.value
+        currentVisible: isVisible.value,
       });
-      
+
       // Update visibility and progress
       isVisible.value = isAtBottom;
-      
+
       // Apply progressive transform for smooth appearance
       if (isAtBottom) {
-        const footer = document.querySelector('.footer') as HTMLElement;
+        const footer = document.querySelector(".footer") as HTMLElement;
         if (footer) {
           const translateY = (1 - progress) * 100;
           footer.style.transform = `translateY(${translateY}%)`;
         }
       }
     };
-    
+
     scrollHandler = handleScroll;
-    
+
     // Use custom scroll container if provided, otherwise use window
     if (props.customScrollContainer) {
       // Wait for next tick to ensure DOM is ready
       nextTick(() => {
         const container = document.querySelector(props.customScrollContainer);
-        console.log('Looking for container:', props.customScrollContainer, 'Found:', container);
+        console.log(
+          "Looking for container:",
+          props.customScrollContainer,
+          "Found:",
+          container,
+        );
         if (container) {
-          container.addEventListener('scroll', handleScroll);
-          console.log('Added scroll listener to:', container);
+          container.addEventListener("scroll", handleScroll);
+          console.log("Added scroll listener to:", container);
         } else {
-          console.warn(`Custom scroll container "${props.customScrollContainer}" not found`);
+          console.warn(
+            `Custom scroll container "${props.customScrollContainer}" not found`,
+          );
         }
       });
     } else {
-      window.addEventListener('scroll', handleScroll);
+      window.addEventListener("scroll", handleScroll);
     }
   }
 });
@@ -122,10 +135,10 @@ onUnmounted(() => {
     if (props.customScrollContainer) {
       const container = document.querySelector(props.customScrollContainer);
       if (container) {
-        container.removeEventListener('scroll', scrollHandler);
+        container.removeEventListener("scroll", scrollHandler);
       }
     } else {
-      window.removeEventListener('scroll', scrollHandler);
+      window.removeEventListener("scroll", scrollHandler);
     }
     scrollHandler = null;
   }
@@ -235,7 +248,7 @@ onUnmounted(() => {
     gap: 1rem;
     text-align: center;
   }
-  
+
   .footer-links {
     gap: 1rem;
   }

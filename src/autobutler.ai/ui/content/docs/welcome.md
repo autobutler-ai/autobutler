@@ -41,4 +41,4 @@ Ready to dive in? Here are some great places to start:
 
 AutoButler is designed to grow with your needs. Start with simple automations and gradually build more complex workflows as you become familiar with the platform.
 
-Let's get started! 🚀 
+Let's get started! 🚀
