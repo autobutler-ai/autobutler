@@ -2,7 +2,7 @@
   <main class="home">
     <div class="home-content">
       <h1>Welcome to AutoButler</h1>
-      <p class="intro"></p>
+      <p class="intro" />
       <h2>Key Features</h2>
       <ul class="features-list">
         <li>TODO</li>

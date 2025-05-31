@@ -1,6 +1,6 @@
 <template>
   <div class="landing-page">
-    <div class="gradient-overlay"></div>
+    <div class="gradient-overlay" />
     <div class="card">
       <h1>About Us</h1>
       <p>

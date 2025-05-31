@@ -1,6 +1,6 @@
 <template>
   <header class="header">
-    <div class="gradient-overlay"></div>
+    <div class="gradient-overlay" />
     <div class="header-content">
       <div class="logo">
         <NuxtLink to="/" class="logo-link">AutoButler</NuxtLink>
@@ -21,9 +21,9 @@
         aria-label="Toggle navigation menu"
         @click="toggleMobileMenu"
       >
-        <span class="hamburger-line" :class="{ open: isMobileMenuOpen }"></span>
-        <span class="hamburger-line" :class="{ open: isMobileMenuOpen }"></span>
-        <span class="hamburger-line" :class="{ open: isMobileMenuOpen }"></span>
+        <span class="hamburger-line" :class="{ open: isMobileMenuOpen }" />
+        <span class="hamburger-line" :class="{ open: isMobileMenuOpen }" />
+        <span class="hamburger-line" :class="{ open: isMobileMenuOpen }" />
       </button>
     </div>
 
@@ -53,7 +53,7 @@
       class="mobile-overlay"
       :class="{ open: isMobileMenuOpen }"
       @click="closeMobileMenu"
-    ></div>
+    />
   </header>
 </template>
 

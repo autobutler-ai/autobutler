@@ -10,9 +10,9 @@
           @click="toggleSidebar"
         >
           <div class="hamburger-icon">
-            <span></span>
-            <span></span>
-            <span></span>
+            <span />
+            <span />
+            <span />
           </div>
           <span class="hamburger-label">Menu</span>
         </button>
@@ -65,13 +65,13 @@
             v-if="sidebarOpen"
             class="sidebar-overlay"
             @click="closeSidebar"
-          ></div>
+          />
 
           <main class="content">
             <article class="main-content">
               <!-- Loading indicator -->
               <div v-if="pending" class="loading-indicator">
-                <div class="loading-spinner"></div>
+                <div class="loading-spinner" />
                 <p>Loading documentation...</p>
               </div>
 
@@ -152,7 +152,7 @@
           v-if="pageNavOpen"
           class="page-nav-overlay"
           @click="closePageNav"
-        ></div>
+        />
 
         <!-- Desktop page navigation -->
         <aside

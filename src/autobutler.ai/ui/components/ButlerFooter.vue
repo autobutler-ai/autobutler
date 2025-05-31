@@ -7,7 +7,7 @@
       'footer-compact': compact,
     }"
   >
-    <div class="gradient-overlay"></div>
+    <div class="gradient-overlay" />
     <div class="footer-content">
       <p class="copyright">
         © {{ currentYear }} AutoButler. All rights reserved.
