@@ -56,7 +56,7 @@
               required
               rows="5"
               placeholder="Your message..."
-            ></textarea>
+            />
           </div>
 
           <button type="submit" class="submit-btn">Send Message</button>

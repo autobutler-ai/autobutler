@@ -1,6 +1,6 @@
 <template>
   <div class="landing-page">
-    <div class="gradient-overlay"></div>
+    <div class="gradient-overlay" />
     <div class="hero-section">
       <h1>The New Era of Digital Independence Starts With You.</h1>
       <p class="subtitle">

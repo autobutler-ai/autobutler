@@ -1,7 +1,7 @@
-from autobutler.db import Database
+import os
 
 import pytest
-import os
+from autobutler.db import Database
 
 
 @pytest.fixture

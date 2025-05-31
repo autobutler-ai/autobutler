@@ -24,7 +24,7 @@
         placeholder="Type your message here..."
         rows="3"
         @keydown.enter.prevent="sendMessage"
-      ></textarea>
+      />
       <button
         :disabled="!userInput.trim()"
         class="send-button"

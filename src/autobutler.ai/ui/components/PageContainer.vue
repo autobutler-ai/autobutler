@@ -1,6 +1,6 @@
 <template>
   <div class="page-wrapper">
-    <div class="gradient-overlay"></div>
+    <div class="gradient-overlay" />
     <div class="content-card">
       <slot />
     </div>
