@@ -2,7 +2,7 @@ __all__ = [
     "Database",
 ]
 
-import dbm
+import dbm.sqlite3 as dbm
 import sqlite3
 
 from autobutler.types import SupportsStr

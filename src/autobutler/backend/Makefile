@@ -5,7 +5,7 @@ SHELL := /bin/bash
 .SILENT:
 
 export PORT ?= 8000
-MIN_PYTHON_VERSION := 3.12
+MIN_PYTHON_VERSION := 3.13
 
 venv/bin/pip: check/python-version
 	python3 -m venv venv
