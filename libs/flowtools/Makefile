@@ -4,32 +4,20 @@ SHELL := /bin/bash
 .ONESHELL:
 .SILENT:
 
-export PORT ?= 8000
 MIN_PYTHON_VERSION := 3.12
 
 venv/bin/pip: check/python-version
 	python3 -m venv venv
 
 venv/lib/python$(MIN_PYTHON_VERSION)/site-packages: venv/bin/pip
-	venv/bin/pip install -e ../../../libs/flowtools
 	venv/bin/pip install -e .
-
-export LLM_MAX_TOKENS ?= 1024
-
-.PHONY: run
-run: venv/lib/python$(MIN_PYTHON_VERSION)/site-packages ## Run the butlerapi command
-	. ./venv/bin/activate
-	butlerapi
-
-.PHONY: kill
-kill: ## Kill the butlerapi command
-	killall $$(lsof -i :$(PORT) | tail -n 1 | awk '{print $1}') || true
 
 PYTEST_ARGS ?= -vv --tb=short
 
 .PHONY: test
 test: venv/lib/python$(MIN_PYTHON_VERSION)/site-packages ## Run the tests
-	$(MAKE) -C ../../../libs/flowtools test
+	. ./venv/bin/activate
+	pytest $(PYTEST_ARGS) tests/
 
 .PHONY: check/python-version
 check/python-version: ## Check the version of python
