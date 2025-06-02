@@ -12,7 +12,7 @@ exoflow/
 │   ├── autobutler/
 |   |   ├── backend/
 |   |   ├── ui/
-│   ├── autobutler.ai/
+│   ├── dotai/
 ├── docs/
 └── libs/
 ```
