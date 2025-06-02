@@ -87,7 +87,10 @@
               </div>
 
               <!-- Index page fallback with docs grid -->
-              <div v-else-if="isIndexPage && (!data || data._error)" class="error-content">
+              <div
+                v-else-if="isIndexPage && (!data || data._error)"
+                class="error-content"
+              >
                 <h1>Welcome to AutoButler Documentation</h1>
                 <p>
                   Complete documentation for AutoButler automation platform.
@@ -106,7 +109,10 @@
               </div>
 
               <!-- Error state for other pages -->
-              <div v-else-if="error || (data && data._error)" class="error-content">
+              <div
+                v-else-if="error || (data && data._error)"
+                class="error-content"
+              >
                 <h1>Content Not Found</h1>
                 <p>The requested documentation page could not be found.</p>
                 <p v-if="data && data._error">{{ data.message }}</p>
@@ -288,7 +294,7 @@ const {
       return {
         _error: true,
         message: err instanceof Error ? err.message : String(err),
-        code: 'CONTENT_NOT_FOUND'
+        code: "CONTENT_NOT_FOUND",
       };
     }
   }
