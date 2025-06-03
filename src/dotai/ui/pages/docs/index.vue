@@ -15,6 +15,6 @@ prerenderRoutes([
   "/docs/install",
   "/docs/quick-start",
   "/docs/welcome",
-])
+]);
 await navigateTo("/docs/welcome");
 </script>
