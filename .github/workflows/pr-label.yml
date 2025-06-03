@@ -22,7 +22,7 @@ jobs:
           filters: |
             autobutler:
               - 'src/autobutler/**'
-              - 'src/autobutler.ai/**'
+              - 'src/dotai/**'
               - 'docs/autobutler/**'
       - name: Add "autobutler" label if applicable
         if: ${{ steps.filter.outputs.autobutler == 'true' }}

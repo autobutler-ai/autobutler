@@ -19,7 +19,7 @@
 
         <!-- On this page dropdown button -->
         <button
-          v-if="data?.body?.toc?.links?.length"
+          v-if="data && !data._error && data.body?.toc?.links?.length"
           class="page-nav-toggle"
           aria-label="Toggle page navigation"
           @click="togglePageNav"
@@ -44,13 +44,19 @@
 
       <div class="docs-layout">
         <div class="left-content-container">
-          <aside class="sidebar" :class="{ 'sidebar-open': sidebarOpen }">
-            <nav>
+          <aside
+            class="sidebar"
+            :class="{ 'sidebar-open': sidebarOpen }"
+            aria-label="Documentation sidebar"
+          >
+            <nav aria-label="Documentation navigation">
               <ul>
                 <li v-for="doc in sortedDocs" :key="doc._path">
                   <NuxtLink
-                    :to="doc._path"
-                    :class="{ 'sidebar-active': isCurrentPath(doc._path) }"
+                    :to="doc._path || '/docs'"
+                    :class="{
+                      'sidebar-active': isCurrentPath(doc._path || '/docs'),
+                    }"
                     @click="closeSidebar"
                   >
                     {{ doc.navigation?.title || doc.title }}
@@ -76,12 +82,15 @@
               </div>
 
               <!-- Document content -->
-              <div v-else-if="data" class="document-content">
+              <div v-else-if="data && !data._error" class="document-content">
                 <ContentRenderer :value="data" />
               </div>
 
               <!-- Index page fallback with docs grid -->
-              <div v-else-if="isIndexPage" class="error-content">
+              <div
+                v-else-if="isIndexPage && (!data || data._error)"
+                class="error-content"
+              >
                 <h1>Welcome to AutoButler Documentation</h1>
                 <p>
                   Complete documentation for AutoButler automation platform.
@@ -100,9 +109,13 @@
               </div>
 
               <!-- Error state for other pages -->
-              <div v-else-if="error" class="error-content">
+              <div
+                v-else-if="error || (data && data._error)"
+                class="error-content"
+              >
                 <h1>Content Not Found</h1>
                 <p>The requested documentation page could not be found.</p>
+                <p v-if="data && data._error">{{ data.message }}</p>
                 <p>Available pages:</p>
                 <ul>
                   <li v-for="doc in sortedDocs" :key="doc._path">
@@ -125,13 +138,14 @@
 
         <!-- Right-side page navigation drawer -->
         <aside
-          v-if="data?.body?.toc?.links?.length"
+          v-if="data && !data._error && data.body?.toc?.links?.length"
           class="page-nav-drawer"
           :class="{ 'page-nav-drawer-open': pageNavOpen }"
+          aria-label="Page table of contents"
         >
           <div class="page-nav-drawer-content">
             <h4>On this page</h4>
-            <nav class="toc-nav">
+            <nav class="toc-nav" aria-label="Page sections">
               <ul>
                 <li v-for="link in data.body.toc.links" :key="link.id">
                   <a
@@ -156,12 +170,13 @@
 
         <!-- Desktop page navigation -->
         <aside
-          v-if="data?.body?.toc?.links?.length"
+          v-if="data && !data._error && data.body?.toc?.links?.length"
           class="page-nav desktop-only"
+          aria-label="Page table of contents"
         >
           <div class="page-nav-content">
             <h4>On this page</h4>
-            <nav class="toc-nav">
+            <nav class="toc-nav" aria-label="Page sections">
               <ul>
                 <li v-for="link in data.body.toc.links" :key="link.id">
                   <a
@@ -209,6 +224,13 @@
 <script setup lang="ts">
 // Import the ButlerFooter component
 import ButlerFooter from "~/components/ButlerFooter.vue";
+import type { ParsedContent } from "@nuxt/content";
+import {
+  createNavigationHelpers,
+  scrollHelpers,
+  pathHelpers,
+  setupDesktopScrolling,
+} from "~/utils/docs/docsHelpers";
 
 // Reactive state
 const sidebarOpen = ref(false);
@@ -226,110 +248,71 @@ const isIndexPage = computed(
     (route.params.slug && route.params.slug[0] === "welcome"),
 );
 
-// Debug: Log the current route path
-console.log("Current route path:", route.path);
-console.log("Is index page:", isIndexPage.value);
-
-// Try different approaches to fetch content
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let allDocs: any[] = [];
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let data: any = null;
-const pending = false;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let error: any = null;
-
-try {
-  // Fetch all documentation files with a more explicit query
-  const docsQuery = await queryContent("docs").find();
-  console.log("Docs query result:", docsQuery);
-  allDocs = docsQuery || [];
-
-  // Get current document based on route
-  if (isIndexPage.value) {
-    // For index page, try to get welcome content
-    console.log("Fetching welcome content for index page");
-    const welcomeDoc = await queryContent("docs/welcome")
-      .findOne()
-      .catch(() => null);
-    console.log("Welcome doc result:", welcomeDoc);
-    data = welcomeDoc;
-  } else {
-    // For other pages, get content based on slug
-    const currentPath = route.path.replace("/docs/", "docs/");
-    console.log("Querying for path:", currentPath);
-
-    const currentDoc = await queryContent(currentPath).findOne();
-    console.log("Current doc result:", currentDoc);
-    data = currentDoc;
-  }
-} catch (err) {
-  console.error("Content query error:", err);
-  error = err;
-}
-
-console.log("Final allDocs:", allDocs);
-console.log("Final data:", data);
-console.log("TOC links:", data?.body?.toc?.links);
-
-// Computed properties
-const sortedDocs = computed(
-  () =>
-    allDocs
-      ?.slice()
-      .sort(
-        (a, b) => (a.navigation?.order || 999) - (b.navigation?.order || 999),
-      ) || [],
+// Use proper Nuxt data fetching without top-level awaits
+const { data: allDocs } = await useAsyncData("all-docs", () =>
+  queryContent("docs").find(),
 );
 
-const isCurrentPath = (path: string) => {
-  // For the welcome page, consider both /docs and /docs/welcome as current
-  if (
-    path === "/docs/welcome" &&
-    (route.path === "/docs" || route.path === "/docs/")
-  ) {
-    return true;
+// Get current document based on route
+const {
+  data: currentData,
+  error,
+  pending,
+} = await useAsyncData(`doc-${route.path || "/docs"}`, async () => {
+  if (isIndexPage.value) {
+    // For index page, try to get welcome content
+    try {
+      return await queryContent("docs/welcome").findOne();
+    } catch (err) {
+      // Return a serializable error object instead of the raw Error
+      return {
+        _error: true,
+        message: err instanceof Error ? err.message : String(err),
+        code: "CONTENT_NOT_FOUND",
+      };
+    }
+  } else {
+    // For other pages, get content based on slug
+    const currentPath = (route.path || "/docs").replace("/docs/", "docs/");
+    try {
+      return await queryContent(currentPath).findOne();
+    } catch (err) {
+      // Return a serializable error object instead of the raw Error
+      return {
+        _error: true,
+        message: err instanceof Error ? err.message : String(err),
+        code: "CONTENT_NOT_FOUND",
+      };
+    }
   }
-  return route.path === path;
-};
+});
 
-// Navigation functions
-const toggleSidebar = () => {
-  sidebarOpen.value = !sidebarOpen.value;
-};
+// Use the data from composables - ParsedContent is auto-imported by Nuxt Content
+const data = currentData as Ref<ParsedContent | null>;
 
-const closeSidebar = () => {
-  sidebarOpen.value = false;
-};
+// Computed properties
+const sortedDocs = computed(() =>
+  ((allDocs.value || []) as ParsedContent[])
+    .slice()
+    .sort(
+      (a, b) => (a.navigation?.order || 999) - (b.navigation?.order || 999),
+    ),
+);
 
-const togglePageNav = () => {
-  pageNavOpen.value = !pageNavOpen.value;
-};
+// Create navigation helpers
+const { toggleSidebar, closeSidebar, togglePageNav, closePageNav } =
+  createNavigationHelpers(sidebarOpen, pageNavOpen);
 
-const closePageNav = () => {
-  pageNavOpen.value = false;
-};
+// Path helper
+const isCurrentPath = (path: string) =>
+  pathHelpers.isCurrentPath(path, route.path);
 
-// Scroll to top function for mobile
-const scrollToTop = () => {
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
-};
+// Scroll functions
+const { scrollToTop } = scrollHelpers;
+const handleMobileScroll = scrollHelpers.handleMobileScroll(showScrollToTop);
 
-// Handle scroll detection for mobile scroll-to-top button
-const handleMobileScroll = () => {
-  const isDesktop = window.innerWidth >= 1024;
-  if (isDesktop) return;
-
-  // Show button when scrolled down more than 300px
-  showScrollToTop.value = window.scrollY > 300;
-};
-
-// Prevent page scrolling and redirect to content area
-onMounted(() => {
-  // Only apply custom scroll handling on desktop screens (1024px and above)
+// Setup desktop scrolling and mobile scroll detection
+onMounted(async () => {
   const isDesktop = () => window.innerWidth >= 1024;
 
   if (!isDesktop()) {
@@ -341,113 +324,12 @@ onMounted(() => {
     onUnmounted(() => {
       window.removeEventListener("scroll", handleMobileScroll);
     });
-
     return;
   }
 
-  // Wait for content area to be properly loaded before preventing page scroll
-  const ensureContentReady = () => {
-    const contentArea = document.querySelector(".content");
-    if (!contentArea || contentArea.scrollHeight <= contentArea.clientHeight) {
-      // Content area doesn't exist or has no scrollable content yet, try again
-      setTimeout(ensureContentReady, 100);
-      return;
-    }
-
-    // Only prevent page scrolling once we confirm content area is ready
-    document.body.style.overflow = "hidden";
-    document.documentElement.style.overflow = "hidden";
-  };
-
-  // Start checking for content readiness
-  ensureContentReady();
-
-  const handleWheel = (e: WheelEvent) => {
-    e.preventDefault();
-    const contentArea = document.querySelector(".content");
-    if (contentArea) {
-      contentArea.scrollTop += e.deltaY;
-    }
-  };
-
-  const handleKeydown = (e: KeyboardEvent) => {
-    const contentArea = document.querySelector(".content");
-    if (contentArea) {
-      switch (e.key) {
-        case "ArrowDown":
-          e.preventDefault();
-          contentArea.scrollTop += 40;
-          break;
-        case "ArrowUp":
-          e.preventDefault();
-          contentArea.scrollTop -= 40;
-          break;
-        case "PageDown":
-          e.preventDefault();
-          contentArea.scrollTop += contentArea.clientHeight * 0.8;
-          break;
-        case "PageUp":
-          e.preventDefault();
-          contentArea.scrollTop -= contentArea.clientHeight * 0.8;
-          break;
-        case "Home":
-          if (e.ctrlKey) {
-            e.preventDefault();
-            contentArea.scrollTop = 0;
-          }
-          break;
-        case "End":
-          if (e.ctrlKey) {
-            e.preventDefault();
-            contentArea.scrollTop = contentArea.scrollHeight;
-          }
-          break;
-      }
-    }
-  };
-
-  const handleAnchorClick = (e: Event) => {
-    const target = e.target as HTMLElement;
-    if (
-      target &&
-      target.tagName === "A" &&
-      (target as HTMLAnchorElement).getAttribute("href")?.startsWith("#")
-    ) {
-      e.preventDefault();
-      const targetId = (target as HTMLAnchorElement)
-        .getAttribute("href")
-        ?.substring(1);
-      const targetElement = targetId ? document.getElementById(targetId) : null;
-      const contentArea = document.querySelector(".content");
-
-      if (targetElement && contentArea) {
-        // Calculate the position of the target element relative to the content area
-        const contentRect = contentArea.getBoundingClientRect();
-        const targetRect = targetElement.getBoundingClientRect();
-        const scrollOffset =
-          targetRect.top - contentRect.top + contentArea.scrollTop - 20; // 20px offset from top
-
-        contentArea.scrollTo({
-          top: scrollOffset,
-          behavior: "smooth",
-        });
-      }
-    }
-  };
-
-  // Add event listeners
-  window.addEventListener("wheel", handleWheel, { passive: false });
-  window.addEventListener("keydown", handleKeydown);
-  document.addEventListener("click", handleAnchorClick);
-
-  // Cleanup on unmount
-  onUnmounted(() => {
-    document.body.style.overflow = "";
-    document.documentElement.style.overflow = "";
-    window.removeEventListener("wheel", handleWheel);
-    window.removeEventListener("keydown", handleKeydown);
-    document.removeEventListener("click", handleAnchorClick);
-  });
+  // Setup desktop scrolling
+  const cleanup = await setupDesktopScrolling();
+  onUnmounted(cleanup);
 });
 
 // SEO

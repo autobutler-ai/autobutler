@@ -4,7 +4,7 @@
     "": {
       "name": "exoflow",
     },
-    "src/autobutler.ai/ui": {
+    "src/dotai/ui": {
       "name": "autobutler-ai-ui",
       "dependencies": {
         "@nuxt/content": "^3.5.1",
@@ -653,7 +653,7 @@
 
     "at-least-node": ["at-least-node@1.0.0", "", {}, "sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg=="],
 
-    "autobutler-ai-ui": ["autobutler-ai-ui@workspace:src/autobutler.ai/ui"],
+    "autobutler-ai-ui": ["autobutler-ai-ui@workspace:src/dotai/ui"],
 
     "autobutler-ui": ["autobutler-ui@workspace:src/autobutler/ui"],
 
