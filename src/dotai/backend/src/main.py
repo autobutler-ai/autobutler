@@ -1,8 +1,7 @@
 import uvicorn
+from config import DOTAI
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
-from config import DOTAI
 from routers import profile
 
 origins = [
