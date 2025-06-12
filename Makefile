@@ -145,6 +145,27 @@ else ifeq ($(UNAME_S),Darwin)
 	fi
 endif
 
+llm: env-AZURE_API_KEY env-SYSTEM_PROMPT ## Call LLM
+	@curl -X POST "https://autobutler-eus2.services.ai.azure.com/models/chat/completions?api-version=2024-05-01-preview" \
+	    -H "Content-Type: application/json" \
+	    -H "Authorization: Bearer $(AZURE_API_KEY)" \
+	    -d '{
+	            "messages": [
+	                {
+	                    "role": "system",
+	                    "content": "$(SYSTEM_PROMPT)"
+	                },
+	                {
+	                    "role": "user",
+	                    "content": "I am going to Paris, what should I see?"
+	                }
+	            ],
+	            "max_tokens": 2048,
+	            "temperature": 0.8,
+	            "top_p": 0.1,
+	            "model": "autobutler_Ministral-3B"
+	    }'
+
 .PHONY: help
 help: ## Displays help info
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m\033[0m\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
