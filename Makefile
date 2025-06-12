@@ -153,25 +153,33 @@ export LLM_TOP_P ?= 0.1
 export LLM_TEMP ?= 0.8
 export LLM_MAX_TOKENS ?= 2048
 llm: env-LLM_AZURE_API_KEY env-LLM_SYSTEM_PROMPT_FILE env-LLM_PROMPT env-LLM_URL env-LLM_TOP_P env-LLM_TEMP env-LLM_MAX_TOKENS ## Call LLM
-	@curl -X POST "$(LLM_URL)?$(LLM_ARGS)" \
+	@curl --silent -X POST "$(LLM_URL)?$(LLM_ARGS)" \
 	    -H "Content-Type: application/json" \
 	    -H "Authorization: Bearer $(LLM_AZURE_API_KEY)" \
-	    -d '{
-	            "messages": [
-	                {
-	                    "role": "system",
-	                    "content": "$(shell cat $(LLM_SYSTEM_PROMPT_FILE))"
-	                },
-	                {
-	                    "role": "user",
-	                    "content": "$(LLM_PROMPT)"
-	                }
-	            ],
-	            "max_tokens": $(LLM_MAX_TOKENS),
-	            "temperature": $(LLM_TEMP),
-	            "top_p": $(LLM_TOP_P),
-	            "model": "$(LLM_MODEL)"
-	    }'
+	    -d "{ \
+	            \"messages\": [ \
+	                { \
+	                    \"role\": \"system\", \
+	                    \"content\": \"$(shell cat $(LLM_SYSTEM_PROMPT_FILE))\" \
+	                }, \
+	                { \
+	                    \"role\": \"user\", \
+	                    \"content\": \"$(LLM_PROMPT)\" \
+	                } \
+	            ], \
+	            \"max_tokens\": $(LLM_MAX_TOKENS), \
+	            \"temperature\": $(LLM_TEMP), \
+	            \"top_p\": $(LLM_TOP_P), \
+	            \"model\": \"$(LLM_MODEL)\" \
+	    }"
+chat: env-LLM_AZURE_API_KEY env-LLM_SYSTEM_PROMPT_FILE env-LLM_PROMPT env-LLM_URL env-LLM_TOP_P env-LLM_TEMP env-LLM_MAX_TOKENS ## Parse the chat response from LLM
+	@$(MAKE) llm | jq -rc '.choices | .[0].message.content'
+
+env-%: ## Check for env var
+	@if [ -z "$($*)" ]; then \
+		echo "Error: Environment variable '$*' is not set."; \
+		exit 1; \
+	fi
 
 .PHONY: help
 help: ## Displays help info
