@@ -178,9 +178,10 @@ const sendMessage = async () => {
     }
 
     const data = await response.json();
-    const chatResponse = data.choices && data.choices.length > 0
-      ? data.choices[0].message.content
-      : "No response from server";
+    const chatResponse =
+      data.choices && data.choices.length > 0
+        ? data.choices[0].message.content
+        : "No response from server";
 
     // Add the response to the messages
     messages.value.push({
