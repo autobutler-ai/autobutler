@@ -7,14 +7,8 @@ SHELL := /bin/bash
 
 run: ## Run all components
 	@echo "Running all components..."
-	# $(MAKE) -C ./home-assistant run
 	$(MAKE) -C ./ui run &
-	$(MAKE) -C ./backend run
-
-kill:
-	# $(MAKE) -C ./home-assistant kill
-	$(MAKE) -C ./backend kill
-	$(MAKE) -C ./ui kill
+	$(MAKE) -C ./backend serve &
 
 .PHONY: help
 help: ## Displays help info

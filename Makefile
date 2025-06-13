@@ -172,8 +172,7 @@ llm: env-LLM_AZURE_API_KEY env-LLM_SYSTEM_PROMPT_FILE env-LLM_PROMPT env-LLM_URL
 	            \"top_p\": $(LLM_TOP_P), \
 	            \"model\": \"$(LLM_MODEL)\" \
 	    }"
-chat: env-LLM_AZURE_API_KEY env-LLM_SYSTEM_PROMPT_FILE env-LLM_PROMPT env-LLM_URL env-LLM_TOP_P env-LLM_TEMP env-LLM_MAX_TOKENS ## Parse the chat response from LLM
-	@$(MAKE) llm | jq -rc '.choices | .[0].message.content'
+
 
 env-%: ## Check for env var
 	@if [ -z "$($*)" ]; then \

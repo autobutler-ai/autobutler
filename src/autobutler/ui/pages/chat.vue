@@ -164,12 +164,13 @@ const sendMessage = async () => {
   try {
     const endpoint = isDummy.value ? DUMMY_ENDPOINT : CHAT_ENDPOINT;
     console.debug(`Sending message to ${endpoint}: ${messageToSend}`);
-    const response = await fetch(endpoint, {
-      method: "POST",
+    const params = new URLSearchParams();
+    params.append("prompt", messageToSend);
+    const response = await fetch(`${endpoint}?${params}`, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ prompt: messageToSend }),
     });
 
     if (!response.ok) {
@@ -177,10 +178,14 @@ const sendMessage = async () => {
     }
 
     const data = await response.json();
+    const chatResponse =
+      data.choices && data.choices.length > 0
+        ? data.choices[0].message.content
+        : "No response from server";
 
     // Add the response to the messages
     messages.value.push({
-      content: data.response,
+      content: chatResponse,
       isUser: false,
       isDummy: isDummy.value,
       isError: false,
