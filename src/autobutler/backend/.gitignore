@@ -20,3 +20,8 @@
 # Dependency directories (remove the comment below to include it)
 # vendor/
 e2e.json
+
+!build/
+build/*
+!build/.gitkeep
+
