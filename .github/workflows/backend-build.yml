@@ -1,4 +1,4 @@
-name: Test autobutler backend
+name: Backend Build
 on:
   push:
     branches:
@@ -13,26 +13,19 @@ defaults:
   run:
     shell: bash
 jobs:
-  test-backend:
+  backend-build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - name: Setup go
+        uses: actions/setup-go@v5
         with:
-          python-version: "3.13"
+          go-version-file: ${{ env.WORKING_DIR }}/go.mod
       - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            sqlite3 \
-            libsqlite3-dev
-      - name: Install autobutler backend
         working-directory: ${{ env.WORKING_DIR }}
         run: |
-          make venv
-      - name: Test
+          go mod download
+      - name: Build
         working-directory: ${{ env.WORKING_DIR }}
-        run: |
-          make test
+        run: make build

@@ -1,18 +1,26 @@
 # autobutler
 
-CLI and UI
+## Usage
 
-FastAPI
+### Make an LLM call
 
-## Features
+To make a call to the LLM, you can use the following command:
 
-- Access inventory
-  - `GET: /api/v1/inv` - Get all inventory
-  - `GET: /api/v1/inv?query=str` - Get an inventory item by query
-  - `PUT: /api/v1/inv` - Update inventory (called automagically by the butler)
-- Access home device
-  - `GET: /api/v1/dev?header-only=true` - Get all devices, optionally with headers only
-  - `GET: /api/v1/dev/{id}` - Get a device by id
-  - `POST: /api/v1/dev` - Add a new device
-  - `PUT: /api/v1/dev` - Update a device
-  - `DELETE: /api/v1/dev` - Delete a device
+```shell
+go run main.go chat "How much milk is in my house?"
+```
+
+### Run the backend
+
+To serve the backend, you can use the following command:
+
+```shell
+make serve
+```
+
+### Build the backend, make an LLM call
+
+```shell
+make build
+go run main.go chat "How much milk is in my house?"
+```
