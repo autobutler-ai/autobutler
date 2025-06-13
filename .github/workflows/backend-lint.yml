@@ -7,6 +7,10 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      image-tag:
+        description: Image tag to run
+        type: string
 env:
   WORKING_DIR: ${{ github.workspace }}/src/autobutler/backend
 defaults:
@@ -15,13 +19,11 @@ defaults:
 jobs:
   backend-lint:
     runs-on: ubuntu-latest
+    container:
+      image: exokomodo/exoflow-devcontainer:${{ inputs.image-tag || (github.event_name == 'pull_request' && 'latest') || (github.head_ref || github.ref_name) }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Setup go
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: ${{ env.WORKING_DIR }}/go.mod
       - name: Lint
         working-directory: ${{ env.WORKING_DIR }}
         run: make lint
