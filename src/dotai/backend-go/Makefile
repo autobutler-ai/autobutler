@@ -18,7 +18,7 @@ lint: ## Lint code
 	go vet ./...
 
 serve: ## Serve backend
-	go run main.go
+	go run main.go serve
 
 version: ## Print version
 	go run main.go version # TODO: Implement version command
