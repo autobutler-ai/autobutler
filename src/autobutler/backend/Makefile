@@ -31,7 +31,7 @@ exercise: env-LLM_AZURE_API_KEY ## Exercise the backend chat feature
 	curl \
 		--silent \
 		-X GET \
-		"http://localhost:8080/chat?prompt=How+much+milk+is+in+the+house" | tee ./e2e.json
+		"http://localhost:8080/chat?prompt=How+much+milk+is+in+the+house" | tee ./exercise.json
 	killall main || true
 
 env-%: ## Check for env var
