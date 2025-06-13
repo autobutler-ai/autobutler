@@ -23,6 +23,13 @@ endif
 build: ## Build backend
 	go build -o ./build ./...
 
+format: ## Format code
+	go fmt ./...
+
+lint: ## Lint code
+	gofmt -s -w .
+	go vet ./...
+
 serve: ## Serve backend
 	go run main.go serve
 

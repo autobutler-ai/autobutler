@@ -1,4 +1,4 @@
-name: Backend Build
+name: Backend Lint
 on:
   push:
     branches:
@@ -22,11 +22,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version-file: ${{ env.WORKING_DIR }}/go.mod
-      - name: Install dependencies
+      - name: Lint
         working-directory: ${{ env.WORKING_DIR }}
         run: |
-          go mod download
-      - name: Build
-        working-directory: ${{ env.WORKING_DIR }}
-        run: |
-          make build
+          make lint

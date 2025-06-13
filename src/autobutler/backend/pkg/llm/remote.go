@@ -25,8 +25,8 @@ type requestBody struct {
 type responseChoice struct {
 	ContentFilterResults struct {
 		Hate struct {
-			Filtered  bool   `json:"filtered"`
-			Severity  string `json:"severity"`
+			Filtered bool   `json:"filtered"`
+			Severity string `json:"severity"`
 		} `json:"hate"`
 		ProtectedMaterialCode struct {
 			Filtered bool `json:"filtered"`
@@ -37,54 +37,54 @@ type responseChoice struct {
 			Detected bool `json:"detected"`
 		} `json:"protected_material_text"`
 		SelfHarm struct {
-			Filtered  bool   `json:"filtered"`
-			Severity  string `json:"severity"`
+			Filtered bool   `json:"filtered"`
+			Severity string `json:"severity"`
 		} `json:"self_harm"`
 		Sexual struct {
-			Filtered  bool   `json:"filtered"`
-			Severity  string `json:"severity"`
+			Filtered bool   `json:"filtered"`
+			Severity string `json:"severity"`
 		} `json:"sexual"`
 		Violence struct {
-			Filtered  bool   `json:"filtered"`
-			Severity  string `json:"severity"`
-	} `json:"violence"`
+			Filtered bool   `json:"filtered"`
+			Severity string `json:"severity"`
+		} `json:"violence"`
 	} `json:"content_filter_results"`
 	FinishReason string `json:"finish_reason"`
-	Index         int    `json:"index"`
-	Message struct {
-		Content     string `json:"content"`
-		Role        string `json:"role"`
-		ToolCalls   interface{} `json:"tool_calls"` // Assuming tool_calls can be null or an object
+	Index        int    `json:"index"`
+	Message      struct {
+		Content   string      `json:"content"`
+		Role      string      `json:"role"`
+		ToolCalls interface{} `json:"tool_calls"` // Assuming tool_calls can be null or an object
 	} `json:"message"`
 }
 type ChatResponse struct {
-	Choices []responseChoice `json:"choices"`
-	Created int64  `json:"created"`
-	ID      string `json:"id"`
-	Model   string `json:"model"`
-	Object string `json:"object"`
+	Choices             []responseChoice `json:"choices"`
+	Created             int64            `json:"created"`
+	ID                  string           `json:"id"`
+	Model               string           `json:"model"`
+	Object              string           `json:"object"`
 	PromptFilterResults []struct {
-		PromptIndex int `json:"prompt_index"`
+		PromptIndex          int `json:"prompt_index"`
 		ContentFilterResults struct {
 			Hate struct {
-				Filtered  bool   `json:"filtered"`
-				Severity  string `json:"severity"`
+				Filtered bool   `json:"filtered"`
+				Severity string `json:"severity"`
 			} `json:"hate"`
 			Jailbreak struct {
 				Filtered bool `json:"filtered"`
 				Detected bool `json:"detected"`
 			} `json:"jailbreak"`
 			SelfHarm struct {
-				Filtered  bool   `json:"filtered"`
-				Severity  string `json:"severity"`
+				Filtered bool   `json:"filtered"`
+				Severity string `json:"severity"`
 			} `json:"self_harm"`
 			Sexual struct {
-				Filtered  bool   `json:"filtered"`
-				Severity  string `json:"severity"`
+				Filtered bool   `json:"filtered"`
+				Severity string `json:"severity"`
 			} `json:"sexual"`
 			Violence struct {
-				Filtered  bool   `json:"filtered"`
-				Severity  string `json:"severity"`
+				Filtered bool   `json:"filtered"`
+				Severity string `json:"severity"`
 			} `json:"violence"`
 		} `json:"content_filter_results"`
 	} `json:"prompt_filter_results"`

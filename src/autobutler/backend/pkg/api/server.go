@@ -11,13 +11,13 @@ import (
 func StartServer() error {
 	router := gin.Default()
 	config := cors.DefaultConfig()
-    config.AllowAllOrigins = true
-    config.AllowMethods = []string{"POST", "GET", "PUT", "OPTIONS"}
-    config.AllowHeaders = []string{"*"}
-    config.ExposeHeaders = []string{"Content-Length"}
-    config.AllowCredentials = true
-    config.MaxAge = 12 * time.Hour
-    router.Use(cors.New(config))
+	config.AllowAllOrigins = true
+	config.AllowMethods = []string{"POST", "GET", "PUT", "OPTIONS"}
+	config.AllowHeaders = []string{"*"}
+	config.ExposeHeaders = []string{"Content-Length"}
+	config.AllowCredentials = true
+	config.MaxAge = 12 * time.Hour
+	router.Use(cors.New(config))
 
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{
