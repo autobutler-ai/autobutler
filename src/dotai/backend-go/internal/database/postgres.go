@@ -26,7 +26,7 @@ type Config struct {
 // LoadConfig loads database configuration from environment variables
 func LoadConfig() *Config {
 	port, _ := strconv.Atoi(getEnv("DB_PORT", "5432"))
-	
+
 	return &Config{
 		Host:     getEnv("DB_HOST", "localhost"),
 		Port:     port,

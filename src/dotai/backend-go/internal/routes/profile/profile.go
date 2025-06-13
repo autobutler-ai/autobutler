@@ -14,7 +14,7 @@ type Profile struct {
 func GetProfile(c *gin.Context) {
 	defaultProfile := Profile{
 		Name:    "Default User",
-		Email:   "user@example.com", 
+		Email:   "user@example.com",
 		Company: "Example Corp",
 		Phone:   "+1-555-555-5555",
 	}

@@ -1,15 +1,15 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"os"
-	"context"
 	"os/signal"
 	"syscall"
 	"time"
-	
-	"dotai-go-backend/internal/routes"
+
 	"dotai-go-backend/internal/database"
+	"dotai-go-backend/internal/routes"
 
 	"github.com/spf13/cobra"
 )
@@ -61,7 +61,7 @@ func startServer(ctx context.Context, db *database.DB) error {
 		return err
 	case <-interrupt:
 		fmt.Println("Shutting down server...")
-		cancel()	
+		cancel()
 
 		time.Sleep(2 * time.Second)
 		return nil

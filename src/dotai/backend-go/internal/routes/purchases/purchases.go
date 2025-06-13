@@ -6,16 +6,16 @@ import (
 
 // TODO update this to use the actual product types
 type PurchaseItem struct {
-	ProductType  string `json:"productType"`
-	Description  string `json:"description"`
-	Amount       int    `json:"amount"`
+	ProductType string `json:"productType"`
+	Description string `json:"description"`
+	Amount      int    `json:"amount"`
 }
 
 type Purchase struct {
 	ID       string         `json:"id"`
-	Amount   int           `json:"amount"`
-	Currency string        `json:"currency"`
-	Status   string        `json:"status"`
+	Amount   int            `json:"amount"`
+	Currency string         `json:"currency"`
+	Status   string         `json:"status"`
 	Items    []PurchaseItem `json:"items"`
 }
 
@@ -28,9 +28,9 @@ func GetPurchases(c *gin.Context) {
 			Status:   "completed",
 			Items: []PurchaseItem{
 				{
-					ProductType:  "base_product",
+					ProductType: "base_product",
 					Description: "Base Software License",
-					Amount:     35900,
+					Amount:      35900,
 				},
 			},
 		},
