@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/exokomodo/exoflow/autobutler/backend/pkg/llm"
 	"github.com/spf13/cobra"
 )
 
@@ -17,8 +18,12 @@ func Chat() *cobra.Command {
 				return
 			}
 			message := args[0]
-			fmt.Printf("Sending message: %s\n", message)
-			// Here you would implement the logic to send the message to the chat system.
+			response, err := llm.DoChat(message)
+			if err != nil {
+				fmt.Printf("Error sending message: %v\n", err)
+				return
+			}
+			fmt.Println(response)
 		},
 	}
 

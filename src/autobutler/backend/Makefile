@@ -23,15 +23,19 @@ endif
 build: ## Build backend
 	go build -o ./build ./...
 
-run/build: build ## Run backend after building
-	$(MAKE) run $(RUN_ARGS)
-
-run: ## Run backend
-	go run ./... $(RUN_ARGS)
-
 serve: ## Serve backend
-	$(MAKE) run serve
+	go run main.go serve
 
 version: ## Print version
-	$(MAKE) run version
+	go run main.go version
 
+exercise: ## Exercise the backend chat feature
+	killall main || true
+	$(MAKE) serve &
+	sleep 5
+	echo ""
+	curl \
+		--silent \
+		-X GET \
+		"http://localhost:8080/chat?prompt=How+much+milk+is+in+the+house" | tee ./e2e.json
+	killall main || true
