@@ -2,20 +2,17 @@ package main
 
 import (
 	"fmt"
+	"os"
 
-	"github.com/gin-gonic/gin"
+	"dotai-go-backend/cmd"
+	"github.com/spf13/cobra"
 )
 
 func main() {
-	router := gin.Default()
-
-	router.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "Hello, World!",
-		})
-	})
-
-	if err := router.Run(":8080"); err != nil {
-		fmt.Printf("Failed to start server: %v\n", err)
+	rootCmd := &cobra.Command{Use: "dotai"}
+	rootCmd.AddCommand(cmd.Serve())
+	if err := rootCmd.Execute(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
 	}
 }
