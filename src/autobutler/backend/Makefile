@@ -6,6 +6,8 @@ SHELL := /bin/bash
 
 .PHONY: $(MAKECMDGOALS)
 
+export CGO_ENABLED := 1
+
 build: ## Build backend
 	mkdir -p ./build
 	go build -o ./build/autobutler
