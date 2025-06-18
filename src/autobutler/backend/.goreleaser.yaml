@@ -48,6 +48,9 @@ changelog:
       - "^test:"
 
 release:
+  github:
+    owner: exokomodo
+    name: autobutler.ai
   footer: >-
 
     ---
