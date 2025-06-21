@@ -8,38 +8,26 @@ package components
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-type ChatRole string
-
-const (
-	ChatRoleUser   ChatRole = "user"
-	ChatRoleSystem ChatRole = "system"
-	ChatRoleDummy  ChatRole = "dummy"
-	ChatRoleError  ChatRole = "error"
+import (
+	"github.com/exokomodo/exoflow/autobutler/backend/pkg/chat"
 )
 
-type ChatMessage struct {
-	ID        string   `json:"id"`
-	Role      ChatRole `json:"role"`
-	Content   string   `json:"content"`
-	Timestamp string   `json:"timestamp"` // ISO 8601 format
-}
-
-func (m ChatMessage) Class() string {
-	switch m.Role {
-	case ChatRoleUser:
+func ChatMessageClass(message chat.ChatMessage) string {
+	switch message.Role {
+	case chat.ChatRoleUser:
 		return "bg-blue-600 text-white"
-	case ChatRoleSystem:
+	case chat.ChatRoleSystem:
 		return "bg-white/10 text-gray-100"
-	case ChatRoleDummy:
+	case chat.ChatRoleDummy:
 		return "bg-orange-500/20 text-gray-100 border-2 border-orange-500"
-	case ChatRoleError:
+	case chat.ChatRoleError:
 		return "bg-red-500/20 text-gray-100 border-2 border-red-500"
 	default:
-		panic("unknown chat role: " + string(m.Role))
+		panic("unknown chat role: " + string(message.Role))
 	}
 }
 
-func Chat(messages []ChatMessage) templ.Component {
+func Chat(messages []chat.ChatMessage) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -65,7 +53,7 @@ func Chat(messages []ChatMessage) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		for _, message := range messages {
-			var templ_7745c5c3_Var2 = []any{message.Class()}
+			var templ_7745c5c3_Var2 = []any{ChatMessageClass(message)}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -90,7 +78,7 @@ func Chat(messages []ChatMessage) templ.Component {
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(message.Content)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `ui/components/chat.templ`, Line: 39, Col: 64}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `ui/components/chat.templ`, Line: 28, Col: 64}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -103,7 +91,7 @@ func Chat(messages []ChatMessage) templ.Component {
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(message.Timestamp)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `ui/components/chat.templ`, Line: 41, Col: 39}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `ui/components/chat.templ`, Line: 30, Col: 39}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {

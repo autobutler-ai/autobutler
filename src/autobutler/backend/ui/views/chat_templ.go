@@ -9,6 +9,7 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
+	"github.com/exokomodo/exoflow/autobutler/backend/pkg/chat"
 	"github.com/exokomodo/exoflow/autobutler/backend/ui/components"
 )
 
@@ -54,11 +55,11 @@ func Chat() templ.Component {
 			}
 			ctx = templ.InitializeContext(ctx)
 			templ_7745c5c3_Err = components.Chat(
-				[]components.ChatMessage{
-					{ID: "1", Role: components.ChatRoleSystem, Content: "Welcome to the Autobutler!", Timestamp: "2023-10-01T12:00:00Z"},
-					{ID: "2", Role: components.ChatRoleUser, Content: "Hello, how can I use this?", Timestamp: "2023-10-01T12:01:00Z"},
-					{ID: "3", Role: components.ChatRoleDummy, Content: "This is a dummy message for testing.", Timestamp: "2023-10-01T12:02:00Z"},
-					{ID: "4", Role: components.ChatRoleError, Content: "An error occurred while processing your request.", Timestamp: "2023-10-01T12:03:00Z"},
+				[]chat.ChatMessage{
+					{ID: "1", Role: chat.ChatRoleSystem, Content: "Welcome to the Autobutler!", Timestamp: "2023-10-01T12:00:00Z"},
+					{ID: "2", Role: chat.ChatRoleUser, Content: "Hello, how can I use this?", Timestamp: "2023-10-01T12:01:00Z"},
+					{ID: "3", Role: chat.ChatRoleDummy, Content: "This is a dummy message for testing.", Timestamp: "2023-10-01T12:02:00Z"},
+					{ID: "4", Role: chat.ChatRoleError, Content: "An error occurred while processing your request.", Timestamp: "2023-10-01T12:03:00Z"},
 				},
 			).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
