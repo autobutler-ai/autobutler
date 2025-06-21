@@ -1,4 +1,4 @@
-name: Backend Build
+name: Autobutler Build
 on:
   push:
     branches:
@@ -8,12 +8,12 @@ on:
       - main
   workflow_dispatch:
 env:
-  WORKING_DIR: ${{ github.workspace }}/src/autobutler/backend
+  WORKING_DIR: ${{ github.workspace }}/src/autobutler
 defaults:
   run:
     shell: bash
 jobs:
-  backend-build:
+  autobutler-build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

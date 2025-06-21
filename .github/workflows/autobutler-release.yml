@@ -4,12 +4,12 @@ on:
     tags:
       - 'v*.*.*'
 env:
-  WORKING_DIR: ${{ github.workspace }}/src/autobutler/backend
+  WORKING_DIR: ${{ github.workspace }}/src/autobutler
 defaults:
   run:
     shell: bash
 jobs:
-  backend-release:
+  autobutler-release:
     runs-on: ubuntu-latest
     steps:
       - name: Workflow Dispatch
