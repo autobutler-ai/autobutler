@@ -6,7 +6,10 @@ SHELL := /bin/bash
 
 .PHONY: $(MAKECMDGOALS)
 
-generate:
+setup/templ: ## Install templ tool
+	go get -tool github.com/a-h/templ/cmd/templ@latest
+
+generate: ## Generate templ files
 	go tool templ generate
 
 build: generate ## Build backend
