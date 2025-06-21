@@ -9,25 +9,25 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
-	"github.com/exokomodo/exoflow/autobutler/backend/pkg/chat"
+	"github.com/exokomodo/exoflow/autobutler/backend/internal/llm"
 )
 
-func ChatMessageClass(message chat.ChatMessage) string {
+func ChatMessageClass(message llm.ChatMessage) string {
 	switch message.Role {
-	case chat.ChatRoleUser:
+	case llm.ChatRoleUser:
 		return "bg-blue-600 text-white"
-	case chat.ChatRoleSystem:
+	case llm.ChatRoleSystem:
 		return "bg-white/10 text-gray-100"
-	case chat.ChatRoleDummy:
+	case llm.ChatRoleDummy:
 		return "bg-orange-500/20 text-gray-100 border-2 border-orange-500"
-	case chat.ChatRoleError:
+	case llm.ChatRoleError:
 		return "bg-red-500/20 text-gray-100 border-2 border-red-500"
 	default:
 		panic("unknown chat role: " + string(message.Role))
 	}
 }
 
-func Chat(messages []chat.ChatMessage) templ.Component {
+func Chat(messages []llm.ChatMessage) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {

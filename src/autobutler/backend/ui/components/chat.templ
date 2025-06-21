@@ -1,18 +1,18 @@
 package components
 
 import (
-    "github.com/exokomodo/exoflow/autobutler/backend/pkg/chat"
+    "github.com/exokomodo/exoflow/autobutler/backend/internal/llm"
 )
 
-func ChatMessageClass(message chat.ChatMessage) string {
+func ChatMessageClass(message llm.ChatMessage) string {
     switch message.Role {
-        case chat.ChatRoleUser:
+        case llm.ChatRoleUser:
             return "bg-blue-600 text-white"
-        case chat.ChatRoleSystem:
+        case llm.ChatRoleSystem:
             return "bg-white/10 text-gray-100"
-        case chat.ChatRoleDummy:
+        case llm.ChatRoleDummy:
             return "bg-orange-500/20 text-gray-100 border-2 border-orange-500"
-        case chat.ChatRoleError:
+        case llm.ChatRoleError:
             return "bg-red-500/20 text-gray-100 border-2 border-red-500"
         default:
             panic("unknown chat role: " + string(message.Role))
@@ -20,7 +20,7 @@ func ChatMessageClass(message chat.ChatMessage) string {
 }
 
 
-templ Chat(messages []chat.ChatMessage) {
+templ Chat(messages []llm.ChatMessage) {
     <div class="flex-1 overflow-y-auto p-4">
       <div class="max-w-4xl mx-auto space-y-4">
         for _, message := range messages {
