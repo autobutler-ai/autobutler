@@ -1,6 +1,7 @@
 package server
 
 import (
+	"embed"
 	"fmt"
 	"time"
 
@@ -10,14 +11,24 @@ import (
 	"autobutler/ui/components/chat"
 	"autobutler/ui/views"
 
+	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 )
 
-func setupRoutes(router *gin.Engine) {
-	// STATIC FILES
-	router.Static("/public", "./public")
-	// UI ROUTES
-	uiRoute(router, "/", func(c *gin.Context) {
+//go:embed public
+var public embed.FS
+
+func setupStaticRoutes(router *gin.Engine) error {
+	staticFS, err := static.EmbedFolder(public, "public")
+	if err != nil {
+		return err
+	}
+	router.NoRoute(static.Serve("/public", staticFS))
+	return nil
+}
+
+func setupUiRoutes(router *gin.Engine) {
+		uiRoute(router, "/", func(c *gin.Context) {
 		if err := views.Home().Render(c.Request.Context(), c.Writer); err != nil {
 			c.Status(400)
 			return
@@ -31,14 +42,16 @@ func setupRoutes(router *gin.Engine) {
 		}
 		c.Status(200)
 	})
+}
 
-	// API ROUTES
-	apiV1Route(router, "GET", "/health", func(c *gin.Context) {
+func setupApiRoutes(router *gin.Engine) {
+	apiV1Group := router.Group("/api/v1")
+	apiRoute(apiV1Group, "GET", "/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"status": "ok",
 		})
 	})
-	apiV1Route(router, "GET", "/chat", func(c *gin.Context) {
+	apiRoute(apiV1Group, "GET", "/chat", func(c *gin.Context) {
 		isHtml := c.GetHeader("Accept") == "text/html"
 		prompt := c.Query("prompt")
 		response, err := llm.RemoteLLMRequest(prompt)
@@ -66,7 +79,7 @@ func setupRoutes(router *gin.Engine) {
 			c.JSON(200, response)
 		}
 	})
-	apiV1Route(router, "POST", "/update", func(c *gin.Context) {
+	apiRoute(apiV1Group, "POST", "/update", func(c *gin.Context) {
 		var r update.UpdateRequest
 		if err := c.BindJSON(&r); err != nil {
 			c.JSON(400, gin.H{
@@ -87,9 +100,14 @@ func setupRoutes(router *gin.Engine) {
 	})
 }
 
-func apiV1Route(router *gin.Engine, method string, path string, handler func(c *gin.Context)) gin.IRoutes {
-	path = util.TrimLeading(path, '/')
-	route := fmt.Sprintf("/api/v1/%s", path)
+func setupRoutes(router *gin.Engine) {
+	setupStaticRoutes(router)
+	setupUiRoutes(router)
+	setupApiRoutes(router)
+}
+
+func apiRoute(router *gin.RouterGroup, method string, route string, handler func(c *gin.Context)) gin.IRoutes {
+	route = util.TrimLeading(route, '/')
 	switch method {
 	case "GET":
 		{
