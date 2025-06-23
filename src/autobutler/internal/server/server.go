@@ -1,6 +1,9 @@
 package server
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -9,7 +12,11 @@ func StartServer() error {
 	// IMPORTANT: UseMiddleware MUST be called before SetupRoutes
 	useMiddleware(router)
 	setupRoutes(router)
-	if err := router.Run(":8080"); err != nil {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	if err := router.Run(fmt.Sprintf(":%s", port)); err != nil {
 		return err
 	}
 
