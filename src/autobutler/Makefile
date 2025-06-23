@@ -9,6 +9,22 @@ SHELL := /bin/bash
 setup/templ: ## Install templ tool
 	go get -tool github.com/a-h/templ/cmd/templ@latest
 
+export INSTALL_VERSION?=$(shell git describe --tags --abbrev=0)
+
+install/mac: env-INSTALL_VERSION ## Install startup service
+	if ! [[ -f /Applications/autobutler ]]; then \
+		curl \
+			--fail \
+			-L \
+			https://github.com/exokomodo/autobutler.ai/releases/download/$(INSTALL_VERSION)/autobutler_darwin_arm64.tar.gz | tar -x -C /Applications/ ; \
+	fi
+	sudo launchctl unload /Library/LaunchDaemons/com.autobutler.autobutler.plist > /dev/null 2>&1 || true
+	sudo cp -f \
+		./deployments/com.autobutler.autobutler.plist \
+		/Library/LaunchDaemons/com.autobutler.autobutler.plist
+	sudo launchctl load /Library/LaunchDaemons/com.autobutler.autobutler.plist
+	echo "Installed autobutler successfully. Will run at startup."
+
 generate: ## Generate templ files
 	go tool templ generate
 
