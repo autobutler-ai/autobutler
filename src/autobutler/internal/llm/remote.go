@@ -12,7 +12,6 @@ import (
 )
 
 var (
-	addFn *openai.FunctionDefinitionParam
 	llmURL string
 	llmArgs string
 	apiKey string
@@ -22,51 +21,7 @@ var (
 	topP string
 	model string
 )
-func add(param0 float64, param1 float64) float64 {
-	return param0 + param1
-}
 
-func init() {
-	var err error
-	addFn, err = GenerateJSONSchema(add, "Adds two numbers together and returns the result.")
-	if err != nil {
-		panic(fmt.Sprintf("failed to generate JSON schema for add function: %v", err))
-	}
-}
-
-func makeRequest(reqBody openai.ChatCompletionNewParams) (*openai.ChatCompletion, error) {
-	bodyBytes, err := json.Marshal(reqBody)
-	if err != nil {
-		return nil, fmt.Errorf("failed to marshal request body: %w", err)
-	}
-	url := llmURL
-	if llmArgs != "" {
-		url = fmt.Sprintf("%s?%s", llmURL, llmArgs)
-	}
-
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(bodyBytes))
-	if err != nil {
-		return nil, fmt.Errorf("failed to create request: %w", err)
-	}
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+apiKey)
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("request failed: %w", err)
-	}
-	defer resp.Body.Close()
-	respBody, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read response: %w", err)
-	}
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("request failed with status %d: %s", resp.StatusCode, string(respBody))
-	}
-	return ParseResponseBytes(respBody)
-}
 
 func RemoteLLMRequest(prompt string) (*openai.ChatCompletion, error) {
 	llmURL = os.Getenv("LLM_URL")
@@ -118,34 +73,71 @@ func RemoteLLMRequest(prompt string) (*openai.ChatCompletion, error) {
 		Temperature: openai.Float(temperatureFloat),
 		TopP:        openai.Float(topPFloat),
 		Model:       model,
-		Tools: []openai.ChatCompletionToolParam{
-			{
-				Function: *addFn,
-			},
-		},
+		Tools: mcpRegistry.toCompletionToolParam(),
 	}
 	completion, err := makeRequest(reqBody)
 	if err != nil {
 		return nil, fmt.Errorf("failed to make LLM request: %w", err)
 	}
+	if err := mcpRegistry.MakeToolCall(completion); err != nil {
+		return nil, fmt.Errorf("failed to handle tool calls: %w", err)
+	}
+	return completion, nil
+}
+
+func makeRequest(reqBody openai.ChatCompletionNewParams) (*openai.ChatCompletion, error) {
+	bodyBytes, err := json.Marshal(reqBody)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal request body: %w", err)
+	}
+	url := llmURL
+	if llmArgs != "" {
+		url = fmt.Sprintf("%s?%s", llmURL, llmArgs)
+	}
+
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(bodyBytes))
+	if err != nil {
+		return nil, fmt.Errorf("failed to create request: %w", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer "+apiKey)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("request failed: %w", err)
+	}
+	defer resp.Body.Close()
+	respBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read response: %w", err)
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("request failed with status %d: %s", resp.StatusCode, string(respBody))
+	}
+	return ParseResponseBytes(respBody)
+}
+
+func handleToolCalls(completion *openai.ChatCompletion, registry McpRegistry) error {
 	toolCalls := completion.Choices[0].Message.ToolCalls
 	if len(toolCalls) > 0 {
 		for _, toolCall := range toolCalls {
 			var args map[string]float64
 			if err := json.Unmarshal([]byte(toolCall.Function.Arguments), &args); err != nil {
-				return nil, fmt.Errorf("failed to unmarshal function arguments: %w", err)
+				return fmt.Errorf("failed to unmarshal function arguments: %w", err)
 			}
 			switch toolCall.Function.Name {
 			case "add":
 				param0, ok1 := args["param0"]
 				param1, ok2 := args["param1"]
 				if !ok1 || !ok2 {
-					return nil, fmt.Errorf("invalid arguments for add function: expected 'param1' and 'param2'")
+					return fmt.Errorf("invalid arguments for add function: expected 'param1' and 'param2'")
 				}
 				result := add(param0, param1)
 				completion.Choices[0].Message.Content = fmt.Sprintf("The result of adding %f and %f is %f", param0, param1, result)
 			}
 		}
 	}
-	return completion, nil
+	return nil
 }
