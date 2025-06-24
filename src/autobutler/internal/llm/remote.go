@@ -11,6 +11,21 @@ import (
 	"github.com/openai/openai-go"
 )
 
+var (
+	addFn *openai.FunctionDefinitionParam
+)
+func add(x float64, y float64) float64 {
+	return x + y
+}
+
+func init() {
+	var err error
+	addFn, err = GenerateJSONSchema(add, "Adds two numbers together and returns the result.")
+	if err != nil {
+		panic(fmt.Sprintf("failed to generate JSON schema for add function: %v", err))
+	}
+}
+
 func RemoteLLMRequest(prompt string) (*openai.ChatCompletion, error) {
 	// Set defaults as per Makefile exports
 	llmURL := os.Getenv("LLM_URL")
@@ -64,23 +79,7 @@ func RemoteLLMRequest(prompt string) (*openai.ChatCompletion, error) {
 		Model:       model,
 		Tools: []openai.ChatCompletionToolParam{
 			{
-				Function: openai.FunctionDefinitionParam{
-					Name: "add",
-					Strict: openai.Bool(false),
-					Description: openai.String("Adds two numbers together"),
-					Parameters: openai.FunctionParameters{
-						"type": "object",
-						"properties": map[string]interface{}{
-							"x": map[string]string{
-								"type": "number",
-							},
-							"y": map[string]string{
-								"type": "number",
-							},
-						},
-						"required": []string{"x", "y"},
-					},
-				},
+				Function: *addFn,
 			},
 		},
 	}

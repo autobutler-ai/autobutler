@@ -1,76 +1,87 @@
 package llm
 
 import (
-	"errors"
+	"fmt"
+	"reflect"
+	"runtime"
+	"strings"
+
+	"github.com/openai/openai-go"
 )
 
-// Function describes a callable functionality with its name and parameter schema.
-type Function struct {
-	Name       string
-	Parameters []string // List of parameter names
-	Handler    func(params map[string]interface{}) (interface{}, error)
+func getFunctionName(fn interface{}) string {
+    strs := strings.Split((runtime.FuncForPC(reflect.ValueOf(fn).Pointer()).Name()), ".")
+    return strs[len(strs)-1]
 }
 
-type MCPCommand struct {
-	Name       string                 `json:"name"`
-	Parameters map[string]interface{} `json:"parameters"` // Parameters as a map
+// GenerateJSONSchema generates a JSON Schema for the given function's parameters and returns an openai.FunctionDefinitionParam.
+func GenerateJSONSchema(fn interface{}, description string) (*openai.FunctionDefinitionParam, error) {
+	t := reflect.TypeOf(fn)
+	if t.Kind() != reflect.Func {
+		return nil, fmt.Errorf("expected a function, got %s", t.Kind())
+	}
+
+	params := map[string]any{}
+	required := []string{}
+	for i := 0; i < t.NumIn(); i++ {
+		paramType := t.In(i)
+		paramName := fmt.Sprintf("param%d", i)
+		params[paramName] = typeToSchema(paramType)
+		required = append(required, paramName)
+	}
+
+	schema := map[string]any{
+		"type":       "object",
+		"properties": params,
+		"required":   required,
+	}
+	name := getFunctionName(fn)
+
+	return &openai.FunctionDefinitionParam{
+		Name:        name,
+		Strict:      openai.Bool(false),
+		Description: openai.String(description),
+		Parameters:  schema,
+	}, nil
 }
 
-// MCPRegistry manages registered functionalities.
-type MCPRegistry struct {
-	functions map[string]*Function
-}
-
-// NewMCPRegistry creates a new MCPRegistry.
-func NewMCPRegistry() *MCPRegistry {
-	return &MCPRegistry{
-		functions: make(map[string]*Function),
+func typeToSchema(t reflect.Type) map[string]any {
+	switch t.Kind() {
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64,
+		reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+		return map[string]any{"type": "integer"}
+	case reflect.Float32, reflect.Float64:
+		return map[string]any{"type": "number"}
+	case reflect.Bool:
+		return map[string]any{"type": "boolean"}
+	case reflect.String:
+		return map[string]any{"type": "string"}
+	case reflect.Slice, reflect.Array:
+		return map[string]any{
+			"type":  "array",
+			"items": typeToSchema(t.Elem()),
+		}
+	case reflect.Map:
+		return map[string]any{
+			"type":                 "object",
+			"additionalProperties": typeToSchema(t.Elem()),
+		}
+	case reflect.Struct:
+		props := map[string]any{}
+		required := []string{}
+		for i := 0; i < t.NumField(); i++ {
+			f := t.Field(i)
+			props[f.Name] = typeToSchema(f.Type)
+			required = append(required, f.Name)
+		}
+		return map[string]any{
+			"type":       "object",
+			"properties": props,
+			"required":   required,
+		}
+	case reflect.Ptr:
+		return typeToSchema(t.Elem())
+	default:
+		return map[string]any{"type": "string"}
 	}
 }
-
-// RegisterFunction registers a new functionality.
-func (r *MCPRegistry) RegisterFunction(f *Function) {
-	r.functions[f.Name] = f
-}
-
-// ListFunctions returns a list of registered functionalities and their parameters.
-func (r *MCPRegistry) ListFunctions() []map[string]interface{} {
-	list := []map[string]interface{}{}
-	for _, f := range r.functions {
-		list = append(list, map[string]interface{}{
-			"name":       f.Name,
-			"parameters": f.Parameters,
-		})
-	}
-	return list
-}
-
-// CallFunction invokes a registered function by name with JSON parameters.
-func (r *MCPRegistry) CallFunction(command MCPCommand) (interface{}, error) {
-	f, ok := r.functions[command.Name]
-	if !ok {
-		return nil, errors.New("function not found")
-	}
-	return f.Handler(command.Parameters)
-}
-
-// Example usage:
-
-// func main() {
-// 	reg := NewMCPRegistry()
-// 	reg.RegisterFunction(&Function{
-// 		Name:       "add",
-// 		Parameters: []string{"a", "b"},
-// 		Handler: func(params map[string]interface{}) (interface{}, error) {
-// 			a, okA := params["a"].(float64)
-// 			b, okB := params["b"].(float64)
-// 			if !okA || !okB {
-// 				return nil, errors.New("invalid parameters")
-// 			}
-// 			return a + b, nil
-// 		},
-// 	})
-// 	fmt.Println(reg.ListFunctions())
-// 	result, err := reg.CallFunction("add", []byte(`{"a":2,"b":3}`))
-// 	fmt.Println(result, err) // Output: 5 <nil>
-// }
