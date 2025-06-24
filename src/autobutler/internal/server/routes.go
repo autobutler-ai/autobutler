@@ -70,7 +70,7 @@ func setupApiRoutes(router *gin.Engine) {
 			return
 		}
 		if isHtml {
-			messageComponent := chat.Message(response.ToChatMessage())
+			messageComponent := chat.Message(llm.FromCompletionToChatMessage(*response))
 			if err := messageComponent.Render(c.Request.Context(), c.Writer); err != nil {
 				c.Status(500)
 				return

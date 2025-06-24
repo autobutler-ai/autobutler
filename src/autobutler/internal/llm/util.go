@@ -3,14 +3,16 @@ package llm
 import (
 	"encoding/json"
 	"fmt"
+
+	"github.com/openai/openai-go"
 )
 
-func ParseResponseString(response string) (*ChatResponse, error) {
+func ParseResponseString(response string) (*openai.ChatCompletion, error) {
 	return ParseResponseBytes([]byte(response))
 }
 
-func ParseResponseBytes(response []byte) (*ChatResponse, error) {
-	var chatResponse ChatResponse
+func ParseResponseBytes(response []byte) (*openai.ChatCompletion, error) {
+	var chatResponse openai.ChatCompletion
 	err := json.Unmarshal(response, &chatResponse)
 	if err != nil {
 		return nil, fmt.Errorf("failed to unmarshal response: %w", err)
@@ -21,7 +23,7 @@ func ParseResponseBytes(response []byte) (*ChatResponse, error) {
 	return &chatResponse, nil
 }
 
-func GetResponseText(response *ChatResponse) (string, error) {
+func GetResponseText(response *openai.ChatCompletion) (string, error) {
 	if response == nil || len(response.Choices) == 0 {
 		return "", fmt.Errorf("invalid response: no choices available")
 	}
