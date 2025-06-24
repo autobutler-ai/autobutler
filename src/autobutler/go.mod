@@ -7,6 +7,7 @@ require (
 	github.com/gin-contrib/cors v1.7.5
 	github.com/gin-contrib/static v1.1.5
 	github.com/gin-gonic/gin v1.10.1
+	github.com/openai/openai-go v1.7.0
 	github.com/spf13/cobra v1.9.1
 	modernc.org/sqlite v1.38.0
 )
@@ -43,6 +44,10 @@ require (
 	github.com/pelletier/go-toml/v2 v2.2.3 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/spf13/pflag v1.0.6 // indirect
+	github.com/tidwall/gjson v1.14.4 // indirect
+	github.com/tidwall/match v1.1.1 // indirect
+	github.com/tidwall/pretty v1.2.1 // indirect
+	github.com/tidwall/sjson v1.2.5 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	golang.org/x/arch v0.16.0 // indirect

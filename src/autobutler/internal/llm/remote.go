@@ -7,9 +7,11 @@ import (
 	"io"
 	"net/http"
 	"os"
+
+	"github.com/openai/openai-go"
 )
 
-func RemoteLLMRequest(prompt string) (*ChatResponse, error) {
+func RemoteLLMRequest(prompt string) (*openai.ChatCompletion, error) {
 	// Set defaults as per Makefile exports
 	llmURL := os.Getenv("LLM_URL")
 	if llmURL == "" {
@@ -51,14 +53,14 @@ func RemoteLLMRequest(prompt string) (*ChatResponse, error) {
 	topPFloat := 0.1
 	fmt.Sscanf(topP, "%f", &topPFloat)
 
-	reqBody := requestBody{
-		Messages: []message{
-			{Role: "system", Content: string(systemPrompt)},
-			{Role: "user", Content: prompt},
+	reqBody := openai.ChatCompletionNewParams{
+		Messages: []openai.ChatCompletionMessageParamUnion{
+			openai.AssistantMessage(string(systemPrompt)),
+			openai.UserMessage(prompt),
 		},
-		MaxTokens:   maxTokensInt,
-		Temperature: temperatureFloat,
-		TopP:        topPFloat,
+		MaxTokens:   openai.Int(int64(maxTokensInt)),
+		Temperature: openai.Float(temperatureFloat),
+		TopP:        openai.Float(topPFloat),
 		Model:       model,
 	}
 
