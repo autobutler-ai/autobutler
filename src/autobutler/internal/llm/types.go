@@ -67,28 +67,49 @@ func (r McpRegistry) toCompletionToolParam() []openai.ChatCompletionToolParam{
 	return tools
 }
 
-func (r McpRegistry) MakeToolCall(completion *openai.ChatCompletion) error {
+func (r McpRegistry) MakeToolCall(completion *openai.ChatCompletion) ([]any, error) {
 	toolCalls := completion.Choices[0].Message.ToolCalls
+	results := make([]any, 0, len(toolCalls))
 	if len(toolCalls) > 0 {
 		for _, toolCall := range toolCalls {
 			var args map[string]float64
 			if err := json.Unmarshal([]byte(toolCall.Function.Arguments), &args); err != nil {
-				return fmt.Errorf("failed to unmarshal function arguments: %w", err)
+				return nil, fmt.Errorf("failed to unmarshal function arguments: %w", err)
 			}
 			if _, ok := r.Functions[toolCall.Function.Name]; !ok {
-				return fmt.Errorf("function %s not found in registry", toolCall.Function.Name)
+				return nil, fmt.Errorf("function %s not found in registry", toolCall.Function.Name)
 			}
-			switch toolCall.Function.Name {
-			case "add":
-				param0, ok1 := args["param0"]
-				param1, ok2 := args["param1"]
-				if !ok1 || !ok2 {
-					return fmt.Errorf("invalid arguments for add function: expected 'param1' and 'param2'")
+			fnDef, ok := r.Functions[toolCall.Function.Name]
+			if !ok {
+				return nil, fmt.Errorf("function %s not found in registry", toolCall.Function.Name)
+			}
+
+			// Prepare argument list in order as defined in fnDef.Parameters
+			var paramNames []string
+			if fnDef.Parameters != nil {
+				if props, ok := fnDef.Parameters["properties"].(map[string]interface{}); ok {
+					for name := range props {
+						paramNames = append(paramNames, name)
+					}
 				}
-				result := add(param0, param1)
-				completion.Choices[0].Message.Content = fmt.Sprintf("The result of adding %f and %f is %f", param0, param1, result)
 			}
+
+			var argValues []interface{}
+			for _, name := range paramNames {
+				val, exists := args[name]
+				if !exists {
+					return nil, fmt.Errorf("missing argument '%s' for function %s", name, toolCall.Function.Name)
+				}
+				argValues = append(argValues, val)
+			}
+
+			var returnValue any
+			var err error
+			if returnValue, err = r.callByName(toolCall.Function.Name, argValues...); err != nil {
+				return nil, fmt.Errorf("failed to call function %s: %w", toolCall.Function.Name, err)
+			}
+			results = append(results, returnValue)
 		}
 	}
-	return nil
+	return results, nil
 }

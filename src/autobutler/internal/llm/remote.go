@@ -79,8 +79,12 @@ func RemoteLLMRequest(prompt string) (*openai.ChatCompletion, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to make LLM request: %w", err)
 	}
-	if err := mcpRegistry.MakeToolCall(completion); err != nil {
+	var values []any
+	if values, err = mcpRegistry.MakeToolCall(completion); err != nil {
 		return nil, fmt.Errorf("failed to handle tool calls: %w", err)
+	}
+	for _, value := range values {
+		completion.Choices[0].Message.Content += fmt.Sprintf("%v\n", value)
 	}
 	return completion, nil
 }
@@ -117,27 +121,4 @@ func makeRequest(reqBody openai.ChatCompletionNewParams) (*openai.ChatCompletion
 		return nil, fmt.Errorf("request failed with status %d: %s", resp.StatusCode, string(respBody))
 	}
 	return ParseResponseBytes(respBody)
-}
-
-func handleToolCalls(completion *openai.ChatCompletion, registry McpRegistry) error {
-	toolCalls := completion.Choices[0].Message.ToolCalls
-	if len(toolCalls) > 0 {
-		for _, toolCall := range toolCalls {
-			var args map[string]float64
-			if err := json.Unmarshal([]byte(toolCall.Function.Arguments), &args); err != nil {
-				return fmt.Errorf("failed to unmarshal function arguments: %w", err)
-			}
-			switch toolCall.Function.Name {
-			case "add":
-				param0, ok1 := args["param0"]
-				param1, ok2 := args["param1"]
-				if !ok1 || !ok2 {
-					return fmt.Errorf("invalid arguments for add function: expected 'param1' and 'param2'")
-				}
-				result := add(param0, param1)
-				completion.Choices[0].Message.Content = fmt.Sprintf("The result of adding %f and %f is %f", param0, param1, result)
-			}
-		}
-	}
-	return nil
 }
