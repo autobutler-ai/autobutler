@@ -16,7 +16,7 @@ install/linux: env-INSTALL_VERSION ## Install startup service on Linux
 		curl \
 			--fail \
 			-L \
-			https://github.com/exokomodo/autobutler.ai/releases/download/$(INSTALL_VERSION)/autobutler_darwin_arm64.tar.gz | sudo tar -x -C /usr/local/bin ; \
+			https://github.com/autobutler-ai/autobutler.ai/releases/download/$(INSTALL_VERSION)/autobutler_darwin_arm64.tar.gz | sudo tar -x -C /usr/local/bin ; \
 	fi
 	sudo cp -f \
 		./deployments/autobutler.service \
@@ -29,7 +29,7 @@ install/mac: env-INSTALL_VERSION ## Install startup service on Mac
 		curl \
 			--fail \
 			-L \
-			https://github.com/exokomodo/autobutler.ai/releases/download/$(INSTALL_VERSION)/autobutler_darwin_arm64.tar.gz | tar -x -C /Applications/ ; \
+			https://github.com/autobutler-ai/autobutler.ai/releases/download/$(INSTALL_VERSION)/autobutler_darwin_arm64.tar.gz | tar -x -C /Applications/ ; \
 	fi
 	sudo launchctl unload /Library/LaunchDaemons/com.autobutler.autobutler.plist > /dev/null 2>&1 || true
 	sudo cp -f \
