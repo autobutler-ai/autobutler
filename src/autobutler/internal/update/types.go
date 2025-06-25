@@ -144,7 +144,7 @@ func Update(version string) error {
 	}
 	baseUrl := os.Getenv("AUTOBUTLER_UPDATE_URL")
 	if baseUrl == "" {
-		baseUrl = "https://github.com/exokomodo/autobutler.ai/releases/download"
+		baseUrl = "https://github.com/autobutler-ai/autobutler.ai/releases/download"
 	}
 	url := fmt.Sprintf("%s/%s/autobutler_%s_%s.tar.gz", baseUrl, version, runtime.GOOS, runtime.GOARCH)
 	fmt.Println("Downloading update from", url)
