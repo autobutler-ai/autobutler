@@ -19,7 +19,7 @@ jobs:
           github-token: ${{ secrets.FG_PAT }}
           script: |
             github.rest.actions.createWorkflowDispatch({
-              owner: 'exokomodo',
+              owner: 'autobutler-ai',
               repo: 'autobutler.ai',
               workflow_id: 'deploy.yml',
               ref: 'main',
