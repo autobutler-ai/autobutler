@@ -106,7 +106,7 @@ func (r McpRegistry) MakeToolCall(completion *openai.ChatCompletion) ([]any, err
 }
 
 func (r McpRegistry) callByName(fnName string, args ...any) (any, error) {
-	actualFnName := strings.TrimSuffix(fnName,"-fm")
+	actualFnName := strings.TrimSuffix(fnName, "-fm")
 	fn := reflect.ValueOf(&r).MethodByName(actualFnName)
 	if fn.Kind() != reflect.Func {
 		return nil, fmt.Errorf("function %s not found", actualFnName)
@@ -128,12 +128,12 @@ func (r McpRegistry) callByName(fnName string, args ...any) (any, error) {
 	return out[0].Interface(), nil
 }
 
-func (r McpRegistry) toCompletionToolParam() []openai.ChatCompletionToolParam{
+func (r McpRegistry) toCompletionToolParam() []openai.ChatCompletionToolParam {
 	var tools []openai.ChatCompletionToolParam
 	for _, fn := range r.Functions {
 		tools = append(tools, openai.ChatCompletionToolParam{
-			Type:        "function",
-			Function:    fn,
+			Type:     "function",
+			Function: fn,
 		})
 	}
 	return tools

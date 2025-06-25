@@ -28,7 +28,7 @@ func setupStaticRoutes(router *gin.Engine) error {
 }
 
 func setupUiRoutes(router *gin.Engine) {
-		uiRoute(router, "/", func(c *gin.Context) {
+	uiRoute(router, "/", func(c *gin.Context) {
 		if err := views.Home().Render(c.Request.Context(), c.Writer); err != nil {
 			c.Status(400)
 			return
@@ -43,7 +43,6 @@ func setupUiRoutes(router *gin.Engine) {
 		c.Status(200)
 	})
 }
-
 
 func setupApiRoutes(router *gin.Engine) {
 	apiV1Group := router.Group("/api/v1")

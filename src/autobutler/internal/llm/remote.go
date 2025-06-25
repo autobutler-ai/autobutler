@@ -12,16 +12,15 @@ import (
 )
 
 var (
-	llmURL string
-	llmArgs string
-	apiKey string
+	llmURL       string
+	llmArgs      string
+	apiKey       string
 	systemPrompt string
-	maxTokens string
-	temperature string
-	topP string
-	model string
+	maxTokens    string
+	temperature  string
+	topP         string
+	model        string
 )
-
 
 func RemoteLLMRequest(prompt string) (*openai.ChatCompletion, error) {
 	llmURL = os.Getenv("LLM_URL")
@@ -73,7 +72,7 @@ func RemoteLLMRequest(prompt string) (*openai.ChatCompletion, error) {
 		Temperature: openai.Float(temperatureFloat),
 		TopP:        openai.Float(topPFloat),
 		Model:       model,
-		Tools: mcpRegistry.toCompletionToolParam(),
+		Tools:       mcpRegistry.toCompletionToolParam(),
 	}
 	completion, err := makeRequest(reqBody)
 	if err != nil {

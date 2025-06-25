@@ -39,8 +39,8 @@ func GenerateJSONSchema(fn interface{}, description string) (*openai.FunctionDef
 }
 
 func getFunctionName(fn interface{}) string {
-    strs := strings.Split((runtime.FuncForPC(reflect.ValueOf(fn).Pointer()).Name()), ".")
-    return strs[len(strs)-1]
+	strs := strings.Split((runtime.FuncForPC(reflect.ValueOf(fn).Pointer()).Name()), ".")
+	return strs[len(strs)-1]
 }
 
 func typeToSchema(t reflect.Type) map[string]any {
