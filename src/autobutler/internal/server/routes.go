@@ -51,7 +51,29 @@ func setupApiRoutes(router *gin.Engine) {
 			"status": "ok",
 		})
 	})
-	apiRoute(apiV1Group, "GET", "/chat", func(c *gin.Context) {
+	apiRoute(apiV1Group, "GET", "/user-chat", func(c *gin.Context) {
+		isHtml := c.GetHeader("Accept") == "text/html"
+		prompt := c.Query("prompt")
+		message := llm.UserChatMessage(prompt)
+		if isHtml {
+			messageComponent := chat.Message(message)
+			if err := messageComponent.Render(c.Request.Context(), c.Writer); err != nil {
+				c.Status(500)
+				return
+			}
+			// Render a div with an hx-trigger="load"
+			loadComponent := chat.Load(prompt)
+			if err := loadComponent.Render(c.Request.Context(), c.Writer); err != nil {
+				c.Status(500)
+				return
+			}
+		} else {
+			c.JSON(500, gin.H{
+				"error": "HTML rendering is required for this endpoint",
+			})
+		}
+	})
+	apiRoute(apiV1Group, "GET", "/ai-chat", func(c *gin.Context) {
 		isHtml := c.GetHeader("Accept") == "text/html"
 		prompt := c.Query("prompt")
 		response, err := llm.RemoteLLMRequest(prompt)

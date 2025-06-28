@@ -30,6 +30,14 @@ func ErrorChatMessage(err error) ChatMessage {
 	}
 }
 
+func UserChatMessage(prompt string) ChatMessage {
+	return ChatMessage{
+		Role:      ChatRoleUser,
+		Content:   prompt,
+		Timestamp: GetTimestamp(time.Now()),
+	}
+}
+
 func GetTimestamp(timestamp time.Time) string {
 	// Matches JS new Date().toLocaleTimeString()
 	return timestamp.Format("3:04:05 PM")
