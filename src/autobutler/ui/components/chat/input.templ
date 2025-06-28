@@ -11,12 +11,14 @@ templ input() {
             class="flex-1 bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
+            id="messageSubmit"
             hx-get="/api/v1/user-chat"
             hx-trigger="click"
             hx-target="#messages"
             hx-swap="beforeend"
             hx-headers='{"Accept": "text/html"}'
             hx-indicator="#spinner"
+            hx-disabled-elt="#messageSubmit"
             hx-vals="js:{
               prompt: document.getElementById('messageInput').value,
               spinnerId: 'spinner',
