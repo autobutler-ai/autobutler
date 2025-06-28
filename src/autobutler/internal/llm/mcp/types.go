@@ -1,7 +1,6 @@
 package mcp
 
 import (
-	"autobutler/internal/db"
 	"autobutler/pkg/util"
 	"encoding/json"
 	"fmt"
@@ -10,133 +9,8 @@ import (
 	"github.com/openai/openai-go"
 )
 
-func init() {
-	// QueryInventory function
-	queryInventoryFn, err := NewMcpFunction(Registry.QueryInventory, "Queries the home inventory for amount of an item.", func(result any, paramSchema string) (string, error) {
-		parameters, err := util.UnmarshalParamSchema[QueryInventoryParams](paramSchema)
-		if err != nil {
-			return "", fmt.Errorf("failed to unmarshal parameters: %w", err)
-		}
-		response := result.(QueryInventoryResponse)
-		return fmt.Sprintf("There are %f %s of %s", response.Inventory, response.Unit, parameters.ItemName), nil
-	})
-	if err != nil {
-		panic(fmt.Sprintf("failed to generate JSON schema for QueryInventory function: %v", err))
-	}
-	Registry.Functions[queryInventoryFn.Name()] = *queryInventoryFn
-
-	// AddToInventory function
-	addToInventoryFn, err := NewMcpFunction(Registry.AddToInventory, "Adds an item to the home inventory.", func(result any, paramSchema string) (string, error) {
-		parameters, err := util.UnmarshalParamSchema[AddToInventoryParams](paramSchema)
-		if err != nil {
-			return "", fmt.Errorf("failed to unmarshal parameters: %w", err)
-		}
-		response := result.(AddToInventoryResponse)
-		return fmt.Sprintf("Added %f %s of %s to the inventory, so now you have %f %s.", parameters.Amount, response.Item.Unit, response.Item.Name, response.Item.Amount, response.Item.Unit), nil
-	})
-	if err != nil {
-		panic(fmt.Sprintf("failed to generate JSON schema for AddToInventory function: %v", err))
-	}
-	Registry.Functions[addToInventoryFn.Name()] = *addToInventoryFn
-
-	// ReduceInventory function
-	reduceInventoryFn, err := NewMcpFunction(Registry.ReduceInventory, "Removes an item from the home inventory, such as when the user used some of the item.", func(result any, paramSchema string) (string, error) {
-		parameters, err := util.UnmarshalParamSchema[ReduceInventoryParams](paramSchema)
-		if err != nil {
-			return "", fmt.Errorf("failed to unmarshal parameters: %w", err)
-		}
-		response := result.(ReduceInventoryResponse)
-		return fmt.Sprintf("Removed %f %s of %s from the inventory, so now you have %f %s.", parameters.Amount, response.Item.Unit, response.Item.Name, response.Item.Amount, response.Item.Unit), nil
-	})
-	if err != nil {
-		panic(fmt.Sprintf("failed to generate JSON schema for ReduceInventory function: %v", err))
-	}
-	Registry.Functions[reduceInventoryFn.Name()] = *reduceInventoryFn
-}
-
-var (
-	Registry = &McpRegistry{
-		Functions: make(map[string]McpFunction),
-	}
-)
-
-type AddParams struct {
-	X float64 `json:"param0"`
-	Y float64 `json:"param1"`
-}
-
-func (r McpRegistry) Add(x float64, y float64) float64 {
-	return x + y
-}
-
-type QueryInventoryParams struct {
-	ItemName string `json:"param0"`
-}
-
-type QueryInventoryResponse struct {
-	Item 	string  `json:"item"`
-	Inventory float64 `json:"inventory"`
-	Unit string `json:"unit,omitempty"`
-}
-
-func (r McpRegistry) QueryInventory(itemName string) QueryInventoryResponse {
-	item, err := db.Instance.QueryInventory(itemName)
-	if err != nil {
-		panic(fmt.Sprintf("failed to query inventory for item %s: %v", itemName, err))
-	}
-	if item == nil {
-		return QueryInventoryResponse{
-			Item:      itemName,
-			Inventory: 0.0,
-			Unit:      "",
-		}
-	}
-	return QueryInventoryResponse{
-		Item:      item.Name,
-		Inventory: float64(item.Amount),
-		Unit:      item.Unit,
-	}
-}
-
-type AddToInventoryParams struct {
-    Name   string `json:"param0"`
-    Amount float64 `json:"param1"`
-    Unit   string `json:"param2"`
-}
-
-type AddToInventoryResponse struct {
-	Item 	db.Item  `json:"item"`
-}
-
-func (r McpRegistry) AddToInventory(name string, amount float64, unit string) AddToInventoryResponse {
-	item, err := db.Instance.AddToInventory(db.Item{
-		Name:   name,
-		Amount: amount,
-		Unit:   unit,
-	})
-	if err != nil {
-		panic(fmt.Sprintf("failed to add to inventory the item: %v", err))
-	}
-	return AddToInventoryResponse{
-		Item: *item,
-	}
-}
-
-type ReduceInventoryParams struct {
-    Name   string `json:"param0"`
-    Amount float64 `json:"param1"`
-    Unit   string `json:"param2"`
-}
-
-type ReduceInventoryResponse struct {
-	Item 	db.Item  `json:"item"`
-}
-
-func (r McpRegistry) ReduceInventory(name string, amount float64, unit string) ReduceInventoryResponse {
-	response := r.AddToInventory(name, -amount, unit)
-	return ReduceInventoryResponse{
-		Item: response.Item,
-	}
+type Params interface {
+	Output(response any) (string, []any)
 }
 
 type McpRegistry struct {
