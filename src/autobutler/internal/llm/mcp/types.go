@@ -1,4 +1,4 @@
-package llm
+package mcp
 
 import (
 	"autobutler/pkg/util"
@@ -9,41 +9,8 @@ import (
 	"github.com/openai/openai-go"
 )
 
-var (
-	mcpRegistry = &McpRegistry{
-		Functions: make(map[string]McpFunction),
-	}
-)
-
-type AddParams struct {
-	Param0 float64 `json:"param0"`
-	Param1 float64 `json:"param1"`
-}
-
-func (r McpRegistry) Add(param0 float64, param1 float64) float64 {
-	return param0 + param1
-}
-
-func unmarshalParamSchema[T any](paramSchema string) (*T, error) {
-	var params T
-	if err := json.Unmarshal([]byte(paramSchema), &params); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal parameters: %w", err)
-	}
-	return &params, nil
-}
-
-func init() {
-	addFn, err := NewMcpFunction(mcpRegistry.Add, "Adds two numbers together and returns the result.", func(result any, paramSchema string) (string, error) {
-		parameters, err := unmarshalParamSchema[AddParams](paramSchema)
-		if err != nil {
-			return "", fmt.Errorf("failed to unmarshal parameters: %w", err)
-		}
-		return fmt.Sprintf("%f + %f = %f", parameters.Param0, parameters.Param1, result), nil
-	})
-	if err != nil {
-		panic(fmt.Sprintf("failed to generate JSON schema for add function: %v", err))
-	}
-	mcpRegistry.Functions[addFn.Name()] = *addFn
+type Params interface {
+	Output(response any) (string, []any)
 }
 
 type McpRegistry struct {
@@ -52,23 +19,20 @@ type McpRegistry struct {
 
 type McpFunction struct {
 	Definition    openai.FunctionDefinitionParam
-	fn            interface{}
+	fn            any
 	OutputHandler func(result any, paramSchema string) (string, error)
 }
-
 func (f McpFunction) Name() string {
 	return f.Definition.Name
 }
-
 func (f McpFunction) Parameters() openai.FunctionParameters {
 	return f.Definition.Parameters
 }
-
 func (f McpFunction) Description() string {
 	return f.Definition.Description.String()
 }
 
-func NewMcpFunction(fn interface{}, description string, outputHandler func(result any, paramSchema string) (string, error)) (*McpFunction, error) {
+func NewMcpFunction(fn any, description string, outputHandler func(result any, paramSchema string) (string, error)) (*McpFunction, error) {
 	t := reflect.TypeOf(fn)
 	if t.Kind() != reflect.Func {
 		return nil, fmt.Errorf("expected a function, got %s", t.Kind())
@@ -100,8 +64,8 @@ func NewMcpFunction(fn interface{}, description string, outputHandler func(resul
 	}, nil
 }
 
-func (r McpRegistry) makeToolCall(toolCall openai.ChatCompletionMessageToolCall) (any, error) {
-	var args map[string]float64
+func (r McpRegistry) MakeToolCall(toolCall openai.ChatCompletionMessageToolCall) (any, error) {
+	var args map[string]any
 	if err := json.Unmarshal([]byte(toolCall.Function.Arguments), &args); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal function arguments: %w", err)
 	}
@@ -116,14 +80,14 @@ func (r McpRegistry) makeToolCall(toolCall openai.ChatCompletionMessageToolCall)
 	// Prepare argument list in order as defined in fnDef.Parameters
 	var paramNames []string
 	if fnDef.Parameters() != nil {
-		if props, ok := fnDef.Parameters()["properties"].(map[string]interface{}); ok {
+		if props, ok := fnDef.Parameters()["properties"].(map[string]any); ok {
 			for name := range props {
 				paramNames = append(paramNames, name)
 			}
 		}
 	}
 
-	var argValues []interface{}
+	var argValues []any
 	for _, name := range paramNames {
 		val, exists := args[name]
 		if !exists {
@@ -162,7 +126,7 @@ func (r McpRegistry) callByName(fnName string, args ...any) (any, error) {
 	return out[0].Interface(), nil
 }
 
-func (r McpRegistry) toCompletionToolParam() []openai.ChatCompletionToolParam {
+func (r McpRegistry) ToCompletionToolParam() []openai.ChatCompletionToolParam {
 	var tools []openai.ChatCompletionToolParam
 	for _, fn := range r.Functions {
 		tools = append(tools, openai.ChatCompletionToolParam{
