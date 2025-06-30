@@ -8,9 +8,9 @@ import (
 	"strings"
 )
 
-func installSystemdService() error {
+func installSystemdService(apiKey string) error {
 	serviceFilePath := fmt.Sprintf("/etc/systemd/system/%s", systemdServiceName)
-	if err := os.WriteFile(serviceFilePath, []byte(systemdServiceContent), 0644); err != nil {
+	if err := os.WriteFile(serviceFilePath, []byte(buildServiceFile(apiKey)), 0644); err != nil {
 		return fmt.Errorf("failed to write systemd service file: %w", err)
 	}
 	if err := exec.Command("systemctl", "start", strings.Split(systemdServiceName, ".")[0]).Run(); err != nil {
@@ -19,9 +19,9 @@ func installSystemdService() error {
 	return nil
 }
 
-func installPlistService() error {
+func installPlistService(apiKey string) error {
 	serviceFilePath := fmt.Sprintf("/Library/LaunchDaemons/%s", plistServiceName)
-	if err := os.WriteFile(serviceFilePath, []byte(plistServiceContent), 0644); err != nil {
+	if err := os.WriteFile(serviceFilePath, []byte(buildServiceFile(apiKey)), 0644); err != nil {
 		return fmt.Errorf("failed to write plist service file: %w", err)
 	}
 	if err := exec.Command("launchctl", "load", serviceFilePath).Run(); err != nil {
@@ -30,7 +30,7 @@ func installPlistService() error {
 	return nil
 }
 
-func Install() error {
+func Install(apiKey string) error {
 	executable, err := os.Executable()
 	if err != nil {
 		return fmt.Errorf("failed to get executable path: %w", err)
@@ -40,12 +40,12 @@ func Install() error {
 		if err := exec.Command("cp", "-v", executable, "/usr/local/bin/autobutler").Run(); err != nil {
 			return fmt.Errorf("failed to copy binary to /usr/local/bin: %w", err)
 		}
-		return installSystemdService()
+		return installSystemdService(apiKey)
 	case "darwin":
 		if err := exec.Command("cp", "-v", executable, "/Applications/autobutler").Run(); err != nil {
 			return fmt.Errorf("failed to copy binary to /Applications: %w", err)
 		}
-		return installPlistService()
+		return installPlistService(apiKey)
 	default:
 		return fmt.Errorf("unsupported operating system: %s", runtime.GOOS)
 	}

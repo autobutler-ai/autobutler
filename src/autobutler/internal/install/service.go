@@ -1,5 +1,10 @@
 package install
 
+import (
+	"fmt"
+	"runtime"
+)
+
 const (
 	systemdServiceName = "autobutler.service"
 	systemdServiceContent = `[Unit]
@@ -8,7 +13,7 @@ After=network.target
 
 [Service]
 ExecStart=/usr/local/bin/autobutler serve
-Environment="LLM_AZURE_API_KEY=$LLM_AZURE_API_KEY"
+Environment="LLM_AZURE_API_KEY=%s"
 Environment="PORT=8081"
 Restart=always
 StandardOutput=append:/var/log/autobutler.app
@@ -32,7 +37,7 @@ WantedBy=multi-user.target`
     <key>EnvironmentVariables</key>
     <dict>
         <key>LLM_AZURE_API_KEY</key>
-        <string>$LLM_AZURE_API_KEY</string>
+        <string>%s</string>
         <key>PORT</key>
         <string>8081</string>
     </dict>
@@ -47,3 +52,14 @@ WantedBy=multi-user.target`
 </dict>
 </plist>`
 )
+
+func buildServiceFile(apiKey string) string {
+	switch runtime.GOOS {
+	case "linux":
+		return fmt.Sprintf(systemdServiceContent, apiKey)
+	case "darwin":
+		return fmt.Sprintf(plistServiceContent, apiKey)
+	default:
+		panic("unsupported operating system")
+	}
+}
