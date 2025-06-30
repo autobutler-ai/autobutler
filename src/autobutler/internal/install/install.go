@@ -35,10 +35,20 @@ func installPlistService() error {
 }
 
 func Install() error {
+	executable, err := os.Executable()
+	if err != nil {
+		return fmt.Errorf("failed to get executable path: %w", err)
+	}
 	switch runtime.GOOS {
 	case "linux":
+		if err := exec.Command("cp", executable, "/usr/local/bin/autobutler").Run(); err != nil {
+			return fmt.Errorf("failed to copy binary to /usr/local/bin: %w", err)
+		}
 		return installSystemdService()
 	case "darwin":
+		if err := exec.Command("cp", executable, "/Applications/autobutler").Run(); err != nil {
+			return fmt.Errorf("failed to copy binary to /Applications: %w", err)
+		}
 		return installPlistService()
 	default:
 		return fmt.Errorf("unsupported operating system: %s", runtime.GOOS)
