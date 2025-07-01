@@ -41,7 +41,18 @@ curl \
 sudo ./autobutler install $API_KEY
 ```
 
-It should now be running in the background, and you can check it out at [http://localhost:8081](http://localhost:8081).
+or if you prefer to use `wget`, you can run:
+
+```bash
+API_KEY=your-api-key
+VERSION=v0.0.0
+wget \
+  -qO- \
+  "https://github.com/exokomodo/autobutler.ai/releases/download/${VERSION}/autobutler_darwin_arm64.tar.gz" | tar -xv
+sudo ./autobutler install $API_KEY
+```
+
+Autobutler should now be running in the background, and you can check it out at [http://localhost:8081](http://localhost:8081).
 
 ## Next Steps
 
