@@ -1,14 +1,20 @@
 package chat
 
 import (
-    "autobutler/ui/components/update"
+  "fmt"
+  "autobutler/ui/components/update"
+  "autobutler/internal/version"
 )
 
 templ header() {
     <!-- Chat Header -->
     <div class="bg-white/5 backdrop-blur-lg border-b border-white/10 p-4">
       <div class="max-w-4xl mx-auto flex items-center justify-between">
-        <h1 class="text-xl font-semibold text-white">AutoButler Chat</h1>
+        if version.Semver == version.NoSemver {
+        <h1 class="text-xl font-semibold text-white">AutoButler Chat<span class="font-thin">{"@vX.Y.Z"}</span></h1>
+        } else {
+          <h1 class="text-xl font-semibold text-white">AutoButler Chat<span class="font-thin">{fmt.Sprintf("@%s", version.Semver)}</span></h1>
+        }
         <div class="flex items-center space-x-4">
           <div id="updateMenu" class="invisible">
             @update.Update()
