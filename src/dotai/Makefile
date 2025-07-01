@@ -8,12 +8,10 @@ SHELL := /bin/bash
 
 run: ## Run all components
 	echo "Running all components..."
-	$(MAKE) -C ./ui run &
 	$(MAKE) -C ./backend run
 
 kill:
 	$(MAKE) -C ./backend kill
-	$(MAKE) -C ./ui kill
 
 .PHONY: help
 help: ## Displays help info
