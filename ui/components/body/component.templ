@@ -1,9 +1,13 @@
-package components
+package body
 
-templ Body() {
+import (
+    "autobutler/ui/components/gradient_overlays"
+)
+
+templ Component() {
     <body class="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
         <main class="relative min-h-screen">
-            @GradientOverlays()
+            @gradient_overlays.Component()
             <div class="relative z-10">
                 { children... }
             </div>

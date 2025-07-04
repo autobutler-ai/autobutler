@@ -1,4 +1,4 @@
-# [Autobutler](https://autobutler.ai)
+# Use Cases
 
 Automated home assistant
 

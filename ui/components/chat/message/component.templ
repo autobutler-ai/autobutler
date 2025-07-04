@@ -1,10 +1,10 @@
-package chat
+package message
 
 import (
     "autobutler/internal/llm"
 )
 
-templ Message(message llm.ChatMessage) {
+templ Component(message llm.ChatMessage) {
     <div class={ chatFlexClass(message) }>
         <div class={ chatMessageClass(message) }>
             <p class="whitespace-pre-wrap">{ message.Content }</p>
