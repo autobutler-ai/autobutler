@@ -3,8 +3,6 @@ on:
   push:
     tags:
       - 'v*.*.*'
-env:
-  WORKING_DIR: ${{ github.workspace }}/src/autobutler
 defaults:
   run:
     shell: bash
