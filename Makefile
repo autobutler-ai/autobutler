@@ -6,95 +6,91 @@ SHELL := /bin/bash
 
 .PHONY: $(MAKECMDGOALS)
 
-YAML_FILES := $(shell find . -not -path "*/node_modules/*" -not -path "**/helm-templates/**" -not -path "**/cluster-nodes/**/templates/**" -type f -name '*.yml')
+setup/templ: ## Install templ tool
+	go get -tool github.com/a-h/templ/cmd/templ@latest
 
-UNAME_S := $(shell uname -s)
+export INSTALL_VERSION?=$(shell git describe --tags --abbrev=0)
 
-.PHONY: $(MAKECMDGOALS)
+install/linux: env-INSTALL_VERSION ## Install startup service on Linux
+	if ! [[ -f /usr/local/bin/autobutler ]]; then \
+		curl \
+			--fail \
+			-L \
+			https://github.com/autobutler-ai/autobutler.ai/releases/download/$(INSTALL_VERSION)/autobutler_darwin_arm64.tar.gz | sudo tar -x -C /usr/local/bin ; \
+	fi
+	sudo cp -f \
+		./deployments/autobutler.service \
+		/etc/systemd/system/
+	sudo systemctl restart autobutler
+	echo "Installed autobutler successfully. Will run at startup."
 
-fix: fix/yaml ## [all] Fix format and lint errors
+install/mac: env-INSTALL_VERSION ## Install startup service on Mac
+	if ! [[ -f /Applications/autobutler ]]; then \
+		curl \
+			--fail \
+			-L \
+			https://github.com/autobutler-ai/autobutler.ai/releases/download/$(INSTALL_VERSION)/autobutler_darwin_arm64.tar.gz | tar -x -C /Applications/ ; \
+	fi
+	sudo launchctl unload /Library/LaunchDaemons/com.autobutler.autobutler.plist > /dev/null 2>&1 || true
+	sudo cp -f \
+		./deployments/com.autobutler.autobutler.plist \
+		/Library/LaunchDaemons/com.autobutler.autobutler.plist
+	sudo launchctl load /Library/LaunchDaemons/com.autobutler.autobutler.plist
+	echo "Installed autobutler successfully. Will run at startup."
 
-format: format/go format/python format/yaml ## [all] Format
+generate: ## Generate templ files
+	go tool templ generate
 
-format/go: ## [golang] Format
+build: generate ## Build backend
+	mkdir -p ./build
+	go build -o ./build/autobutler
+
+build/all: build/linux build/mac build/windows ## Build all backends
+
+build/linux: build/linux/amd64 build/linux/arm64 ## Build linux backends
+build/linux/amd64: ## Build linux backends
+	GOOS=linux GOARCH=amd64 go build -o ./build/autobutler-linux-amd64 main.go
+build/linux/arm64: ## Build linux backends
+	GOOS=linux GOARCH=arm64 go build -o ./build/autobutler-linux-arm64 main.go
+
+build/mac: build/mac/amd64 build/mac/arm64 ## Build macOS backends
+build/mac/arm64: ## Build macOS backends
+	GOOS=darwin GOARCH=arm64 go build -o ./build/autobutler-mac-arm64 main.go
+
+build/windows: build/windows/amd64 build/windows/arm64 ## Build windows backends
+build/windows/amd64: ## Build windows backends
+	GOOS=windows GOARCH=amd64 go build -o ./build/autobutler-windows-amd64.exe main.go
+build/windows/arm64: ## Build windows backends
+	GOOS=windows GOARCH=arm64 go build -o ./build/autobutler-windows-arm64.exe main.go
+
+format: ## Format code
 	go fmt ./...
 
-fix/python: format/python ## [python] Fix
-format/python:
-	SHOULD_INSTALL=0
-	if ! [[ -d ./venv ]]; then \
-		python3 -m venv ./venv; \
-		SHOULD_INSTALL=1; \
-	fi
-	. ./venv/bin/activate
-	if [[ $${SHOULD_INSTALL} -eq 1 ]]; then \
-		pip install --upgrade pip; \
-		pip install -r ./requirements.dev.txt; \
-	fi
-	black .
-	isort --profile black .
-
-fix/yaml: format/yaml ## [yaml] Format
-format/yaml:
-	echo "[fix/format/yaml] begin"
-	for file in $(YAML_FILES); do \
-		yq -i -P $${file}; \
-	done
-	echo "[fix/format/yaml] end"
-
-lint: lint/go lint/python lint/yaml ## [all] Lint
-
-lint/go: lint/go/format lint/go/vet ## [all] Lint Golang
-
-lint/go/format:
+lint: ## Lint code
 	gofmt -s -w .
+	go vet ./...
 
-lint/go/vet:
-	# iterate over al folders with go.mod
-	echo "[lint/vet/go] begin"
-	for dir in $(shell find . -type f -name 'go.mod' -exec dirname {} \;); do \
-		pushd $${dir}; \
-		echo "[lint/vet/go] running go vet in $${dir}"; \
-		go vet ./...; \
-		popd; \
-	done
-	echo "[lint/vet/go] end"
+serve: generate env-LLM_AZURE_API_KEY ## Serve backend
+	go run main.go serve
 
-lint/python: lint/python/format ## [all] Lint Python
-lint/python/format:
-	SHOULD_INSTALL=0
-	if ! [[ -d ./venv ]]; then \
-		python3 -m venv ./venv; \
-		SHOULD_INSTALL=1; \
-	fi
-	. ./venv/bin/activate
-	if [[ $${SHOULD_INSTALL} -eq 1 ]]; then \
-		pip install --upgrade pip; \
-		pip install -r ./requirements.dev.txt; \
-	fi
-	black --check .
-	isort --profile black --check-only .
+watch: env-LLM_AZURE_API_KEY ## Watch backend for changes
+	go tool templ generate \
+		--watch \
+		--cmd="go run . serve"
 
-lint/yaml: lint/yaml/format ## [all] Lint YAML
-lint/yaml/format:
-	echo "[lint/format/yaml] begin"
-	for file in $(YAML_FILES); do \
-		yq -P $${file} > /dev/null; \
-	done
-	echo "[lint/format/yaml] end"
+version: ## Print version
+	go run main.go version
 
-setup: setup/db
-
-setup/db: ## [db] Setup DB
-ifeq ($(UNAME_S),Linux)
-	if ! command -v sqlite3 &> /dev/null; then \
-		sudo apt-get install -y sqlite3; \
-	fi
-else ifeq ($(UNAME_S),Darwin)
-	if ! command -v sqlite3 &> /dev/null; then \
-		brew install sqlite; \
-	fi
-endif
+exercise: env-LLM_AZURE_API_KEY ## Exercise the backend chat feature
+	killall main || true
+	$(MAKE) serve &
+	sleep 5
+	echo ""
+	curl \
+		--silent \
+		-X GET \
+		"http://localhost:8080/chat?prompt=How+much+milk+is+in+the+house" | tee ./exercise.json
+	killall main || true
 
 env-%: ## Check for env var
 	if [ -z "$($*)" ]; then \
@@ -102,6 +98,5 @@ env-%: ## Check for env var
 		exit 1; \
 	fi
 
-.PHONY: help
 help: ## Displays help info
-	awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m\033[0m\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m\033[0m\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
