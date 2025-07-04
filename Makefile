@@ -14,7 +14,7 @@ UNAME_S := $(shell uname -s)
 
 fix: fix/yaml ## [all] Fix format and lint errors
 
-format: format/go format/python format/yaml ## [all] Format
+format: format/go format/yaml ## [all] Format
 
 format/go: ## [golang] Format
 	go fmt ./...
@@ -27,7 +27,7 @@ format/yaml:
 	done
 	echo "[fix/format/yaml] end"
 
-lint: lint/go lint/python lint/yaml ## [all] Lint
+lint: lint/go lint/yaml ## [all] Lint
 
 lint/go: lint/go/format lint/go/vet ## [all] Lint Golang
 
@@ -45,20 +45,6 @@ lint/go/vet:
 	done
 	echo "[lint/vet/go] end"
 
-lint/python: lint/python/format ## [all] Lint Python
-lint/python/format:
-	SHOULD_INSTALL=0
-	if ! [[ -d ./venv ]]; then \
-		python3 -m venv ./venv; \
-		SHOULD_INSTALL=1; \
-	fi
-	. ./venv/bin/activate
-	if [[ $${SHOULD_INSTALL} -eq 1 ]]; then \
-		pip install --upgrade pip; \
-		pip install -r ./requirements.dev.txt; \
-	fi
-	black --check .
-	isort --profile black --check-only .
 
 lint/yaml: lint/yaml/format ## [all] Lint YAML
 lint/yaml/format:
