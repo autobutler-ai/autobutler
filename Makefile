@@ -19,21 +19,6 @@ format: format/go format/python format/yaml ## [all] Format
 format/go: ## [golang] Format
 	go fmt ./...
 
-fix/python: format/python ## [python] Fix
-format/python:
-	SHOULD_INSTALL=0
-	if ! [[ -d ./venv ]]; then \
-		python3 -m venv ./venv; \
-		SHOULD_INSTALL=1; \
-	fi
-	. ./venv/bin/activate
-	if [[ $${SHOULD_INSTALL} -eq 1 ]]; then \
-		pip install --upgrade pip; \
-		pip install -r ./requirements.dev.txt; \
-	fi
-	black .
-	isort --profile black .
-
 fix/yaml: format/yaml ## [yaml] Format
 format/yaml:
 	echo "[fix/format/yaml] begin"
