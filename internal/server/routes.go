@@ -9,7 +9,8 @@ import (
 	"autobutler/internal/llm"
 	"autobutler/internal/update"
 	"autobutler/pkg/util"
-	"autobutler/ui/components/chat"
+	"autobutler/ui/components/chat/load"
+	"autobutler/ui/components/chat/message"
 	"autobutler/ui/views"
 
 	"github.com/gin-contrib/static"
@@ -55,15 +56,15 @@ func setupApiRoutes(router *gin.Engine) {
 	apiRoute(apiV1Group, "GET", "/user-chat", func(c *gin.Context) {
 		isHtml := c.GetHeader("Accept") == "text/html"
 		prompt := c.Query("prompt")
-		message := llm.UserChatMessage(prompt)
+		msg := llm.UserChatMessage(prompt)
 		if isHtml {
-			messageComponent := chat.Message(message)
+			messageComponent := message.Component(msg)
 			if err := messageComponent.Render(c.Request.Context(), c.Writer); err != nil {
 				c.Status(500)
 				return
 			}
 			// Render a div with an hx-trigger="load"
-			loadComponent := chat.Load(prompt)
+			loadComponent := load.Component(prompt)
 			if err := loadComponent.Render(c.Request.Context(), c.Writer); err != nil {
 				c.Status(500)
 				return
@@ -80,7 +81,7 @@ func setupApiRoutes(router *gin.Engine) {
 		response, err := llm.RemoteLLMRequest(prompt)
 		if err != nil {
 			if isHtml {
-				messageComponent := chat.Message(llm.ErrorChatMessage(err))
+				messageComponent := message.Component(llm.ErrorChatMessage(err))
 				if err := messageComponent.Render(c.Request.Context(), c.Writer); err != nil {
 					c.Status(500)
 					return
@@ -93,7 +94,7 @@ func setupApiRoutes(router *gin.Engine) {
 			return
 		}
 		if isHtml {
-			messageComponent := chat.Message(llm.FromCompletionToChatMessage(*response))
+			messageComponent := message.Component(llm.FromCompletionToChatMessage(*response))
 			if err := messageComponent.Render(c.Request.Context(), c.Writer); err != nil {
 				c.Status(500)
 				return

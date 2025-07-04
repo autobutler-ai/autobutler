@@ -1,11 +1,11 @@
-package chat
+package load
 
 import (
     "fmt"
     "html"
 )
 
-templ Load(prompt string) {
+templ Component(prompt string) {
     <div hx-trigger="load"
          hx-get="/api/v1/ai-chat"
          hx-target="this"

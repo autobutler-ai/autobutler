@@ -10,8 +10,10 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import (
 	"autobutler/internal/llm"
-	"autobutler/ui/components"
+	"autobutler/ui/components/body"
 	"autobutler/ui/components/chat"
+	"autobutler/ui/components/footer"
+	"autobutler/ui/components/header"
 	"time"
 )
 
@@ -40,7 +42,7 @@ func Chat() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Header().Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = header.Component().Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -56,7 +58,7 @@ func Chat() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = chat.Chat(
+			templ_7745c5c3_Err = chat.Component(
 				[]llm.ChatMessage{
 					{Role: llm.ChatRoleSystem, Content: "Welcome to the Autobutler!", Timestamp: llm.GetTimestamp(time.Now())},
 				},
@@ -66,11 +68,11 @@ func Chat() templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = components.Body().Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = body.Component().Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Footer().Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = footer.Component().Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

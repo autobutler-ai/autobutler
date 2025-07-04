@@ -1,23 +1,25 @@
 package views
 
 import (
-"time"
-"autobutler/ui/components"
-"autobutler/ui/components/chat"
-"autobutler/internal/llm"
+    "time"
+    "autobutler/internal/llm"
+    "autobutler/ui/components/chat"
+	"autobutler/ui/components/header"
+    "autobutler/ui/components/footer"
+	"autobutler/ui/components/body"
 )
 
 templ Chat() {
     <!DOCTYPE html>
     <html lang="en">
-        @components.Header()
-        @components.Body() {
-            @chat.Chat(
+        @header.Component()
+        @body.Component() {
+            @chat.Component(
                 []llm.ChatMessage{
                     {Role: llm.ChatRoleSystem, Content: "Welcome to the Autobutler!", Timestamp: llm.GetTimestamp(time.Now())},
                 },
             )
         }
-        @components.Footer()
+        @footer.Component()
     </html>
 }
