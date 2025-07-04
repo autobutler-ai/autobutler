@@ -204,9 +204,9 @@ cython_debug/
 ## Other
 
 # SSL certificates and keys
-src/autobutler/nginx/ssl/*.crt
-src/autobutler/nginx/ssl/*.key
-src/autobutler/nginx/ssl/*.csr
+src/nginx/ssl/*.crt
+src/nginx/ssl/*.key
+src/nginx/ssl/*.csr
 
 # Home Assistant
-src/autobutler/home-assistant/config
+src/home-assistant/config

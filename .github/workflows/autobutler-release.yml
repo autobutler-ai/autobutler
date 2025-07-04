@@ -4,7 +4,7 @@ on:
     tags:
       - 'v*.*.*'
 env:
-  WORKING_DIR: ${{ github.workspace }}/src/autobutler
+  WORKING_DIR: ${{ github.workspace }}/src
 defaults:
   run:
     shell: bash
