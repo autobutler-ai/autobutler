@@ -8,11 +8,12 @@ import (
     "autobutler/ui/components/icons/slideshow"
     "autobutler/ui/components/icons/image"
     "autobutler/pkg/util"
+	"path/filepath"
 )
 
 
 
-templ Node(file fs.FileInfo) {
+templ Node(rootDir string, file fs.FileInfo) {
     <li class="flex items-center py-3">
         {{ fileType := util.DetermineFileType(file) }}
         switch fileType {
@@ -27,7 +28,14 @@ templ Node(file fs.FileInfo) {
         default:
             @generic.Component()
         }
-        <span class="flex-1">{ file.Name() }</span>
-        <span class="text-gray-600 dark:text-gray-200 text-sm">{util.SizeBytesToString(file.Size())}</span>
+        if fileType == util.FileTypeFolder {
+            <a href={filepath.Join("/files", rootDir, file.Name())} class="flex-1 hover:underline">
+                <span>{ file.Name() }</span>
+            </a>
+            <span class="text-gray-600 dark:text-gray-200 text-sm">{util.SizeBytesToString(file.Size())}</span>
+        } else {
+            <span class="flex-1">{ file.Name() }</span>
+            <span class="text-gray-600 dark:text-gray-200 text-sm">{util.SizeBytesToString(file.Size())}</span>
+        }
     </li>
 }

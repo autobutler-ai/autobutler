@@ -5,7 +5,7 @@ import (
 	"autobutler/pkg/util"
 )
 
-templ Component(files []fs.FileInfo) {
+templ Component(rootDir string, files []fs.FileInfo) {
     <div class="bg-white dark:bg-gray-900 max-w-2xl mx-auto mt-10 rounded shadow p-6">
         <h2 class="text-2xl font-bold mb-4">File Explorer</h2>
         if len(files) == 0 {
@@ -13,7 +13,7 @@ templ Component(files []fs.FileInfo) {
         } else {
             <ul class="divide-y divide-gray-200">
                 for _, file := range files {
-                    @Node(file)
+                    @Node(rootDir, file)
                 }
             </ul>
         }
