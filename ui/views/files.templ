@@ -18,7 +18,7 @@ templ Files(rootDir string) {
             if err != nil {
                 <div class="text-red-500">Error loading files: {err.Error()}</div>
             } else {
-                @file_explorer.Component(files)
+                @file_explorer.Component(rootDir, files)
             }
         }
         @footer.Component()

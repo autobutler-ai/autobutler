@@ -51,8 +51,8 @@ func setupUiRoutes(router *gin.Engine) {
 		}
 		c.Status(200)
 	})
-	uiRoute(router, "/files/:root", func(c *gin.Context) {
-		rootDir := c.Param("root")
+	uiRoute(router, "/files/*rootDir", func(c *gin.Context) {
+		rootDir := c.Param("rootDir")
 		if err := views.Files(rootDir).Render(c.Request.Context(), c.Writer); err != nil {
 			c.Status(400)
 			return
