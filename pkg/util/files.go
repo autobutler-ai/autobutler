@@ -3,34 +3,37 @@ package util
 import (
 	"fmt"
 	"io/fs"
+	"os"
 	"path/filepath"
+	"slices"
+	"strings"
 	"time"
 )
 
-type TestFileInfo struct {
+type CustomFileInfo struct {
     name string
     size int64
 }
-func (f TestFileInfo) Name() string {
+func (f CustomFileInfo) Name() string {
     return f.name
 }
-func (f TestFileInfo) Size() int64 {
+func (f CustomFileInfo) Size() int64 {
     return f.size
 }
-func (f TestFileInfo) Mode() fs.FileMode {
+func (f CustomFileInfo) Mode() fs.FileMode {
     return 0666
 }
-func (f TestFileInfo) ModTime() time.Time {
+func (f CustomFileInfo) ModTime() time.Time {
     return time.Now()
 }
-func (f TestFileInfo) IsDir() bool {
+func (f CustomFileInfo) IsDir() bool {
     return f.name[len(f.name)-1] == '/'
 }
-func (f TestFileInfo) Sys() any {
+func (f CustomFileInfo) Sys() any {
     return nil
 }
-func NewTestFileInfo(name string, size int64) fs.FileInfo {
-	return TestFileInfo{name: name, size: size}
+func NewCustomFileInfo(name string, size int64) fs.FileInfo {
+	return CustomFileInfo{name: name, size: size}
 }
 
 type FileType string
@@ -96,23 +99,30 @@ func SizeBytesToString(size_bytes int64) string {
 }
 
 func StatFilesInDir(dir string) ([]fs.FileInfo, error) {
-	fileInfos := make([]fs.FileInfo, 0)
-	err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
-		if err != nil {
-			return fmt.Errorf("failed to access path %s: %w", path, err)
-		}
-		if d.IsDir() {
-			return nil
-		}
-		info, err := d.Info()
-		if err != nil {
-			return fmt.Errorf("failed to get file info for %s: %w", path, err)
-		}
-		fileInfos = append(fileInfos, info)
-		return nil
-	})
+	entries, err := os.ReadDir(dir)
+	files := make([]fs.FileInfo, len(entries))
 	if err != nil {
-		return nil, fmt.Errorf("error walking the path %s: %w", dir, err)
+		return nil, fmt.Errorf("error reading the directory %s: %w", dir, err)
 	}
-	return fileInfos, nil
+	for i, entry := range entries {
+		if entry.IsDir() {
+			files[i] = NewCustomFileInfo(entry.Name()+"/", 0)
+		} else {
+			info, err := entry.Info()
+			if err != nil {
+				return nil, fmt.Errorf("error getting info for file %s: %w", entry.Name(), err)
+			}
+			files[i] = info
+		}
+	}
+	// Sort files by directory first, then by name
+	slices.SortFunc(files, func(a, b fs.FileInfo) int {
+		if a.IsDir() && !b.IsDir() {
+			return -1 // a is a directory, b is a file
+		} else if !a.IsDir() && b.IsDir() {
+			return 1 // a is a file, b is a directory
+		}
+		return strings.Compare(a.Name(), b.Name())
+	})
+	return files, nil
 }
