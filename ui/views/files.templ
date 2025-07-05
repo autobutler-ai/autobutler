@@ -1,6 +1,7 @@
 package views
 
 import (
+	"io/fs"
     "autobutler/pkg/util"
 	"autobutler/ui/components/header"
     "autobutler/ui/components/footer"
@@ -13,18 +14,12 @@ templ Files() {
     <html lang="en">
         @header.Component()
         @body.Component() {
-            @files.Component([]string{
-                "bingus-pics/",
-                "report.pdf",
-                "presentation.pptx",
-                "notes.txt",
-                "image.png",
-            }, []int64{
-                util.TB(1.2), // 1.2 TB
-                util.MB(1.1), // 1.1 MB
-                util.MB(3.4), // 3.4 MB
-                util.KB(8),   // 8 KB
-                util.KB(540), // 540 KB
+            @files.Component([]fs.FileInfo{
+                util.NewTestFileInfo("bingus-pics/",util.TB(1.2)),
+                util.NewTestFileInfo("report.pdf", util.MB(1.1)),
+                util.NewTestFileInfo("presentation.pptx", util.MB(3.4)),
+                util.NewTestFileInfo("notes.txt", util.KB(8)),
+                util.NewTestFileInfo("image.png", util.KB(540)),
             })
         }
         @footer.Component()

@@ -14,6 +14,7 @@ import (
 	"autobutler/ui/components/files"
 	"autobutler/ui/components/footer"
 	"autobutler/ui/components/header"
+	"io/fs"
 )
 
 func Files() templ.Component {
@@ -57,18 +58,12 @@ func Files() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = files.Component([]string{
-				"bingus-pics/",
-				"report.pdf",
-				"presentation.pptx",
-				"notes.txt",
-				"image.png",
-			}, []int64{
-				util.TB(1.2), // 1.2 TB
-				util.MB(1.1), // 1.1 MB
-				util.MB(3.4), // 3.4 MB
-				util.KB(8),   // 8 KB
-				util.KB(540), // 540 KB
+			templ_7745c5c3_Err = files.Component([]fs.FileInfo{
+				util.NewTestFileInfo("bingus-pics/", util.TB(1.2)),
+				util.NewTestFileInfo("report.pdf", util.MB(1.1)),
+				util.NewTestFileInfo("presentation.pptx", util.MB(3.4)),
+				util.NewTestFileInfo("notes.txt", util.KB(8)),
+				util.NewTestFileInfo("image.png", util.KB(540)),
 			}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err

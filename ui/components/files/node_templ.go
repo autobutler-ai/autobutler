@@ -15,9 +15,10 @@ import (
 	"autobutler/ui/components/icons/image"
 	"autobutler/ui/components/icons/pdf"
 	"autobutler/ui/components/icons/slideshow"
+	"io/fs"
 )
 
-func Node(filename string, size_bytes int64) templ.Component {
+func Node(file fs.FileInfo) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -42,27 +43,29 @@ func Node(filename string, size_bytes int64) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if util.IsFileType(filename, util.FileTypeFolder) {
+		fileType := util.GetFileType(file)
+		switch fileType {
+		case util.FileTypeFolder:
 			templ_7745c5c3_Err = folder.Component().Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-		} else if util.IsFileType(filename, util.FileTypePDF) {
+		case util.FileTypePDF:
 			templ_7745c5c3_Err = pdf.Component().Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-		} else if util.IsFileType(filename, util.FileTypeSlideshow) {
+		case util.FileTypeSlideshow:
 			templ_7745c5c3_Err = slideshow.Component().Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-		} else if util.IsFileType(filename, util.FileTypeImage) {
+		case util.FileTypeImage:
 			templ_7745c5c3_Err = image.Component().Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-		} else {
+		default:
 			templ_7745c5c3_Err = generic.Component().Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -73,9 +76,9 @@ func Node(filename string, size_bytes int64) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
-		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(filename)
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(file.Name())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `ui/components/files/node.templ`, Line: 31, Col: 39}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `ui/components/files/node.templ`, Line: 34, Col: 42}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -86,9 +89,9 @@ func Node(filename string, size_bytes int64) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var3 string
-		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(util.SizeBytesToString(size_bytes))
+		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(util.SizeBytesToString(file.Size()))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `ui/components/files/node.templ`, Line: 32, Col: 79}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `ui/components/files/node.templ`, Line: 35, Col: 80}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
