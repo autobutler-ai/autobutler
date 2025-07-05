@@ -1,0 +1,33 @@
+package file_explorer
+
+import (
+    "io/fs"
+    "autobutler/ui/components/icons/folder"
+    "autobutler/ui/components/icons/generic"
+    "autobutler/ui/components/icons/pdf"
+    "autobutler/ui/components/icons/slideshow"
+    "autobutler/ui/components/icons/image"
+    "autobutler/pkg/util"
+)
+
+
+
+templ Node(file fs.FileInfo) {
+    <li class="flex items-center py-3">
+        {{ fileType := util.DetermineFileType(file) }}
+        switch fileType {
+        case util.FileTypeFolder:
+            @folder.Component()
+        case util.FileTypePDF:
+            @pdf.Component()
+        case util.FileTypeSlideshow:
+            @slideshow.Component()
+        case util.FileTypeImage:
+            @image.Component()
+        default:
+            @generic.Component()
+        }
+        <span class="flex-1">{ file.Name() }</span>
+        <span class="text-gray-600 dark:text-gray-200 text-sm">{util.SizeBytesToString(file.Size())}</span>
+    </li>
+}

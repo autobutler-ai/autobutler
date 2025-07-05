@@ -2,8 +2,36 @@ package util
 
 import (
 	"fmt"
+	"io/fs"
 	"path/filepath"
+	"time"
 )
+
+type TestFileInfo struct {
+    name string
+    size int64
+}
+func (f TestFileInfo) Name() string {
+    return f.name
+}
+func (f TestFileInfo) Size() int64 {
+    return f.size
+}
+func (f TestFileInfo) Mode() fs.FileMode {
+    return 0666
+}
+func (f TestFileInfo) ModTime() time.Time {
+    return time.Now()
+}
+func (f TestFileInfo) IsDir() bool {
+    return f.name[len(f.name)-1] == '/'
+}
+func (f TestFileInfo) Sys() any {
+    return nil
+}
+func NewTestFileInfo(name string, size int64) fs.FileInfo {
+	return TestFileInfo{name: name, size: size}
+}
 
 type FileType string
 
@@ -31,8 +59,11 @@ func TB(size float64) int64 {
 	return int64(GB(size) * 1024)
 }
 
-func GetFileType(filename string) FileType {
-	ext := filepath.Ext(filename)
+func DetermineFileType(file fs.FileInfo) FileType {
+	if file.IsDir() {
+		return FileTypeFolder
+	}
+	ext := filepath.Ext(file.Name())
 	switch ext {
 	case ".pdf":
 		return FileTypePDF
@@ -40,18 +71,13 @@ func GetFileType(filename string) FileType {
 		return FileTypeSlideshow
 	case ".png", ".jpg", ".jpeg", ".gif":
 		return FileTypeImage
-	case "":
-		if filename[len(filename)-1] == '/' {
-			return FileTypeFolder
-		}
-		return FileTypeGeneric
 	default:
 		return FileTypeGeneric
 	}
 }
 
-func IsFileType(filename string, expected FileType) bool {
-	actual := GetFileType(filename)
+func IsFileType(file fs.FileInfo, expected FileType) bool {
+	actual := DetermineFileType(file)
 	return actual == expected
 }
 
@@ -67,4 +93,26 @@ func SizeBytesToString(size_bytes int64) string {
     } else {
         return fmt.Sprintf("%.1f TB", float64(size_bytes)/(1024*1024*1024*1024))
     }
+}
+
+func StatFilesInDir(dir string) ([]fs.FileInfo, error) {
+	fileInfos := make([]fs.FileInfo, 0)
+	err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return fmt.Errorf("failed to access path %s: %w", path, err)
+		}
+		if d.IsDir() {
+			return nil
+		}
+		info, err := d.Info()
+		if err != nil {
+			return fmt.Errorf("failed to get file info for %s: %w", path, err)
+		}
+		fileInfos = append(fileInfos, info)
+		return nil
+	})
+	if err != nil {
+		return nil, fmt.Errorf("error walking the path %s: %w", dir, err)
+	}
+	return fileInfos, nil
 }
