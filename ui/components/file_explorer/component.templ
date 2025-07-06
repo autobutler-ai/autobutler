@@ -7,11 +7,13 @@ import (
 
 templ Component(rootDir string, files []fs.FileInfo) {
     <div class="bg-white dark:bg-gray-900 max-w-2xl mx-auto mt-10 rounded shadow p-6">
-        <h2 class="text-2xl font-bold mb-4">File Explorer</h2>
+        <div class="flex items-center mb-4">
+            <h2 class="text-2xl font-bold mr-4">File Explorer</h2>
+            @upload()
+        </div>
         if len(files) == 0 {
             <span class="py-3 text-gray-500">No files found in { util.GetFilesDir() }</span>
         } else {
-            @upload()
             <ul class="divide-y divide-gray-200">
                 for _, file := range files {
                     @Node(rootDir, file)
