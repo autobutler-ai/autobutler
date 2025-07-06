@@ -280,6 +280,6 @@ func apiRoute(router *gin.RouterGroup, method string, route string, handler func
 
 func uiRoute(router *gin.Engine, path string, handler func(c *gin.Context)) gin.IRoutes {
 	path = util.TrimLeading(path, '/')
-	route := fmt.Sprintf("/%s", path)
+	route := filepath.Join("/", path)
 	return router.GET(route, handler)
 }

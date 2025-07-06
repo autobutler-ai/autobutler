@@ -9,7 +9,7 @@ package file_explorer
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "fmt"
+import "path/filepath"
 
 func upload(rootDir string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
@@ -37,15 +37,15 @@ func upload(rootDir string) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
-		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("/api/v1/files/upload/%s", rootDir))
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(filepath.Join("/api/v1/files/upload", rootDir))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `ui/components/file_explorer/upload.templ`, Line: 9, Col: 66}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `ui/components/file_explorer/upload.templ`, Line: 9, Col: 65}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" hx-headers='{\"Accept\": \"text/html\"}' hx-swap=\"innerHTML\" hx-target=\"#file-explorer-status\"><table><tbody><tr><td><input type=\"file\" name=\"file\" class=\"max-w-lg\"></td></tr><tr><td><button class=\"mr-4 mt-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors duration-200 space-x-2\" hx-indicator=\"#file-upload-progress\">Upload</button> <progress id=\"file-upload-progress\" class=\"htmx-indicator \" value=\"0\" max=\"100\"></progress></td></tr></tbody></table><script>\n            htmx.on(\n                '#file-upload-form',\n                'htmx:xhr:progress',\n                function(evt) {\n                    htmx.find('#file-upload-progress').setAttribute(\n                        'value',\n                        evt.detail.loaded / evt.detail.total * 100,\n                    );\n                }\n            );\n        </script></form>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" hx-headers='{\"Accept\": \"text/html\"}' hx-swap=\"innerHTML\" hx-target=\"#file-explorer-status\"><table><tbody><tr><td><input type=\"file\" name=\"file\" class=\"max-w-lg\" hx-on:change=\"this.form.querySelector('#file-upload-button').disabled = !this.files.length\"></td></tr><tr><td><button class=\"disabled:opacity-75 mr-4 mt-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors duration-200 space-x-2\" disabled hx-indicator=\"#file-upload-progress\" id=\"file-upload-button\">Upload</button> <progress id=\"file-upload-progress\" class=\"htmx-indicator \" value=\"0\" max=\"100\"></progress></td></tr></tbody></table><script>\n            htmx.on(\n                '#file-upload-form',\n                'htmx:xhr:progress',\n                function(evt) {\n                    htmx.find('#file-upload-progress').setAttribute(\n                        'value',\n                        evt.detail.loaded / evt.detail.total * 100,\n                    );\n                }\n            );\n        </script></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
