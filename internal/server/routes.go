@@ -154,8 +154,9 @@ func setupApiRoutes(router *gin.Engine) {
 			})
 		}
 	})
-	apiRoute(apiV1Group, "POST", "/files/upload", func(c *gin.Context) {
+	apiRoute(apiV1Group, "POST", "/files/upload/*rootDir", func(c *gin.Context) {
 		isHtml := c.GetHeader("Accept") == "text/html"
+		rootDir := c.Param("rootDir")
 		// Parse the multipart form with a max memory size
 		err := c.Request.ParseMultipartForm(32 << 20)
 		if err != nil {
@@ -179,7 +180,7 @@ func setupApiRoutes(router *gin.Engine) {
 		defer file.Close()
 
 		fileDir := util.GetFilesDir()
-		newFilePath := filepath.Join(fileDir, header.Filename)
+		newFilePath := filepath.Join(fileDir, rootDir, header.Filename)
 		newFile, err := os.Create(newFilePath)
 		if err != nil {
 			if isHtml {
@@ -199,7 +200,7 @@ func setupApiRoutes(router *gin.Engine) {
 			return
 		}
 		if isHtml {
-			loadComponent := file_explorer_load.Component("/")
+			loadComponent := file_explorer_load.Component(rootDir)
 			if err := loadComponent.Render(c.Request.Context(), c.Writer); err != nil {
 				c.Status(500)
 				return

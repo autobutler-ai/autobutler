@@ -1,10 +1,12 @@
 
 package file_explorer
+import "fmt"
 
-templ upload() {
+
+templ upload(rootDir string) {
     <form id="file-upload-form"
           hx-encoding="multipart/form-data"
-          hx-post="/api/v1/files/upload"
+          hx-post={fmt.Sprintf("/api/v1/files/upload/%s", rootDir)}
           hx-headers='{"Accept": "text/html"}'
           hx-swap="innerHTML"
           hx-target="#file-explorer-status">
