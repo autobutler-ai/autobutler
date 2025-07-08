@@ -11,8 +11,9 @@ import (
 	"path/filepath"
 )
 
-templ Node(rootDir string, file fs.FileInfo) {
-    <li class="flex items-center py-3">
+templ node(rootDir string, file fs.FileInfo) {
+    <li class="flex items-center py-3 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer relative"
+        hx-on:contextmenu="event.preventDefault(); event.stopPropagation(); this.querySelector('.context-menu').classList.toggle('hidden');">
         {{ fileType := util.DetermineFileType(file) }}
         switch fileType {
         case util.FileTypeFolder:
@@ -34,6 +35,7 @@ templ Node(rootDir string, file fs.FileInfo) {
         } else {
             <span class="flex-1">{ file.Name() }</span>
             <span class="text-gray-600 dark:text-gray-200 text-sm">{util.SizeBytesToString(file.Size())}</span>
+            @contextMenu(rootDir, file)
         }
     </li>
 }

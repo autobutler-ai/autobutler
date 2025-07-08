@@ -1,0 +1,17 @@
+package file_explorer
+
+templ scripts() {
+    <script>
+    function openContextMenu(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        const menu = event.target.parentElement.querySelector('.context-menu');
+        menu.classList.toggle('hidden');
+    }
+
+    function fileInfoMenu(event, fileName) {
+        alert(fileName);
+        this.closest('ul').classList.add('hidden')
+    }
+    </script>
+}
