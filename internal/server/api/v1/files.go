@@ -8,17 +8,19 @@ import (
 	"os"
 	"path/filepath"
 
+	"autobutler/internal/server/ui"
 	"autobutler/internal/server/ui/components/file_explorer/load"
 
 	"github.com/gin-gonic/gin"
 )
 
 func SetupFilesRoutes(apiV1Group *gin.RouterGroup) {
+	deleteFileRoute(apiV1Group)
 	uploadFileRoute(apiV1Group)
 }
 
 func uploadFileRoute(apiV1Group *gin.RouterGroup) {
-	apiRoute(apiV1Group, "POST", "/files/upload/*rootDir", func(c *gin.Context) {
+	apiRoute(apiV1Group, "POST", "/files/*rootDir", func(c *gin.Context) {
 		isHtml := c.GetHeader("Accept") == "text/html"
 		rootDir := c.Param("rootDir")
 		// Parse the multipart form with a max memory size
@@ -75,5 +77,19 @@ func uploadFileRoute(apiV1Group *gin.RouterGroup) {
 				"file":    header.Filename,
 			})
 		}
+	})
+}
+
+func deleteFileRoute(apiV1Group *gin.RouterGroup) {
+	apiRoute(apiV1Group, "DELETE", "/files/*filePath", func(c *gin.Context) {
+		filePath := c.Param("filePath")
+		rootDir := util.GetFilesDir()
+		fullPath := filepath.Join(rootDir, filePath)
+		if err := os.Remove(fullPath); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete file: " + err.Error()})
+			return
+		}
+		fileDir := filepath.Dir(filePath)
+		ui.RenderFileExplorer(c, fileDir)
 	})
 }

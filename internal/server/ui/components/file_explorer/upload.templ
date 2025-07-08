@@ -5,7 +5,7 @@ import "path/filepath"
 templ upload(rootDir string) {
     <form id="file-upload-form"
         hx-encoding="multipart/form-data"
-        hx-post={filepath.Join("/api/v1/files/upload", rootDir)}
+        hx-post={filepath.Join("/api/v1/files", rootDir)}
         hx-headers='{"Accept": "text/html"}'
         hx-swap="innerHTML"
         hx-target="#file-explorer-status"

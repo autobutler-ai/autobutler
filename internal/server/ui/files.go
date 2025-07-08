@@ -38,36 +38,40 @@ func setupComponentRoutes(router *gin.Engine) {
 	setupComponentFileExplorer(router)
 }
 
-func setupComponentFileExplorer(router *gin.Engine) {
-	uiRoute(router, "/components/files/explorer/*rootDir", func(c *gin.Context) {
-		isHtml := c.GetHeader("Accept") == "text/html"
-		rootDir := c.Param("rootDir")
-		if rootDir == "" {
-			rootDir = util.GetFilesDir()
+func RenderFileExplorer(c *gin.Context, fileDir string) {
+	isHtml := c.GetHeader("Accept") == "text/html"
+	fullPathDir := ""
+	if fileDir == "" {
+		fullPathDir = util.GetFilesDir()
+	} else {
+		fullPathDir = filepath.Join(util.GetFilesDir(), fileDir)
+	}
+	files, err := util.StatFilesInDir(fullPathDir)
+	if err != nil {
+		if isHtml {
+			c.Writer.WriteString(`<span class="text-red-500">Failed to load files: ` + html.EscapeString(err.Error()) + `</span>`)
 		} else {
-			rootDir = filepath.Join(util.GetFilesDir(), rootDir)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to load files: " + err.Error()})
 		}
-		files, err := util.StatFilesInDir(rootDir)
-		if err != nil {
-			if isHtml {
-				c.Writer.WriteString(`<span class="text-red-500">Failed to load files: ` + html.EscapeString(err.Error()) + `</span>`)
-			} else {
-				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to load files: " + err.Error()})
-			}
+		return
+	}
+	explorerComponent := file_explorer.Component(fileDir, files)
+	if isHtml {
+		if err := explorerComponent.Render(c.Request.Context(), c.Writer); err != nil {
+			c.Status(500)
 			return
 		}
-		loadComponent := file_explorer.Component("fileExplorer", files)
-		if isHtml {
-			if err := loadComponent.Render(c.Request.Context(), c.Writer); err != nil {
-				c.Status(500)
-				return
-			}
-		} else {
-			c.JSON(200, gin.H{
-				"message": "File explorer loaded successfully",
-				"rootDir": rootDir,
-			})
-		}
+	} else {
+		c.JSON(200, gin.H{
+			"message": "File explorer loaded successfully",
+			"dir": fileDir,
+		})
+	}
+}
+
+func setupComponentFileExplorer(router *gin.Engine) {
+	uiRoute(router, "/components/files/explorer/*fileDir", func(c *gin.Context) {
+		RenderFileExplorer(c, c.Param("fileDir"))
 	})
 }
 
