@@ -64,7 +64,7 @@ func RenderFileExplorer(c *gin.Context, fileDir string) {
 	} else {
 		c.JSON(200, gin.H{
 			"message": "File explorer loaded successfully",
-			"dir": fileDir,
+			"dir":     fileDir,
 		})
 	}
 }
@@ -74,4 +74,3 @@ func setupComponentFileExplorer(router *gin.Engine) {
 		RenderFileExplorer(c, c.Param("fileDir"))
 	})
 }
-
