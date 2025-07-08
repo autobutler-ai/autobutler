@@ -51,7 +51,7 @@ func contextMenu(rootDir string, file fs.FileInfo) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templ.RenderScriptItems(ctx, templ_7745c5c3_Buffer, templ.JSFuncCall("fileInfoMenu", file.Name()))
+		templ_7745c5c3_Err = templ.RenderScriptItems(ctx, templ_7745c5c3_Buffer, templ.JSFuncCall("fileInfoMenu", templ.JSExpression("event"), file.Name()))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -59,7 +59,7 @@ func contextMenu(rootDir string, file fs.FileInfo) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var3 templ.ComponentScript = templ.JSFuncCall("fileInfoMenu", file.Name())
+		var templ_7745c5c3_Var3 templ.ComponentScript = templ.JSFuncCall("fileInfoMenu", templ.JSExpression("event"), file.Name())
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3.Call)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
