@@ -29,7 +29,7 @@ func scripts() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<script>\n    function openContextMenu(event) {\n        event.preventDefault();\n        event.stopPropagation();\n        const menu = event.target.parentElement.querySelector('.context-menu');\n        menu.classList.toggle('hidden');\n    }\n\n    function fileInfoMenu(event, fileName) {\n        alert(fileName);\n        this.closest('ul').classList.add('hidden')\n    }\n    </script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<script>\n    function showFileInfo(event, fileName) {\n        alert(fileName);\n    }\n\n    function toggleContextMenu(event, parentNode) {\n        if (event) {\n            event.preventDefault();\n            event.stopPropagation();\n        }\n        parentNode.querySelector('.context-menu').classList.toggle('hidden');\n    }\n    </script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

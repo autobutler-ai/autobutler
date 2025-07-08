@@ -2,16 +2,16 @@ package file_explorer
 
 templ scripts() {
     <script>
-    function openContextMenu(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        const menu = event.target.parentElement.querySelector('.context-menu');
-        menu.classList.toggle('hidden');
+    function showFileInfo(event, fileName) {
+        alert(fileName);
     }
 
-    function fileInfoMenu(event, fileName) {
-        alert(fileName);
-        this.closest('ul').classList.add('hidden')
+    function toggleContextMenu(event, parentNode) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        parentNode.querySelector('.context-menu').classList.toggle('hidden');
     }
     </script>
 }
