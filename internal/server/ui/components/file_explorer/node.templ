@@ -17,10 +17,12 @@ templ node(rootDir string, file fs.FileInfo) {
 		hx-on:contextmenu="toggleFloatingContextMenu(event, this)"
 	>
 		{{ fileType := util.DetermineFileType(file) }}
-		{{ filePath := filepath.Join("/files", rootDir, file.Name())}}
+		{{ filePath := filepath.Join("/files", rootDir, file.Name()) }}
 		<div class="flex items-center">
-			<div class="flex flex-1 items-center"
-				hx-on:click={templ.JSFuncCall("viewFile", templ.JSExpression("event"), filePath, fileType)}>
+			<div
+				class="flex flex-1 items-center"
+				hx-on:click={ templ.JSFuncCall("viewFile", templ.JSExpression("event"), filePath, fileType) }
+			>
 				switch fileType {
 					case util.FileTypeFolder:
 						@folder.Component()
@@ -34,7 +36,7 @@ templ node(rootDir string, file fs.FileInfo) {
 						@generic.Component()
 				}
 				if fileType == util.FileTypeFolder {
-					<a href={filePath} class="flex-1 py-3">
+					<a href={ filePath } class="flex-1 py-3">
 						<span class="file-name">{ file.Name() }</span>
 					</a>
 				} else {
