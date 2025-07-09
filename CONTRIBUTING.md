@@ -13,17 +13,6 @@ Familiarize yourself with the following steps and guidelines.
 - [Sign your commits](https://gist.github.com/Beneboe/3183a8a9eb53439dbee07c90b344c77e)
 - Use clear, concise commit messages (under 80 characters, or under 120 character lines for body)
 
-## Development Environment
-
-```shell
-git clone git@github.com:exokomodo/exoflow
-# Local
-make setup
-# Docker compose (for a dev environment)
-docker compose up
-# devcontainer: use whatever tool you use here, including Github Codespaces
-```
-
 ## Branching and Pull Requests
 
 - Create a new branch for your changes.
