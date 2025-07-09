@@ -9,7 +9,7 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
-	"autobutler/internal/server/ui/components/file_viewer"
+	"autobutler/internal/server/ui/components/file_explorer/file_viewer"
 	"autobutler/pkg/util"
 	"io/fs"
 
