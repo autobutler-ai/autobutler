@@ -72,6 +72,14 @@ lint: ## Lint code
 	go vet ./...
 	go tool templ fmt -fail .
 
+upgrade: ## Upgrade dependencies
+	go get -u ./...
+	go mod tidy
+
+fix: ## Fix code issues
+	go mod tidy
+	$(MAKE) format
+
 serve: generate env-LLM_AZURE_API_KEY ## Serve backend
 	go run main.go serve
 
