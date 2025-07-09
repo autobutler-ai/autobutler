@@ -19,6 +19,9 @@ jobs:
       - name: Lint
         run: |
           make lint
+      - name: Generate code
+        run: |
+          make generate
       - name: Check for uncommitted changes
         run: |
           if ! git diff --exit-code; then
