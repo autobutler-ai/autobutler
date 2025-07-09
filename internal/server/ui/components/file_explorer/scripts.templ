@@ -74,19 +74,74 @@ templ scripts() {
         const fileViewerContent = document.getElementById('file-viewer-content');
         console.log(fileViewer);
         switch (extension) {
+            case 'log':
+            case 'csv':
+            case 'json':
+            case 'yaml':
+            case 'yml':
+            case 'xml':
+            case 'ini':
+            case 'conf':
+            case 'config':
+            case 'env':
+            case 'toml':
+            case 'tsv':
+            case 'properties':
+            case 'bat':
+            case 'sh':
+            case 'bash':
+            case 'zsh':
+            case 'csh':
+            case 'fish':
+            case 'ps1':
+            case 'dockerfile':
+            case 'gitignore':
+            case 'gitattributes':
+            case 'editorconfig':
             case 'txt':
             case 'md':
-                fileViewerContent.innerHTML = `<p>TODO: viewing text file: ${filePath}</p>`;
+            case 'txt':
+            case 'md':
+                fetch(`/api/v1${filePath}`)
+                    .then(response => response.text())
+                    .then(text => {
+                        fileViewerContent.innerHTML = `<pre class="whitespace-pre-wrap">${text}</pre>`;
+                    })
+                    .catch(error => {
+                        fileViewerContent.innerHTML = `<p>Error loading file: ${error}</p>`;
+                    });
                 break;
+            case 'jpeg':
+            case 'jpe':
+            case 'jfif':
+            case 'pjpeg':
+            case 'pjp':
+            case 'gif':
+            case 'bmp':
+            case 'webp':
+            case 'svg':
+            case 'apng':
+            case 'ico':
             case 'jpg':
             case 'png':
                 fileViewerContent.innerHTML = `<img src="/api/v1${filePath}" alt="${filePath}" class="max-w-full max-h-full">`;
                 break;
+            case 'webm':
+                fileViewerContent.innerHTML = `<video controls class="max-w-full max-h-full"><source src="/api/v1${filePath}" type="video/webm">Your browser does not support the video tag.</video>`;
+                break;
+            case 'ogg':
+            case 'ogv':
+                fileViewerContent.innerHTML = `<video controls class="max-w-full max-h-full"><source src="/api/v1${filePath}" type="video/ogg">Your browser does not support the video tag.</video>`;
+                break;
+            case 'm4v':
             case 'mp4':
                 fileViewerContent.innerHTML = `<video controls class="max-w-full max-h-full"><source src="/api/v1${filePath}" type="video/mp4">Your browser does not support the video tag.</video>`;
                 break;
+            case 'mov':
+                fileViewerContent.innerHTML = `<video controls class="max-w-full max-h-full"><source src="/api/v1${filePath}" type="video/quicktime">Your browser does not support the video tag.</video>`;
+                break;
             case 'pdf':
-                fileViewerContent.innerHTML = `<p>TODO: viewing pdf file: ${filePath}</p>`;
+                fileViewerContent.innerHTML = `<object style="width: 90vw; height: 90vh;" data="/api/v1${filePath}" type="application/pdf"><p>${filePath}</p></object>`
                 break;
             default:
                 fileViewerContent.innerHTML = `<p>Unsupported file type: ${extension}</p>`;
