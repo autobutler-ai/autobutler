@@ -37,5 +37,30 @@ templ scripts() {
             folderInput.focus();
         }
     }
+
+    function viewFile(event) {
+        event.preventDefault();
+        const fileName = event.currentTarget.querySelector('.file-name').textContent;
+        console.log(fileName);
+        if (fileName.includes('.')) {
+            const extension = fileName.split('.').pop().toLowerCase();
+            console.log(extension);
+            viewAnyFile(event, fileName, extension);
+        } else {
+            viewFileFallback(event, fileName);
+        }
+    }
+
+    function viewFileFallback(event, fileName) {
+        event.preventDefault();
+        console.log(`Fallback logic: ${fileName}`);
+        // TODO: Implement fallback logic
+    }
+
+    function viewAnyFile(event, fileName, extension) {
+        event.preventDefault();
+        console.log(`Viewing file: ${fileName} with extension: ${extension}`);
+        // TODO: Implement logic to view file based on extension
+    }
     </script>
 }
