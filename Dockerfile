@@ -6,9 +6,11 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
   apt-get install -y -qq \
   build-essential \
   curl \
+  git \
   libsqlite3-dev \
   make \
   sqlite3 \
+  sudo \
   unzip \
   wget \
   xz-utils \
