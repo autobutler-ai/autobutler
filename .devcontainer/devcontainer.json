@@ -23,6 +23,7 @@
   "containerEnv": {
     "SHELL": "/usr/bin/zsh"
   },
+  "postCreateCommand": "make setup",
   "forwardPorts": [
     // Live reload server
     7331,
