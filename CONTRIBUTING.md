@@ -22,12 +22,7 @@ Familiarize yourself with the following steps and guidelines.
 
 ## Communication
 
-- [Create an issue](https://github.com/ExoKomodo/exoflow/issues/new) if you find a bug or have an enhancement suggestion.
-- [Ask a question in the Discussions](https://github.com/ExoKomodo/exoflow/discussions) if you need to know something
-  a bit more specific or discuss a larger topic.
-  - If a thread evolves into something actionable,
-    an [issue can be created from a discussion](https://github.com/orgs/community/discussions/2861#discussioncomment-696235)
-  - Don't feel the need to only start discussions that may become issues.
+- [Create an issue](https://github.com/autobutler-ai/autobutler/issues/new) if you find a bug or have an enhancement suggestion.
 
 ## Additional Guidelines
 
