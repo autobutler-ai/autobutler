@@ -9,7 +9,7 @@ SHELL := /bin/bash
 setup: setup/templ ## Setup development environment
 
 setup/templ: ## Install templ tool
-	go get -tool github.com/a-h/templ/cmd/templ@latest
+	go install github.com/a-h/templ/cmd/templ@latest
 
 export INSTALL_VERSION?=$(shell git describe --tags --abbrev=0)
 
@@ -41,7 +41,7 @@ install/mac: env-INSTALL_VERSION ## Install startup service on Mac
 	echo "Installed autobutler successfully. Will run at startup."
 
 generate: ## Generate templ files
-	go tool templ generate
+	templ generate
 
 build: generate ## Build backend
 	mkdir -p ./build
@@ -67,12 +67,12 @@ build/windows/arm64: ## Build windows backends
 
 format: ## Format code
 	go fmt ./...
-	go tool templ fmt .
+	templ fmt .
 
 lint: ## Lint code
 	gofmt -s -w .
 	go vet ./...
-	go tool templ fmt -fail .
+	templ fmt -fail .
 
 upgrade: ## Upgrade dependencies
 	go get -u ./...
@@ -86,7 +86,7 @@ serve: generate env-LLM_AZURE_API_KEY ## Serve backend
 	go run main.go serve
 
 watch: env-LLM_AZURE_API_KEY ## Watch backend for changes
-	go tool templ generate \
+	templ generate \
 		--watch \
 		--proxy="http://localhost:8080" \
 		--cmd="go run . serve"
