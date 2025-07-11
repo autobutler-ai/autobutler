@@ -8,6 +8,7 @@
     "ms-azuretools.vscode-docker",
     "editorconfig.editorconfig",
     "davidanson.vscode-markdownlint",
-    "tyriar.sort-lines"
+    "tyriar.sort-lines",
+    "golang.go"
   ]
 }
