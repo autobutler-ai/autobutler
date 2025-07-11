@@ -1,0 +1,19 @@
+services:
+  code:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - .:/code
+      # Mount SSH dir to enable git
+      - ~/.ssh:/root/.ssh
+    # [Optional] Required for ptrace-based debuggers like C++, Go, and Rust
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp:unconfined
+    working_dir: /code
+    command:
+      - tail
+      - -f
+      - /dev/null
