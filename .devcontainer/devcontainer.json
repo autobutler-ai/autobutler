@@ -15,5 +15,8 @@
     7331,
     // Normal server port
     8080
-  ]
+  ],
+  "customizations": {
+    "vscode": {}
+  }
 }

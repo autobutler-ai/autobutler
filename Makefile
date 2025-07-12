@@ -6,7 +6,10 @@ SHELL := /bin/bash
 
 .PHONY: $(MAKECMDGOALS)
 
-setup: setup/templ ## Setup development environment
+setup: setup/gopls setup/templ ## Setup development environment
+
+setup/gopls: ## Install go language server
+	go install golang.org/x/tools/gopls@latest
 
 setup/templ: ## Install templ tool
 	go install github.com/a-h/templ/cmd/templ@latest
