@@ -9,6 +9,7 @@
     "editorconfig.editorconfig",
     "davidanson.vscode-markdownlint",
     "tyriar.sort-lines",
-    "golang.go"
+    "golang.go",
+    "bradlc.vscode-tailwindcss"
   ]
 }
