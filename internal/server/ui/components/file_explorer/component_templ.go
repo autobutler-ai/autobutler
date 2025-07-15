@@ -42,7 +42,7 @@ func Component(rootDir string, files []fs.FileInfo) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"file-explorer\" class=\"bg-white dark:bg-gray-900 max-full mx-8 mt-10 rounded shadow p-6\" hx-on:dragover=\"showUploadArea(event)\" hx-on:dragenter=\"showUploadArea(event)\" hx-on:dragleave=\"hideUploadArea(event)\" hx-on:drop=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"file-explorer\" class=\"bg-white dark:bg-gray-900 max-full mx-24 mt-10 rounded shadow p-6\" hx-on:dragover=\"showUploadArea(event)\" hx-on:dragenter=\"showUploadArea(event)\" hx-on:dragleave=\"hideUploadArea(event)\" hx-on:drop=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
