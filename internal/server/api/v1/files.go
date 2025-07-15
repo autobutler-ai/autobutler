@@ -2,6 +2,7 @@ package v1
 
 import (
 	"autobutler/pkg/util"
+	"fmt"
 	"html"
 	"io"
 	"net/http"
@@ -46,8 +47,15 @@ func DownloadFile(c *gin.Context, filePath string) {
 	}
 	defer file.Close()
 
-	c.Header("Content-Disposition", "attachment; filename="+filepath.Base(fullPath))
-	c.Header("Content-Type", "application/octet-stream")
+	disposition := "inline"
+	contentType := "application/octet-stream"
+	if util.DetermineFileTypeFromPath(fullPath) == util.FileTypePDF {
+		disposition = "inline"
+		contentType = "application/pdf"
+	}
+	c.Header("Content-Disposition", fmt.Sprintf("%s; filename=%s", disposition, filepath.Base(fullPath)))
+	c.Header("Content-Type", contentType)
+
 	c.File(fullPath)
 }
 

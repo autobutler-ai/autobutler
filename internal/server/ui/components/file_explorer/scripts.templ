@@ -124,24 +124,24 @@ templ scripts() {
             case 'ico':
             case 'jpg':
             case 'png':
-                fileViewerContent.innerHTML = `<img src="/api/v1${filePath}" alt="${filePath}" class="max-w-full max-h-full">`;
+                fileViewerContent.innerHTML = `<img class="max-w-full max-h-full" src="/api/v1${filePath}" alt="${filePath}">`;
                 break;
             case 'webm':
-                fileViewerContent.innerHTML = `<video controls class="max-w-full max-h-full"><source src="/api/v1${filePath}" type="video/webm">Your browser does not support the video tag.</video>`;
+                fileViewerContent.innerHTML = `<video class="max-w-full max-h-full" controls><source src="/api/v1${filePath}" type="video/webm">Your browser does not support the video tag.</video>`;
                 break;
             case 'ogg':
             case 'ogv':
-                fileViewerContent.innerHTML = `<video controls class="max-w-full max-h-full"><source src="/api/v1${filePath}" type="video/ogg">Your browser does not support the video tag.</video>`;
+                fileViewerContent.innerHTML = `<video class="max-w-full max-h-full" controls><source src="/api/v1${filePath}" type="video/ogg">Your browser does not support the video tag.</video>`;
                 break;
             case 'm4v':
             case 'mp4':
-                fileViewerContent.innerHTML = `<video controls class="max-w-full max-h-full"><source src="/api/v1${filePath}" type="video/mp4">Your browser does not support the video tag.</video>`;
+                fileViewerContent.innerHTML = `<video class="max-w-full max-h-full" controls><source src="/api/v1${filePath}" type="video/mp4">Your browser does not support the video tag.</video>`;
                 break;
             case 'mov':
-                fileViewerContent.innerHTML = `<video controls class="max-w-full max-h-full"><source src="/api/v1${filePath}" type="video/quicktime">Your browser does not support the video tag.</video>`;
+                fileViewerContent.innerHTML = `<video class="max-w-full max-h-full" controls><source src="/api/v1${filePath}" type="video/quicktime">Your browser does not support the video tag.</video>`;
                 break;
             case 'pdf':
-                fileViewerContent.innerHTML = `<object style="width: 90vw; height: 90vh;" data="/api/v1${filePath}" type="application/pdf"><p>${filePath}</p></object>`
+                fileViewerContent.innerHTML = `<iframe style="width: 90vw; height: 90vh;" src="/api/v1${filePath}" type="application/pdf"></iframe>`
                 break;
             default:
                 fileViewerContent.innerHTML = `<p>Unsupported file type: ${extension}</p>`;
