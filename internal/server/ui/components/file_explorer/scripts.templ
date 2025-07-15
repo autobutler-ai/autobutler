@@ -165,5 +165,42 @@ templ scripts() {
         fileViewer.close();
         clearFileViewer();
     }
+
+    function showUploadArea(event) {
+        preventDefault(event);
+        const uploadArea = document.getElementById('file-upload-area');
+        uploadArea.classList.remove('hidden');
+    }
+
+    function hideUploadArea(event) {
+        preventDefault(event);
+        const uploadArea = document.getElementById('file-upload-area');
+        uploadArea.classList.add('hidden');
+    }
+
+    function dropFiles(event, rootDir) {
+        preventDefault(event);
+        const uploadArea = document.getElementById('file-upload-area');
+        uploadArea.classList.add('hidden');
+        const files = event.dataTransfer.files;
+        if (files.length > 0) {
+
+            const formData = new FormData();
+            for (let i = 0; i < files.length; i++) {
+                formData.append('files', files[i]);
+            }
+            fetch(`/api/v1/files/${rootDir}`, {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('file-explorer-status').innerHTML = html;
+            })
+            .catch(error => {
+                console.error('Error uploading files:', error);
+            });
+        }
+    }
     </script>
 }

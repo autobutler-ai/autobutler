@@ -10,9 +10,21 @@ import (
 )
 
 templ Component(rootDir string, files []fs.FileInfo) {
-	<div id="file-explorer" class="bg-white dark:bg-gray-900 max-w-2xl mx-auto mt-10 rounded shadow p-6">
+	<div
+		id="file-explorer"
+		class="bg-white dark:bg-gray-900 max-w-2xl mx-auto mt-10 rounded shadow p-6"
+		hx-on:dragover="showUploadArea(event)"
+		hx-on:dragenter="showUploadArea(event)"
+		hx-on:dragleave="hideUploadArea(event)"
+		hx-on:drop={ templ.JSFuncCall("dropFiles", templ.JSExpression("event"), rootDir) }
+	>
 		@scripts()
 		@file_viewer.Component()
+		<div
+			id="file-upload-area"
+			class="absolute inset-0 w-full h-full bg-black bg-opacity-40 flex hidden items-center justify-center z-50"
+			style="top: 0; left: 0;"
+		></div>
 		<div class="flex items-center mb-4">
 			<h2 class="text-2xl font-bold mr-4 whitespace-nowrap">File Explorer</h2>
 			@upload(rootDir)
