@@ -7,15 +7,19 @@ templ scripts() {
         y: null,
     };
 
+    function preventDefault(event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    }
+
     function showFileDetails(event, fileName) {
         alert(fileName);
     }
 
     function toggleContextMenu(event, parentNode) {
-        if (event) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
+        preventDefault(event);
         const contextMenu = parentNode.querySelector('.context-menu');
         contextMenu.style.left = null;
         contextMenu.style.top = null;
@@ -42,7 +46,7 @@ templ scripts() {
         if (fileType === 'folder') {
             return;
         }
-        event.preventDefault();
+        preventDefault(event);
         console.log(filePath);
         if (filePath.includes('.')) {
             const extension = filePath.split('.').pop().toLowerCase();
@@ -54,21 +58,21 @@ templ scripts() {
     }
 
     function viewFileFallback(event, filePath) {
-        event.preventDefault();
+        preventDefault(event);
         console.log(`Fallback logic: ${filePath}`);
         // TODO: Implement fallback logic
         openFileViewer(event, filePath);
     }
 
     function viewAnyFile(event, filePath, extension) {
-        event.preventDefault();
+        preventDefault(event);
         console.log(`Viewing file: ${filePath} with extension: ${extension}`);
         // TODO: Implement logic to view file based on extension
         openFileViewer(event, filePath, extension);
     }
 
     function openFileViewer(event, filePath, extension) {
-        event.preventDefault();
+        preventDefault(event);
         console.log(`Opening file modal for: ${filePath}`);
         const fileViewer = document.getElementById('file-viewer');
         const fileViewerContent = document.getElementById('file-viewer-content');
@@ -156,7 +160,7 @@ templ scripts() {
     }
 
     function closeFileViewer(event) {
-        event.preventDefault();
+        preventDefault(event);
         const fileViewer = document.getElementById('file-viewer');
         fileViewer.close();
         clearFileViewer();
