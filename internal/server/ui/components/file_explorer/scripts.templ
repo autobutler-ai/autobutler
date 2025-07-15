@@ -167,6 +167,7 @@ templ scripts() {
     }
 
     function showUploadArea(event) {
+        console.log('showUploadArea called');
         preventDefault(event);
         const uploadArea = document.getElementById('file-upload-area');
         uploadArea.classList.remove('hidden');
