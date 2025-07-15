@@ -178,6 +178,14 @@ templ scripts() {
         uploadArea.classList.add('hidden');
     }
 
+    function supportsDirectoryUpload() {
+        const supportsFileSystemAccessAPI = 'getAsFileSystemHandle' in DataTransferItem.prototype;
+        const supportsWebkitGetAsEntry = 'webkitGetAsEntry' in DataTransferItem.prototype;
+        // NOTE: I have found that none of my browsers support this, and likely is why Google Drive does not support
+        // folder upload without a separate input.
+        return supportsFileSystemAccessAPI || supportsWebkitGetAsEntry;
+    }
+
     function dropFiles(event, rootDir) {
         preventDefault(event);
         const uploadArea = document.getElementById('file-upload-area');
@@ -189,6 +197,7 @@ templ scripts() {
                 formData.append('files', files[i]);
             }
             const uploadForm = document.getElementById('file-upload-form');
+            // NOTE: https://flaviocopes.com/htmx-send-files-using-htmxajax-call/
             htmx.ajax('POST',
                 uploadForm.getAttribute('hx-post'), {
                 values: {
