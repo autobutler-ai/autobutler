@@ -63,11 +63,8 @@ func TB(size float64) int64 {
 	return int64(GB(size) * 1024)
 }
 
-func DetermineFileType(file fs.FileInfo) FileType {
-	if file.IsDir() {
-		return FileTypeFolder
-	}
-	ext := filepath.Ext(file.Name())
+func DetermineFileTypeFromPath(filePath string) FileType {
+	ext := filepath.Ext(filePath)
 	switch ext {
 	case ".pdf":
 		return FileTypePDF
@@ -75,9 +72,18 @@ func DetermineFileType(file fs.FileInfo) FileType {
 		return FileTypeSlideshow
 	case ".png", ".jpg", ".jpeg", ".gif":
 		return FileTypeImage
+	case "/":
+		return FileTypeFolder
 	default:
 		return FileTypeGeneric
 	}
+}
+
+func DetermineFileType(file fs.FileInfo) FileType {
+	if file.IsDir() {
+		return FileTypeFolder
+	}
+	return DetermineFileTypeFromPath(file.Name())
 }
 
 func IsFileType(file fs.FileInfo, expected FileType) bool {
