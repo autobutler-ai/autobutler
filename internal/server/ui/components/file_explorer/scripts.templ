@@ -174,6 +174,20 @@ templ scripts() {
         return supportsFileSystemAccessAPI || supportsWebkitGetAsEntry;
     }
 
+    function activateDropZone(event) {
+        preventDefault(event);
+        const fileUploadArea = document.getElementById('file-upload-area');
+        fileUploadArea.classList.add('bg-blue-600');
+        fileUploadArea.classList.remove('bg-gray-800');
+    }
+
+    function deactivateDropZone(event) {
+        preventDefault(event);
+        const fileUploadArea = document.getElementById('file-upload-area');
+        fileUploadArea.classList.remove('bg-blue-600');
+        fileUploadArea.classList.add('bg-gray-800');
+    }
+
     function dropFiles(event, rootDir) {
         console.log('Drop files event:', event);
         preventDefault(event);

@@ -33,7 +33,7 @@ func dnd(rootDir string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"file-upload-area\" class=\"text-white text-lg bg-opacity-100 py-4 px-48 bg-gray-800 border rounded-lg z-10\" hx-on:dragover=\"console.log('dragover event'); preventDefault(event);\" hx-on:drop=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"file-upload-area\" class=\"text-white text-lg bg-opacity-100 py-4 px-48 bg-gray-800 border rounded-lg z-10\" hx-on:dragover=\"activateDropZone(event)\" hx-on:dragleave=\"deactivateDropZone(event)\" hx-on:drop=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -4,7 +4,8 @@ templ dnd(rootDir string) {
 	<div
 		id="file-upload-area"
 		class="text-white text-lg bg-opacity-100 py-4 px-48 bg-gray-800 border rounded-lg z-10"
-		hx-on:dragover="console.log('dragover event'); preventDefault(event);"
+		hx-on:dragover="activateDropZone(event)"
+		hx-on:dragleave="deactivateDropZone(event)"
 		hx-on:drop={ templ.JSFuncCall("dropFiles", templ.JSExpression("event"), rootDir) }
 	>
 		Drop files here...
