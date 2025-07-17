@@ -1,11 +1,15 @@
 package file_explorer
 
 templ scripts() {
+	<script src="/public/scripts/vendor/epub.js/jszip.min.js"></script>
+	<script src="/public/scripts/vendor/epub.js/epub.min.js"></script>
 	<script>
     var contextMenuPosition = {
         x: null,
         y: null,
     };
+    var navigationListener = null;
+    var loadedBook = null;
 
     function preventDefault(event) {
         if (event) {
@@ -145,7 +149,11 @@ templ scripts() {
                 fileViewerContent.innerHTML = `<video class="max-w-full max-h-full" controls><source src="/api/v1${filePath}" type="video/quicktime">Your browser does not support the video tag.</video>`;
                 break;
             case 'pdf':
-                fileViewerContent.innerHTML = `<iframe style="width: 90vw; height: 90vh;" src="/api/v1${filePath}" type="application/pdf"></iframe>`
+                fileViewerContent.innerHTML = `<iframe style="width: 90vw; height: 90vh;" src="/api/v1${filePath}" type="application/pdf"></iframe>`;
+                break;
+            case 'mobi':
+            case 'epub':
+                setupEbookViewer(fileViewerContent, filePath);
                 break;
             default:
                 fileViewerContent.innerHTML = `<p>Unsupported file type: ${extension}</p>`;
@@ -154,9 +162,73 @@ templ scripts() {
         fileViewer.showModal();
     }
 
+    function setupEbookViewer(fileViewerContent, filePath) {
+        fileViewerContent.innerHTML = `
+        <div class="flex items-center justify-center" style="width: 80vw; height: 60vh;">
+            <div class="flex flex-col items-center">
+                <div class="mb-4">
+                    <button id="book-reader-prev" class="bg-gray-800 text-white px-4 py-2 rounded mr-2">Previous Page</button>
+                    <button id="book-reader-next" class="bg-gray-800 text-white px-4 py-2 rounded">Next Page</button>
+                </div>
+                <div id="book-reader"></div>
+            </div>
+        </div>`;
+        loadedBook = ePub(`/api/v1${filePath}`);
+        const rendition = loadedBook.renderTo("book-reader", {
+            method: "default",
+            flow: "paginated",
+            width: '80vw',
+            height: '60vh',
+        });
+                // Setup navigation controls
+        console.log("Setting up navigation controls");
+        const prevButton = document.getElementById('book-reader-prev');
+        const nextButton = document.getElementById('book-reader-next');
+        prevButton.addEventListener('click', () => {
+            rendition.prev();
+        });
+        nextButton.addEventListener('click', () => {
+            rendition.next();
+        });
+        navigationListener = (event) => {
+            console.log(`Key pressed: ${event.key}`);
+            switch (event.key) {
+                case 'ArrowLeft':
+                    rendition.prev();
+                    break;
+                case 'Enter':
+                case 'ArrowRight':
+                    rendition.next();
+                    break;
+                default:
+                    break;
+            }
+        };
+        addEventListener('keydown', navigationListener);
+        fileViewerContent.focus();
+        const displayed = rendition.display();
+        if (displayed) {
+            displayed.then(() => {
+                console.log("Book loaded successfully");
+            }).catch((error) => {
+                fileViewerContent.innerHTML = `<p>Error loading book: ${error}</p>`;
+            });
+        } else {
+            fileViewerContent.innerHTML = `<p>Error displaying book.</p>`;
+        }
+    }
+
     function clearFileViewer() {
+        if (loadedBook) {
+            loadedBook.destroy();
+            loadedBook = null;
+        }
         const fileViewerContent = document.getElementById('file-viewer-content');
         fileViewerContent.innerHTML = '';
+        if (navigationListener) {
+            removeEventListener('keydown', navigationListener);
+            navigationListener = null;
+        }
     }
 
     function closeFileViewer(event) {
