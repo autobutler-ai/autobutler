@@ -14,23 +14,13 @@ templ Component(rootDir string, files []fs.FileInfo) {
 	<div
 		id="file-explorer"
 		class="bg-white dark:bg-gray-900 max-full mx-24 mt-10 rounded shadow p-6"
-		hx-on:dragenter="showUploadArea(event)"
-		hx-on:dragleave="hideUploadArea(event)"
-		hx-on:drop={ templ.JSFuncCall("dropFiles", templ.JSExpression("event"), rootDir) }
 	>
 		@scripts()
 		@file_viewer.Component()
-		<div
-			id="file-upload-area"
-			class="absolute inset-0 bg-black bg-opacity-40 flex hidden items-center justify-center"
-		>
-			<span class="text-white text-lg bg-opacity-100 p-20 bg-gray-800 border rounded-3xl">
-				Drop files anywhere to upload
-			</span>
-		</div>
 		<div class="flex items-center mb-4">
 			<h2 class="text-2xl font-bold mr-4 whitespace-nowrap">File Explorer</h2>
 			@upload(rootDir)
+			@dnd(rootDir)
 		</div>
 		<div id="breadcrumbs">
 			<nav class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mb-2" data-path={ rootDir }>

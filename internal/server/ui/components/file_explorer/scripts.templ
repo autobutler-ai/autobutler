@@ -166,19 +166,6 @@ templ scripts() {
         clearFileViewer();
     }
 
-    function showUploadArea(event) {
-        console.log('showUploadArea called');
-        preventDefault(event);
-        const uploadArea = document.getElementById('file-upload-area');
-        uploadArea.classList.remove('hidden');
-    }
-
-    function hideUploadArea(event) {
-        preventDefault(event);
-        const uploadArea = document.getElementById('file-upload-area');
-        uploadArea.classList.add('hidden');
-    }
-
     function supportsDirectoryUpload() {
         const supportsFileSystemAccessAPI = 'getAsFileSystemHandle' in DataTransferItem.prototype;
         const supportsWebkitGetAsEntry = 'webkitGetAsEntry' in DataTransferItem.prototype;
@@ -188,9 +175,8 @@ templ scripts() {
     }
 
     function dropFiles(event, rootDir) {
+        console.log('Drop files event:', event);
         preventDefault(event);
-        const uploadArea = document.getElementById('file-upload-area');
-        uploadArea.classList.add('hidden');
         const files = event.dataTransfer.files;
         if (files.length > 0) {
             const formData = new FormData();
