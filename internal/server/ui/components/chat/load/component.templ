@@ -12,7 +12,6 @@ templ Component(prompt string) {
 		hx-target="this"
 		hx-disabled-elt="#messageSubmit"
 		hx-swap="outerHTML"
-		hx-headers='{"Accept": "text/html"}'
 		hx-indicator="#spinner"
 		hx-vals={ fmt.Sprintf(`{"prompt": "%s"}`, html.EscapeString(prompt)) }
 	></div>

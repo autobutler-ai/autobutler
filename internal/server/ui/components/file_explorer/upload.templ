@@ -7,7 +7,6 @@ templ upload(rootDir string) {
 		id="file-upload-form"
 		hx-encoding="multipart/form-data"
 		hx-post={ filepath.Join("/api/v1/files", rootDir) }
-		hx-headers='{"Accept": "text/html"}'
 		hx-swap="innerHTML"
 		hx-target="#file-explorer-status"
 		hx-indicator="#file-upload-progress"

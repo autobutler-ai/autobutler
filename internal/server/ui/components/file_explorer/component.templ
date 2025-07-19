@@ -61,7 +61,6 @@ templ Component(rootDir string, files []fs.FileInfo) {
 					hx-include="[name='folderName']"
 					hx-put={ filepath.Join("/api/v1/files", rootDir) }
 					hx-target="#file-explorer"
-					hx-headers='{"Accept": "text/html"}'
 					hx-swap="outerHTML"
 					hx-trigger="keydown[keyCode==13] from:body"
 					hx-disabled-elt="this"
