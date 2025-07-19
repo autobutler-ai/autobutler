@@ -67,7 +67,7 @@ func downloadFileRoute(apiV1Group *gin.RouterGroup) {
 }
 
 func newFolderRoute(apiV1Group *gin.RouterGroup) {
-	apiRoute(apiV1Group, "PUT", "/files/*folderDir", func(c *gin.Context) {
+	apiRoute(apiV1Group, "POST", "/folder/files/*folderDir", func(c *gin.Context) {
 		folderDir := c.Param("folderDir")
 		folderName := c.PostForm("folderName")
 		rootDir := util.GetFilesDir()

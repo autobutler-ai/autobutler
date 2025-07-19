@@ -123,14 +123,14 @@ func Component(rootDir string, files []fs.FileInfo) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<button id=\"add-folder-btn\" class=\"ml-2 p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700\" title=\"Add Folder\" type=\"button\" hx-on:click=\"toggleFolderInput(event)\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-5 w-5 text-green-600\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 4v16m8-8H4\"></path></svg></button> <input type=\"text\" id=\"folder-input\" name=\"folderName\" class=\"hidden ml-2 p-1 border border-gray-300 rounded dark:bg-gray-800 dark:border-gray-700\" placeholder=\"New folder name\" hx-include=\"[name='folderName']\" hx-put=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<button id=\"add-folder-btn\" class=\"ml-2 p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700\" title=\"Add Folder\" type=\"button\" hx-on:click=\"toggleFolderInput(event)\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-5 w-5 text-green-600\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 4v16m8-8H4\"></path></svg></button> <input type=\"text\" id=\"folder-input\" name=\"folderName\" class=\"hidden ml-2 p-1 border border-gray-300 rounded dark:bg-gray-800 dark:border-gray-700\" placeholder=\"New folder name\" hx-include=\"[name='folderName']\" hx-post=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var5 string
-		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(filepath.Join("/api/v1/files", rootDir))
+		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(filepath.Join("/api/v1/folder/files", rootDir))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/component.templ`, Line: 62, Col: 53}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/component.templ`, Line: 62, Col: 61}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
