@@ -85,16 +85,19 @@ func DetermineFileTypeFromPath(filePath string) FileType {
 	}
 }
 
-func DetermineFileType(file fs.FileInfo) FileType {
+func DetermineFileType(rootDir string, file fs.FileInfo) FileType {
 	if file.IsDir() {
 		return FileTypeFolder
 	}
+	filesDir := GetFilesDir()
+	stat, err := os.Stat(filepath.Join(filesDir, rootDir, file.Name()))
+	if err != nil || stat == nil {
+		return FileTypeGeneric // If we can't stat the file, treat it as generic
+	}
+	if stat.IsDir() {
+		return FileTypeFolder
+	}
 	return DetermineFileTypeFromPath(file.Name())
-}
-
-func IsFileType(file fs.FileInfo, expected FileType) bool {
-	actual := DetermineFileType(file)
-	return actual == expected
 }
 
 func SizeBytesToString(size_bytes int64) string {
