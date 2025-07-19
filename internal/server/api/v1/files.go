@@ -28,7 +28,7 @@ func deleteFileRoute(apiV1Group *gin.RouterGroup) {
 		rootDir := util.GetFilesDir()
 		fullPath := filepath.Join(rootDir, filePath)
 		if err := os.Remove(fullPath); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete file: " + err.Error()})
+			c.Status(http.StatusInternalServerError)
 			return
 		}
 		fileDir := filepath.Dir(filePath)
@@ -42,7 +42,7 @@ func DownloadFile(c *gin.Context, filePath string) {
 
 	file, err := os.Open(fullPath)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "File not found: " + err.Error()})
+		c.Status(http.StatusNotFound)
 		return
 	}
 	defer file.Close()
@@ -67,14 +67,14 @@ func downloadFileRoute(apiV1Group *gin.RouterGroup) {
 }
 
 func newFolderRoute(apiV1Group *gin.RouterGroup) {
-	apiRoute(apiV1Group, "PUT", "/files/*folderDir", func(c *gin.Context) {
+	apiRoute(apiV1Group, "POST", "/folder/files/*folderDir", func(c *gin.Context) {
 		folderDir := c.Param("folderDir")
 		folderName := c.PostForm("folderName")
 		rootDir := util.GetFilesDir()
 		fullPath := filepath.Join(rootDir, folderDir, folderName)
 
 		if err := os.MkdirAll(fullPath, 0755); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create folder: " + err.Error()})
+			c.Status(http.StatusInternalServerError)
 			return
 		}
 
@@ -84,36 +84,23 @@ func newFolderRoute(apiV1Group *gin.RouterGroup) {
 }
 
 func uploadFileRouteImpl(c *gin.Context, rootDir string) {
-	isHtml := c.GetHeader("Accept") == "text/html"
 	// Parse the multipart form with a max memory size
 	err := c.Request.ParseMultipartForm(32 << 20)
 	if err != nil {
-		if isHtml {
-			c.Writer.WriteString(`<span class="text-red-500">Failed to parse multipart form: ` + html.EscapeString(err.Error()) + `</span>`)
-		} else {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to parse multipart form: " + err.Error()})
-		}
+		c.Writer.WriteString(`<span class="text-red-500">Failed to parse multipart form: ` + html.EscapeString(err.Error()) + `</span>`)
 		return
 	}
 
 	form, err := c.MultipartForm()
 	if err != nil {
-		if isHtml {
-			c.Writer.WriteString(`<span class="text-red-500">Failed to get file: ` + html.EscapeString(err.Error()) + `</span>`)
-		} else {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to get file: " + err.Error()})
-		}
+		c.Writer.WriteString(`<span class="text-red-500">Failed to get file: ` + html.EscapeString(err.Error()) + `</span>`)
 		return
 	}
 	fileHeaders := form.File["files"]
 	for _, header := range fileHeaders {
 		file, err := header.Open()
 		if err != nil {
-			if isHtml {
-				c.Writer.WriteString(`<span class="text-red-500">Failed to open file: ` + html.EscapeString(err.Error()) + `</span>`)
-			} else {
-				c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to open file: " + err.Error()})
-			}
+			c.Writer.WriteString(`<span class="text-red-500">Failed to open file: ` + html.EscapeString(err.Error()) + `</span>`)
 			return
 		}
 		defer file.Close()
@@ -122,33 +109,19 @@ func uploadFileRouteImpl(c *gin.Context, rootDir string) {
 		newFilePath := filepath.Join(fileDir, rootDir, header.Filename)
 		newFile, err := os.Create(newFilePath)
 		if err != nil {
-			if isHtml {
-				c.Writer.WriteString(`<span class="text-red-500">Failed to create file: ` + html.EscapeString(err.Error()) + `</span>`)
-			} else {
-				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create file: " + err.Error()})
-			}
+			c.Writer.WriteString(`<span class="text-red-500">Failed to create file: ` + html.EscapeString(err.Error()) + `</span>`)
 			return
 		}
 		defer newFile.Close()
 		if _, err := io.Copy(newFile, file); err != nil {
-			if isHtml {
-				c.Writer.WriteString(`<span class="text-red-500">Failed to write file: ` + html.EscapeString(err.Error()) + `</span>`)
-			} else {
-				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to write file: " + err.Error()})
-			}
+			c.Writer.WriteString(`<span class="text-red-500">Failed to write file: ` + html.EscapeString(err.Error()) + `</span>`)
 			return
 		}
 	}
-	if isHtml {
-		loadComponent := load.Component(rootDir)
-		if err := loadComponent.Render(c.Request.Context(), c.Writer); err != nil {
-			c.Status(500)
-			return
-		}
-	} else {
-		c.JSON(200, gin.H{
-			"message": "Files uploaded successfully",
-		})
+	loadComponent := load.Component(rootDir)
+	if err := loadComponent.Render(c.Request.Context(), c.Writer); err != nil {
+		c.Status(500)
+		return
 	}
 }
 

@@ -41,7 +41,6 @@ templ contextMenu(rootDir string, file fs.FileInfo) {
 				<button
 					type="button"
 					class="w-full text-left px-4 py-2 bg-red-800 text-white hover:bg-red-600 text-sm"
-					hx-headers='{"Accept": "text/html"}'
 					hx-target="#file-explorer"
 					hx-swap="outerHTML"
 					hx-delete={ filepath.Join(`/api/v1/files`, rootDir, file.Name()) }

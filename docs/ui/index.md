@@ -109,38 +109,25 @@ Example API route that renders a `chat.message`:
 
 ```go
 apiRoute(apiV1Group, "GET", "/ai-chat", func(c *gin.Context) {
-	// Checks if the requester wants HTML, and if not, defaults to JSON
-	isHtml := c.GetHeader("Accept") == "text/html"
 	// Grabs a query param by key name
 	prompt := c.Query("prompt")
 	response, err := llm.RemoteLLMRequest(prompt)
 	if err != nil {
-		if isHtml {
-			// Calling `message.Component` returns an object representing the component to be rendered,
-			// embedding whatever arguments are pased into it
-			messageComponent := message.Component(llm.ErrorChatMessage(err))
-			// The component can now be rendered (even repeatedly), as long as it is provided
-			// the request context and the Writer interface from the HTTP framework
-			if err := messageComponent.Render(c.Request.Context(), c.Writer); err != nil {
-				c.Status(500)
-				return
-			}
-		} else {
-			c.JSON(500, gin.H{
-				"error": err.Error(),
-			})
-		}
-		return
-	}
-	if isHtml {
-		// Same as before for the error, but now returning a good response
-		messageComponent := message.Component(llm.FromCompletionToChatMessage(*response))
+		// Calling `message.Component` returns an object representing the component to be rendered,
+		// embedding whatever arguments are pased into it
+		messageComponent := message.Component(llm.ErrorChatMessage(err))
+		// The component can now be rendered (even repeatedly), as long as it is provided
+		// the request context and the Writer interface from the HTTP framework
 		if err := messageComponent.Render(c.Request.Context(), c.Writer); err != nil {
 			c.Status(500)
 			return
 		}
-	} else {
-		c.JSON(200, response)
+	}
+	// Same as before for the error, but now returning a good response
+	messageComponent := message.Component(llm.FromCompletionToChatMessage(*response))
+	if err := messageComponent.Render(c.Request.Context(), c.Writer); err != nil {
+		c.Status(500)
+		return
 	}
 })
 ```

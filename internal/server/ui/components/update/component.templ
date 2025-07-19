@@ -4,9 +4,7 @@ templ Component() {
 	<form
 		class="flex space-x-4 items-center"
 		onsubmit="return false;"
-		hx-ext="json-enc"
 		hx-post="/api/v1/update"
-		hx-headers='{"Accept": "text/html"}'
 		hx-target="#status"
 		hx-swap="innerHTML"
 	>

@@ -10,7 +10,6 @@ import (
 	"autobutler/internal/server/ui/views"
 	"autobutler/pkg/util"
 	"html"
-	"net/http"
 	"path/filepath"
 
 	"github.com/a-h/templ"
@@ -46,7 +45,6 @@ func setupComponentRoutes(router *gin.Engine) {
 }
 
 func RenderFileExplorer(c *gin.Context, fileDir string) {
-	isHtml := c.GetHeader("Accept") == "text/html"
 	fullPathDir := ""
 	if fileDir == "" {
 		fullPathDir = util.GetFilesDir()
@@ -55,24 +53,13 @@ func RenderFileExplorer(c *gin.Context, fileDir string) {
 	}
 	files, err := util.StatFilesInDir(fullPathDir)
 	if err != nil {
-		if isHtml {
-			c.Writer.WriteString(`<span class="text-red-500">Failed to load files: ` + html.EscapeString(err.Error()) + `</span>`)
-		} else {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to load files: " + err.Error()})
-		}
+		c.Writer.WriteString(`<span class="text-red-500">Failed to load files: ` + html.EscapeString(err.Error()) + `</span>`)
 		return
 	}
 	explorerComponent := file_explorer.Component(fileDir, files)
-	if isHtml {
-		if err := explorerComponent.Render(c.Request.Context(), c.Writer); err != nil {
-			c.Status(500)
-			return
-		}
-	} else {
-		c.JSON(200, gin.H{
-			"message": "File explorer loaded successfully",
-			"dir":     fileDir,
-		})
+	if err := explorerComponent.Render(c.Request.Context(), c.Writer); err != nil {
+		c.Status(500)
+		return
 	}
 }
 
