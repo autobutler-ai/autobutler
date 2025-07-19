@@ -16,7 +16,7 @@ templ node(rootDir string, file fs.FileInfo) {
 		class="hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer hover:underline"
 		hx-on:contextmenu="toggleFloatingContextMenu(event, this)"
 	>
-		{{ fileType := util.DetermineFileType(file) }}
+		{{ fileType := util.DetermineFileType(rootDir, file) }}
 		{{ filePath := filepath.Join("/files", rootDir, file.Name()) }}
 		<div class="flex items-center">
 			{{ /* Render the appropriate icon based on the file type */ }}
