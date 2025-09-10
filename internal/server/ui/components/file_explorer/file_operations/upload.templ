@@ -1,4 +1,4 @@
-package file_explorer
+package file_operations
 
 import (
 	"autobutler/internal/server/ui/types"
@@ -44,23 +44,5 @@ templ upload(pageState types.PageState) {
 			onchange="this.form.requestSubmit()"
 			multiple
 		/>
-		<progress
-			id="file-upload-progress"
-			class="htmx-indicator "
-			value="0"
-			max="100"
-		></progress>
-		<script>
-		htmx.on(
-			'#file-upload-form',
-			'htmx:xhr:progress',
-			function(evt) {
-				htmx.find('#file-upload-progress').setAttribute(
-				'value',
-				evt.detail.loaded / evt.detail.total * 100,
-				);
-			}
-		);
-		</script>
 	</form>
 }

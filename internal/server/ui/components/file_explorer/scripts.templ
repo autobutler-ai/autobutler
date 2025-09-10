@@ -94,6 +94,12 @@ templ scripts() {
         fileUploadArea.classList.add('bg-gray-800');
     }
 
+    function downloadSelectedFiles(event, rootDir) {
+        preventDefault(event);
+        console.log('Downloading files from', rootDir);
+
+    }
+
     function dropFiles(event, rootDir) {
         preventDefault(event);
         const files = event.dataTransfer.files;
