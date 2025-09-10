@@ -96,12 +96,16 @@ templ scripts() {
 
     function deleteSelectedFiles(event, rootDir) {
         preventDefault(event);
+        selecto.continueSelect = false;
         console.log('Deleting files from', rootDir);
+        console.log(selectedFiles);
     }
 
     function downloadSelectedFiles(event, rootDir) {
         preventDefault(event);
+        selecto.continueSelect = false;
         console.log('Downloading files from', rootDir);
+        console.log(selectedFiles);
     }
 
     function dropFiles(event, rootDir) {
@@ -153,7 +157,7 @@ templ scripts() {
         // Whether to select from the target inside (default: true)
         selectFromInside: true,
         // After the select, whether to select the next target with the selected target (deselected if the target is selected again).
-        continueSelect: false,
+        continueSelect: true,
         // Determines which key to continue selecting the next target via keydown and keyup.
         toggleContinueSelect: "shift",
         // The container for keydown and keyup events
@@ -173,6 +177,7 @@ templ scripts() {
         });
     });
     selecto.on('selectEnd', e => {
+        selecto.continueSelect = true;
         const hasSelectedFiles = e.selected.length > 0;
         document.getElementById('file-delete-button').disabled = !hasSelectedFiles;
         document.getElementById('file-download-button').disabled = !hasSelectedFiles;
