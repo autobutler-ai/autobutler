@@ -154,10 +154,11 @@ templ scripts() {
 
     selecto.on("select", e => {
         e.added.forEach(el => {
-            el.classList.add("selected");
+            el.classList.add("bg-gray-100", "dark:bg-gray-800");
+            el.classList.add("dark:bg-gray-800");
         });
         e.removed.forEach(el => {
-            el.classList.remove("selected");
+            el.classList.remove("bg-gray-100", "dark:bg-gray-800");
         });
     });
     selecto.on('selectEnd', e => {
