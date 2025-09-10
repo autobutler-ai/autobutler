@@ -173,6 +173,9 @@ templ scripts() {
     });
     selecto.on('selectEnd', e => {
         console.log('selectEnd:', e.selected);
+        const hasSelectedFiles = e.selected.length > 0;
+        document.getElementById('file-delete-button').disabled = !hasSelectedFiles;
+        document.getElementById('file-download-button').disabled = !hasSelectedFiles;
     });
     </script>
 }
