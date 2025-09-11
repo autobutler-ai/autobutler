@@ -9,6 +9,7 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
+	"autobutler/internal/server/ui/components/file_explorer/file_operations"
 	"autobutler/internal/server/ui/components/file_explorer/file_viewer"
 	"autobutler/pkg/util"
 	"io/fs"
@@ -44,11 +45,7 @@ func Component(pageState types.PageState, files []fs.FileInfo) templ.Component {
 		var stat unix.Statfs_t
 		fileDir := util.GetFilesDir()
 		unix.Statfs(fileDir, &stat)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"file-explorer\" class=\"bg-white dark:bg-gray-900 max-full mx-24 mt-10 rounded shadow p-6\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = scripts().Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<script src=\"/public/vendor/selecto/selecto.min.js\"></script><div id=\"file-explorer\" class=\"bg-white dark:bg-gray-900 max-full mx-24 mt-10 rounded shadow p-6\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -63,7 +60,7 @@ func Component(pageState types.PageState, files []fs.FileInfo) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.2fGB", util.BytesToGB(stat.Bavail*uint64(stat.Bsize))))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/component.templ`, Line: 29, Col: 121}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/component.templ`, Line: 30, Col: 121}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -73,7 +70,7 @@ func Component(pageState types.PageState, files []fs.FileInfo) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = upload(pageState).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = file_operations.Component(pageState).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -81,14 +78,14 @@ func Component(pageState types.PageState, files []fs.FileInfo) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div><div id=\"breadcrumbs\"><nav class=\"flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mb-2\" data-path=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div><div id=\"file-explorer-selectable\"><div id=\"breadcrumbs\"><nav class=\"flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mb-2\" data-path=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(pageState.RootDir)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/component.templ`, Line: 35, Col: 119}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/component.templ`, Line: 37, Col: 120}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -118,7 +115,7 @@ func Component(pageState types.PageState, files []fs.FileInfo) templ.Component {
 			var templ_7745c5c3_Var4 templ.SafeURL
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinURLErrs(filepath.Join("/", accumulatedDir))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/component.templ`, Line: 46, Col: 50}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/component.templ`, Line: 48, Col: 51}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -131,7 +128,7 @@ func Component(pageState types.PageState, files []fs.FileInfo) templ.Component {
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(dir)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/component.templ`, Line: 47, Col: 12}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/component.templ`, Line: 49, Col: 13}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
@@ -149,7 +146,7 @@ func Component(pageState types.PageState, files []fs.FileInfo) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(filepath.Join("/api/v1/folder/files", pageState.RootDir))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/component.templ`, Line: 71, Col: 71}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/component.templ`, Line: 73, Col: 72}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -167,7 +164,7 @@ func Component(pageState types.PageState, files []fs.FileInfo) templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(filepath.Join(util.GetFilesDir(), pageState.RootDir))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/component.templ`, Line: 81, Col: 108}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/component.templ`, Line: 83, Col: 109}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
@@ -178,7 +175,7 @@ func Component(pageState types.PageState, files []fs.FileInfo) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<ul class=\"divide-y divide-gray-200\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<ul id=\"file-explorer-list\" class=\"divide-y divide-gray-200\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -193,7 +190,7 @@ func Component(pageState types.PageState, files []fs.FileInfo) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</div></div><script src=\"/public/scripts/file_explorer.js\"></script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
