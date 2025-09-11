@@ -97,9 +97,10 @@ serve: generate env-LLM_AZURE_API_KEY ## Serve backend
 
 watch: env-LLM_AZURE_API_KEY ## Watch backend for changes
 	templ generate \
-		--watch \
-		--proxy="http://localhost:8080" \
-		--cmd="go run . serve"
+		-watch \
+		-watch-pattern='(.+\.go$$)|(.+\.templ$$)|(.+_templ\.txt$$)|(.+\.js$$)' \
+		-proxy="http://localhost:8080" \
+		-cmd="go run . serve"
 
 version: ## Print version
 	go run main.go version
