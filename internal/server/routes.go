@@ -50,6 +50,7 @@ func setupStaticRoutes(router *gin.Engine) error {
 
 func setupUiRoutes(router *gin.Engine) {
 	ui.SetupIndexRoutes(router)
+	ui.SetupCalendarRoutes(router)
 	ui.SetupChatRoutes(router)
 	ui.SetupFileRoutes(router)
 }
