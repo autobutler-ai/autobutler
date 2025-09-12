@@ -9,17 +9,15 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
-	"autobutler/internal/llm"
 	"autobutler/internal/server/ui/components/body"
-	"autobutler/internal/server/ui/components/chat"
+	"autobutler/internal/server/ui/components/calendar"
 	"autobutler/internal/server/ui/components/footer"
 	"autobutler/internal/server/ui/components/header"
 	"autobutler/internal/server/ui/components/topnav"
 	"autobutler/internal/server/ui/types"
-	"time"
 )
 
-func Chat(pageState types.PageState) templ.Component {
+func Calendar(pageState types.PageState) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -40,7 +38,7 @@ func Chat(pageState types.PageState) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		pageState.CurrentPageName = types.PageChat
+		pageState.CurrentPageName = types.PageCalendar
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html lang=\"en\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -65,11 +63,7 @@ func Chat(pageState types.PageState) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = chat.Component(
-				[]llm.ChatMessage{
-					{Role: llm.ChatRoleSystem, Content: "Welcome to the Autobutler!", Timestamp: llm.GetTimestamp(time.Now())},
-				},
-			).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = calendar.Component(calendar.CalendarViewMonth).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

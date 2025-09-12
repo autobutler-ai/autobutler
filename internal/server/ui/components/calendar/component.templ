@@ -1,0 +1,19 @@
+package calendar
+
+import "time"
+
+templ Component(calendarView CalendarView) {
+	{{ now := time.Now() }}
+	<div class="h-screen flex flex-col m-4">
+		if calendarView == CalendarViewMonth {
+			@monthView(now)
+		} else if calendarView == CalendarViewWeek {
+			<p>Week View - Coming Soon</p>
+		} else if calendarView == CalendarViewDay {
+			<p>Day View - Coming Soon</p>
+		} else {
+			<p>Invalid Calendar View</p>
+		}
+	</div>
+	<script src="/public/scripts/calendar.js"></script>
+}

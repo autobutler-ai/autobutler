@@ -1,0 +1,51 @@
+package calendar
+
+import "time"
+import "fmt"
+
+import "autobutler/pkg/calendar"
+
+templ monthView(now time.Time) {
+	{{ monthInfo := NewMonthInfoFromTime(now) }}
+	{{ events, err := calendar.GetMonthEvents(now) }}
+	if err != nil {
+		<p class="text-red-500">Error loading events: { err.Error() }</p>
+	}
+	<h1 class="text-5xl font-bold mb-4">{ now.Month() } { now.Year() } </h1>
+	<table class="table-fixed border-collapse w-full">
+		<thead>
+			<tr>
+				for day := range calendar.Saturday + 1 {
+					<th class="py-2 px-4 border">{ calendar.WeekdayToShortString(day, calendar.WeekModeStandard) }</th>
+				}
+			</tr>
+		</thead>
+		<tbody>
+			{{ previousMonth := now.AddDate(0, -1, 0) }}
+			{{ endOfPreviousMonth := calendar.GetFirstDayOfMonth(previousMonth).AddDate(0, 1, -1) }}
+			{{ dayCounter := -monthInfo.LeadingDays }}
+			for range monthInfo.WeeksToRender {
+				{{ renderDay := monthInfo.StartOfMonth.AddDate(0, 0, dayCounter) }}
+				<tr data-year={ renderDay.Year() } data-month={ calendar.MonthToInt(renderDay.Month()) }>
+					for range calendar.Saturday + 1 {
+						{{ renderDay = monthInfo.StartOfMonth.AddDate(0, 0, dayCounter) }}
+						{{ dayTitle := "" }}
+						{{ outsideOfMonth := false }}
+						if dayCounter < 0 {
+							{{ renderDay = endOfPreviousMonth.AddDate(0, 0, dayCounter+1) }}
+							{{ dayTitle = fmt.Sprintf("%s %d", calendar.ShortMonth(renderDay.Month()), renderDay.Day()) }}
+							{{ outsideOfMonth = true }}
+						} else if dayCounter >= monthInfo.MonthDays {
+							{{ dayTitle = fmt.Sprintf("%s %d", calendar.ShortMonth(renderDay.Month()), renderDay.Day()) }}
+							{{ outsideOfMonth = true }}
+						} else {
+							{{ dayTitle = fmt.Sprintf("%d", renderDay.Day()) }}
+						}
+						@day(renderDay, dayTitle, outsideOfMonth, events)
+						{{ dayCounter++ }}
+					}
+				</tr>
+			}
+		</tbody>
+	</table>
+}
