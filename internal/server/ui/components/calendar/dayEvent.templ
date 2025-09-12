@@ -4,7 +4,6 @@ import (
 	"autobutler/pkg/calendar"
 )
 
-
 func trimEventTitle(event calendar.Event, maxLen int) string {
 	title := event.Title
 	if len(title) <= maxLen {
