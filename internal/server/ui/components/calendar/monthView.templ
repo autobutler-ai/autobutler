@@ -5,11 +5,12 @@ import "fmt"
 
 import "autobutler/pkg/calendar"
 
-const defaultDayClass = "h-24 border align-top p-2"
-const invalidDayClass = "text-gray-400"
-
-templ MonthView(now time.Time) {
+templ monthView(now time.Time) {
 	{{ monthInfo := NewMonthInfoFromTime(now) }}
+	{{ events, err := calendar.GetMonthEvents(now) }}
+	if err != nil {
+		<p class="text-red-500">Error loading events: { err.Error() }</p>
+	}
 	<h1 class="text-5xl font-bold mb-4">{ now.Month() } { now.Year() } </h1>
 	<table class="table-fixed border-collapse w-full">
 		<thead>
@@ -27,24 +28,20 @@ templ MonthView(now time.Time) {
 				{{ renderDay := monthInfo.StartOfMonth.AddDate(0, 0, dayCounter) }}
 				<tr data-year={ renderDay.Year() } data-month={ calendar.MonthToInt(renderDay.Month()) }>
 					for _ = range calendar.Saturday + 1 {
-						{{ renderClass := defaultDayClass }}
 						{{ renderDay = monthInfo.StartOfMonth.AddDate(0, 0, dayCounter) }}
 						{{ dayTitle := "" }}
+						{{ outsideOfMonth := false }}
 						if dayCounter < 0 {
 							{{ renderDay = endOfPreviousMonth.AddDate(0, 0, dayCounter+1) }}
-							{{ renderClass += (" " + invalidDayClass) }}
 							{{ dayTitle = fmt.Sprintf("%s %d", calendar.ShortMonth(renderDay.Month()), renderDay.Day()) }}
+							{{ outsideOfMonth = true }}
 						} else if dayCounter >= monthInfo.MonthDays {
-							{{ renderClass += (" " + invalidDayClass) }}
 							{{ dayTitle = fmt.Sprintf("%s %d", calendar.ShortMonth(renderDay.Month()), renderDay.Day()) }}
+							{{ outsideOfMonth = true }}
 						} else {
 							{{ dayTitle = fmt.Sprintf("%d", renderDay.Day()) }}
 						}
-						<td class={ renderClass } data-year={ renderDay.Year() } data-month={ calendar.MonthToInt(renderDay.Month()) } data-day={ renderDay.Day() }>
-							<div class="text-sm font-semibold mb-1">{ dayTitle }</div>
-							<!-- Placeholder for events -->
-							<div class="text-xs text-gray-500">No Events</div>
-						</td>
+						@day(renderDay, dayTitle, outsideOfMonth, events)
 						{{ dayCounter++ }}
 					}
 				</tr>

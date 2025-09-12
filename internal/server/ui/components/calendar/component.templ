@@ -6,7 +6,7 @@ templ Component(calendarView CalendarView) {
 	{{ now := time.Now() }}
 	<div class="h-screen flex flex-col m-4">
 		if calendarView == CalendarViewMonth {
-			@MonthView(now)
+			@monthView(now)
 		} else if calendarView == CalendarViewWeek {
 			<p>Week View - Coming Soon</p>
 		} else if calendarView == CalendarViewDay {

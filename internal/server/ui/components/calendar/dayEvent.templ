@@ -1,0 +1,21 @@
+package calendar
+
+import (
+	"autobutler/pkg/calendar"
+)
+
+
+func trimEventTitle(event calendar.Event, maxLen int) string {
+	title := event.Title
+	if len(title) <= maxLen {
+		return title
+	}
+	if maxLen <= 3 {
+		return title[:maxLen]
+	}
+	return title[:maxLen-3] + "..."
+}
+
+templ dayEvent(event calendar.Event) {
+	<div class="text-xs bg-blue-100 text-blue-800 rounded px-1 py-0.5 mb-0.5">{ trimEventTitle(event, 20) }</div>
+}

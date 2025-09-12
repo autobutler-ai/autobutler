@@ -1,0 +1,27 @@
+package calendar
+
+import (
+	"autobutler/pkg/calendar"
+	"time"
+)
+
+const defaultDayClass = "h-24 border align-top p-2"
+const invalidDayClass = "text-gray-400"
+
+templ day(renderDay time.Time, dayTitle string, outsideOfMonth bool, events calendar.EventMap) {
+	{{ renderClass := defaultDayClass }}
+	if outsideOfMonth {
+		{{ renderClass += (" " + invalidDayClass) }}
+	}
+	<td class={ renderClass } data-year={ renderDay.Year() } data-month={ calendar.MonthToInt(renderDay.Month()) } data-day={ renderDay.Day() }>
+		<div class="text-sm font-semibold mb-1">{ dayTitle }</div>
+		{{ dayEvents, exists := events[renderDay.Day()] }}
+		if exists && len(dayEvents) > 0 {
+			for _, event := range dayEvents {
+				@dayEvent(*event)
+			}
+		} else {
+			<div class="text-xs text-gray-500">No Events</div>
+		}
+	</td>
+}
