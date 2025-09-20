@@ -48,6 +48,7 @@ const (
 	FileTypePDF       FileType = "pdf"
 	FileTypeSlideshow FileType = "slideshow"
 	FileTypeVideo     FileType = "video"
+	FileTypeSpacer    FileType = "spacer"
 )
 
 func BytesToKB(size uint64) float64 {
@@ -111,6 +112,9 @@ func DetermineFileTypeFromPath(filePath string) FileType {
 }
 
 func DetermineFileType(rootDir string, file fs.FileInfo) FileType {
+	if file == nil {
+		return FileTypeSpacer
+	}
 	if file.IsDir() {
 		return FileTypeFolder
 	}

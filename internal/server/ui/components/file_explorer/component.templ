@@ -3,6 +3,7 @@ package file_explorer
 import (
 	"autobutler/internal/server/ui/components/file_explorer/file_operations"
 	"autobutler/internal/server/ui/components/file_explorer/file_viewer"
+	"autobutler/internal/server/ui/components/file_explorer/node"
 	"autobutler/pkg/util"
 	"io/fs"
 
@@ -37,13 +38,13 @@ templ Component(pageState types.PageState, files []fs.FileInfo) {
 				<nav class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mb-2" data-path={ pageState.RootDir }>
 					{{ accumulatedDir := "" }}
 					for i, dir := range strings.Split(pageState.RootDir, "/") {
+						if i == 0 {
+							{{ dir = "files" }}
+						}
+						if i > 0 && dir == "" {
+							{{ continue }}
+						}
 						<span class="text-gray-700 dark:text-gray-300">
-							if i == 0 {
-								{{ dir = "files" }}
-							}
-							if i > 0 && dir == "" {
-								{{ continue }}
-							}
 							{{ accumulatedDir = filepath.Join(accumulatedDir, dir) }}
 							<a href={ filepath.Join("/", accumulatedDir) } class="hover:underline">
 								{ dir }
@@ -84,8 +85,9 @@ templ Component(pageState types.PageState, files []fs.FileInfo) {
 			} else {
 				<ul id="file-explorer-list" class="divide-y divide-gray-200">
 					for _, file := range files {
-						@node(pageState, file)
+						@node.Component(pageState, file)
 					}
+					@node.Component(pageState, nil)
 				</ul>
 			}
 		</div>
