@@ -1,4 +1,4 @@
-package file_explorer
+package context_menu
 
 import (
 	"autobutler/internal/server/ui/types"
@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 )
 
-templ contextMenu(pageState types.PageState, file fs.FileInfo) {
+templ Component(pageState types.PageState, file fs.FileInfo) {
 	<div>
 		<button
 			class="ml-2 p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700"

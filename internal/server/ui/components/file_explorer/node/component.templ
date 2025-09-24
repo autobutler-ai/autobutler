@@ -1,0 +1,90 @@
+package node
+
+import (
+	"autobutler/internal/server/ui/components/file_explorer/context_menu"
+	"autobutler/internal/server/ui/components/icons/folder"
+	"autobutler/internal/server/ui/components/icons/generic"
+	"autobutler/internal/server/ui/components/icons/image"
+	"autobutler/internal/server/ui/components/icons/pdf"
+	"autobutler/internal/server/ui/components/icons/slideshow"
+	"autobutler/internal/server/ui/types"
+	"autobutler/pkg/util"
+	"io/fs"
+	"path/filepath"
+)
+
+templ Component(pageState types.PageState, file fs.FileInfo) {
+	// TODO: Refactor this into small parts, so we don't do so much spaghetti for folder vs file, but share common bits
+	{{ fileType := util.DetermineFileType(pageState.RootDir, file) }}
+	{{ fileName := "" }}
+	if file != nil {
+		{{ fileName = file.Name() }}
+	}
+	{{ nodeClasses := "hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer hover:underline" }}
+	if file != nil {
+		{{ nodeClasses += " file-node" }}
+	}
+	<li
+		class={ nodeClasses }
+		hx-on:contextmenu="toggleFloatingContextMenu(event, this)"
+		hx-on:dragenter="activateDropZoneOnNode(event)"
+		hx-on:dragover="preventDefault(event)"
+		hx-on:dragleave="deactivateDropZoneOnNode(event)"
+		hx-on:drop={ templ.JSFuncCall("dropOnNode", templ.JSExpression("event"), pageState.RootDir) }
+		data-name={ fileName }
+	>
+		<div class="flex items-center">
+			{{ /* Render the appropriate icon based on the file type */ }}
+			switch fileType {
+				case util.FileTypeFolder:
+					@folder.Component()
+				case util.FileTypePDF:
+					@pdf.Component()
+				case util.FileTypeSlideshow:
+					@slideshow.Component()
+				case util.FileTypeImage:
+					@image.Component()
+				case util.FileTypeSpacer:
+					{{ /* Render nothing for spacer */ }}
+				default:
+					@generic.Component()
+			}
+			switch fileType {
+				case util.FileTypeFolder:
+					{{ filePath := filepath.Join("/files", pageState.RootDir, fileName) }}
+					<div
+						class="flex flex-1 items-center"
+					>
+						<a href={ filePath } class="flex-1 py-3">
+							<span class="file-name">{ fileName }</span>
+						</a>
+						<span class="text-gray-600 dark:text-gray-200 text-sm">{ util.SizeBytesToString(file.Size()) }</span>
+					</div>
+					<div class="justify-self-end">
+						@context_menu.Component(pageState, file)
+					</div>
+				case util.FileTypeSpacer:
+					<div class="flex flex-1 items-center justify-center py-3 italic text-gray-400">
+						<span class="file-name">Drop files here&#8230;</span>
+					</div>
+				default:
+					{{ filePath := filepath.Join("/files", pageState.RootDir, fileName) }}
+					<div
+						class="flex flex-1 items-center"
+						hx-get={ filepath.Join("/components/files/viewer", filePath) }
+						hx-target="#file-viewer-content"
+						hx-swap="innerHTML"
+						hx-on:click="document.getElementById('file-viewer').showModal();"
+					>
+						<div class="flex-1 py-3">
+							<span class="file-name">{ fileName }</span>
+						</div>
+						<span class="text-gray-600 dark:text-gray-200 text-sm">{ util.SizeBytesToString(file.Size()) }</span>
+					</div>
+					<div class="justify-self-end">
+						@context_menu.Component(pageState, file)
+					</div>
+			}
+		</div>
+	</li>
+}

@@ -6,6 +6,11 @@ SHELL := /bin/bash
 
 .PHONY: $(MAKECMDGOALS)
 
+ifneq (,$(wildcard ./.env))
+    include .env
+    export
+endif
+
 setup: setup/gotools setup/templ ## Setup development environment
 
 setup/gotools: ## Install go tools

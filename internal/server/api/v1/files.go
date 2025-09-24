@@ -168,6 +168,10 @@ func uploadFileRouteImpl(c *gin.Context, rootDir string) {
 			return
 		}
 	}
+	returnDir := form.Value["returnDir"]
+	if len(returnDir) > 0 {
+		rootDir = returnDir[0]
+	}
 	loadComponent := load.Component(types.NewPageState().WithRootDir(rootDir))
 	if err := loadComponent.Render(c.Request.Context(), c.Writer); err != nil {
 		c.Status(500)

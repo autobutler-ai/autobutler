@@ -91,6 +91,25 @@ function deactivateDropZone(event) {
     fileUploadArea.classList.add('bg-gray-800');
 }
 
+function activateDropZoneOnNode(event) {
+    preventDefault(event);
+    event.currentTarget.classList.add('bg-blue-600');
+}
+
+function deactivateDropZoneOnNode(event) {
+    preventDefault(event);
+    event.currentTarget.classList.remove('bg-blue-600');
+}
+
+function dropOnNode(event, returnDir) {
+    preventDefault(event);
+    event.currentTarget.classList.remove('bg-blue-600');
+    const li = event.currentTarget.closest('li');
+    const dropDir = li.dataset.name;
+    console.log(`Drop on node: ${dropDir}`);
+    return dropFiles(event, `/${dropDir}`, !!returnDir ? returnDir : "/");
+}
+
 function downloadSelectedFiles(event, rootDir) {
     preventDefault(event);
     selectedFiles.forEach(fileName => {
@@ -107,20 +126,21 @@ function downloadSelectedFiles(event, rootDir) {
     clearSelectedFiles();
 }
 
-function dropFiles(event) {
+function dropFiles(event, rootDir, returnDir) {
     preventDefault(event);
     const files = event.dataTransfer.files;
     if (files.length > 0) {
         const formData = new FormData();
-        for (let i = 0; i < files.length; i++) {
-            formData.append('files', files[i]);
+        for (const file of files) {
+            formData.append('files', file);
         }
         const uploadForm = document.getElementById('file-upload-form');
         // NOTE: https://flaviocopes.com/htmx-send-files-using-htmxajax-call/
         htmx.ajax('POST',
-            uploadForm.getAttribute('hx-post'), {
+            uploadForm.getAttribute('hx-post') + rootDir, {
             values: {
-                files: formData.getAll('files')
+                files: formData.getAll('files'),
+                returnDir: returnDir,
             },
             source: uploadForm,
         });
@@ -139,6 +159,8 @@ function saveQuill(filePath) {
         console.error('Error updating file:', error);
     });
 }
+
+var SELECTABLE_TARGETS = ['.file-node'];
 
 function clearSelectedFiles() {
     setSelectedFiles([]);
@@ -166,7 +188,7 @@ var selecto = new Selecto({
     // The area to drag selection element (default: container)
     dragContainer: document.getElementById('file-explorer-selectable'),
     // Targets to select. You can register a queryselector or an Element.
-    selectableTargets: ['.file-node'],
+    selectableTargets: SELECTABLE_TARGETS,
     // Whether to select by click (default: true)
     selectByClick: false,
     // Whether to select from the target inside (default: true)

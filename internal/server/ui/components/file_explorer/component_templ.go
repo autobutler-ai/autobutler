@@ -11,6 +11,7 @@ import templruntime "github.com/a-h/templ/runtime"
 import (
 	"autobutler/internal/server/ui/components/file_explorer/file_operations"
 	"autobutler/internal/server/ui/components/file_explorer/file_viewer"
+	"autobutler/internal/server/ui/components/file_explorer/node"
 	"autobutler/pkg/util"
 	"io/fs"
 
@@ -60,7 +61,7 @@ func Component(pageState types.PageState, files []fs.FileInfo) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.2fGB", util.BytesToGB(stat.Bavail*uint64(stat.Bsize))))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/component.templ`, Line: 30, Col: 121}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/component.templ`, Line: 31, Col: 121}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -85,7 +86,7 @@ func Component(pageState types.PageState, files []fs.FileInfo) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(pageState.RootDir)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/component.templ`, Line: 37, Col: 120}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/component.templ`, Line: 38, Col: 120}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -97,100 +98,108 @@ func Component(pageState types.PageState, files []fs.FileInfo) templ.Component {
 		}
 		accumulatedDir := ""
 		for i, dir := range strings.Split(pageState.RootDir, "/") {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<span class=\"text-gray-700 dark:text-gray-300\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
 			if i == 0 {
 				dir = "files"
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, " ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
 			}
 			if i > 0 && dir == "" {
 				continue
 			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, " <span class=\"text-gray-700 dark:text-gray-300\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
 			accumulatedDir = filepath.Join(accumulatedDir, dir)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<a href=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<a href=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var4 templ.SafeURL
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinURLErrs(filepath.Join("/", accumulatedDir))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/component.templ`, Line: 48, Col: 51}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/component.templ`, Line: 49, Col: 51}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\" class=\"hover:underline\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\" class=\"hover:underline\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(dir)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/component.templ`, Line: 49, Col: 13}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/component.templ`, Line: 50, Col: 13}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</a> <span>/</span></span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</a> <span>/</span></span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<button id=\"add-folder-btn\" class=\"ml-2 p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700\" title=\"Add Folder\" type=\"button\" hx-on:click=\"toggleFolderInput(event)\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-5 w-5 text-green-600\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 4v16m8-8H4\"></path></svg></button> <input type=\"text\" id=\"folder-input\" name=\"folderName\" class=\"hidden ml-2 p-1 border border-gray-300 rounded dark:bg-gray-800 dark:border-gray-700\" placeholder=\"New folder name\" hx-include=\"[name='folderName']\" hx-post=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<button id=\"add-folder-btn\" class=\"ml-2 p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700\" title=\"Add Folder\" type=\"button\" hx-on:click=\"toggleFolderInput(event)\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-5 w-5 text-green-600\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 4v16m8-8H4\"></path></svg></button> <input type=\"text\" id=\"folder-input\" name=\"folderName\" class=\"hidden ml-2 p-1 border border-gray-300 rounded dark:bg-gray-800 dark:border-gray-700\" placeholder=\"New folder name\" hx-include=\"[name='folderName']\" hx-post=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(filepath.Join("/api/v1/folder/files", pageState.RootDir))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/component.templ`, Line: 73, Col: 72}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/component.templ`, Line: 74, Col: 72}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\" hx-target=\"#file-explorer\" hx-swap=\"outerHTML\" hx-trigger=\"keydown[keyCode==13] from:body\" hx-disabled-elt=\"this\"></nav></div><div id=\"file-explorer-status\"></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" hx-target=\"#file-explorer\" hx-swap=\"outerHTML\" hx-trigger=\"keydown[keyCode==13] from:body\" hx-disabled-elt=\"this\"></nav></div><div id=\"file-explorer-status\"></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if len(files) == 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<span class=\"py-3 text-gray-500\">No files found in ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<span class=\"py-3 text-gray-500\">No files found in ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(filepath.Join(util.GetFilesDir(), pageState.RootDir))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/component.templ`, Line: 83, Col: 109}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/component.templ`, Line: 84, Col: 109}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<ul id=\"file-explorer-list\" class=\"divide-y divide-gray-200\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<ul id=\"file-explorer-list\" class=\"divide-y divide-gray-200\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			for _, file := range files {
-				templ_7745c5c3_Err = node(pageState, file).Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = node.Component(pageState, file).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</ul>")
+			templ_7745c5c3_Err = node.Component(pageState, nil).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</ul>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</div></div><script src=\"/public/scripts/file_explorer.js\"></script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</div></div><script src=\"/public/scripts/file_explorer.js\"></script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
