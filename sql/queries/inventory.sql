@@ -22,14 +22,14 @@ FROM
 ORDER BY
     name;
 
--- name: UpdateInventory :exec
+-- name: UpdateInventory :one
 UPDATE inventory
 SET
     name = ?,
     amount = ?,
     unit = ?
 WHERE
-    id = ?;
+    id = ? RETURNING *;
 
 -- name: DeleteInventory :exec
 DELETE FROM inventory
