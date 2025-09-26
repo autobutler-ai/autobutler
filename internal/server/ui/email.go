@@ -13,7 +13,7 @@ func SetupEmailRoutes(router *gin.Engine) {
 
 func setupEmailView(router *gin.Engine) {
 	uiRoute(router, "/email", func(c *gin.Context) {
-		if err := views.Email(types.NewPageState()).Render(c.Request.Context(), c.Writer); err != nil {
+		if err := views.Email(types.NewPageState(), types.MockEmails()).Render(c.Request.Context(), c.Writer); err != nil {
 			c.Status(400)
 			return
 		}

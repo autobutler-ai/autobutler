@@ -8,7 +8,12 @@ package email
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-func Component() templ.Component {
+import (
+	"autobutler/internal/server/ui/components/email/email_list"
+	"autobutler/internal/server/ui/types"
+)
+
+func Component(emails []types.Email) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -29,7 +34,15 @@ func Component() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"email\" class=\"h-screen flex flex-col m-4\"><div class=\"flex flex-row h-full\"><!-- Email List --><div class=\"w-1/3 border-r overflow-y-auto\"><ul id=\"email-list\"><li id=\"email-0\" class=\"p-4 border-b cursor-pointer bg-gray-600 underline hover:bg-gray-600\" onclick=\"showEmail(0)\"><strong>Welcome to Autobutler</strong><br><span class=\"text-sm text-gray-400\">info@autobutler.ai</span></li><li id=\"email-1\" class=\"p-4 border-b cursor-pointer hover:bg-gray-600\" onclick=\"showEmail(1)\"><strong>Your Invoice</strong><br><span class=\"text-sm text-gray-400\">billing@autobutler.ai</span></li><li id=\"email-2\" class=\"p-4 border-b cursor-pointer hover:bg-gray-600\" onclick=\"showEmail(2)\"><strong>Service Reminder</strong><br><span class=\"text-sm text-gray-400\">service@autobutler.ai</span></li></ul></div><!-- Email Viewer --><div class=\"w-2/3 p-6\" id=\"email-viewer\"><h2 class=\"text-xl font-bold mb-2\" id=\"email-subject\">Welcome to Autobutler</h2><p class=\"text-sm text-gray-400 mb-4\" id=\"email-from\">info@autobutler.ai</p><div id=\"email-body\"><p>Thank you for joining Autobutler. We're excited to have you on board!</p></div></div></div><script>\n\t\tconst emails = [\n\t\t\t{\n\t\t\t\tsubject: \"Welcome to Autobutler\",\n\t\t\t\tfrom: \"info@autobutler.ai\",\n\t\t\t\tbody: \"Thank you for joining Autobutler. We're excited to have you on board!\"\n\t\t\t},\n\t\t\t{\n\t\t\t\tsubject: \"Your Invoice\",\n\t\t\t\tfrom: \"billing@autobutler.ai\",\n\t\t\t\tbody: \"Please find attached your invoice for this month. Contact us if you have any questions.\"\n\t\t\t},\n\t\t\t{\n\t\t\t\tsubject: \"Service Reminder\",\n\t\t\t\tfrom: \"service@autobutler.ai\",\n\t\t\t\tbody: \"This is a reminder for your upcoming car service appointment. Let us know if you need to reschedule.\"\n\t\t\t}\n\t\t];\n\t\tfunction showEmail(index) {\n\t\t\tfor (let i = 0; i < emails.length; i++) {\n\t\t\t\tdocument.getElementById(`email-${i}`).classList.remove('bg-gray-600');\n\t\t\t\tdocument.getElementById(`email-${i}`).classList.remove('underline');\n\t\t\t}\n\t\t\tdocument.getElementById(`email-${index}`).classList.add('bg-gray-600');\n\t\t\tdocument.getElementById(`email-${index}`).classList.add('underline');\n\t\t\tdocument.getElementById('email-subject').textContent = emails[index].subject;\n\t\t\tdocument.getElementById('email-from').textContent = emails[index].from;\n\t\t\tdocument.getElementById('email-body').innerHTML = `<p>${emails[index].body}</p>`;\n\t\t}\n\t</script></div><script src=\"/public/scripts/email.js\"></script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"email\" class=\"h-screen flex flex-col m-4\"><div class=\"flex flex-row h-full\"><div class=\"w-1/3 border-r overflow-y-auto\"><div id=\"email-actions\" class=\"flex items-center mb-4\"><div id=\"new-email\" class=\"mr-2\"><button class=\"bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4\"><span class=\"sr-only\">New eamil</span> <svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-5 w-5\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 4v16m8-8H4\"></path></svg></button></div><div id=\"refresh-email\"><button class=\"bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4\" hx-get=\"/api/v1/email\" hx-target=\"#email-list\" hx-swap=\"outerHTML\"><span class=\"sr-only\">Refresh</span> <svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-5 w-5\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\"><path stroke-width=\"2\" d=\"M1.7507,16.0022 C3.3517,20.0982 7.3367,23.0002 11.9997,23.0002 C18.0747,23.0002 22.9997,18.0752 22.9997,12.0002 M22.2497,7.9982 C20.6487,3.9012 16.6627,1.0002 11.9997,1.0002 C5.9247,1.0002 0.9997,5.9252 0.9997,12.0002 M8.9997,16.0002 L0.9997,16.0002 L0.9997,24.0002 M22.9997,0.0002 L22.9997,8.0002 L14.9997,8.0002\"></path></svg></button></div></div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = email_list.Component(emails).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div><!-- Email Viewer --><div class=\"w-2/3 p-6\" id=\"email-viewer\"><h2 class=\"text-xl font-bold mb-2\" id=\"email-subject\">Welcome to Autobutler</h2><p class=\"text-sm text-gray-400 mb-4\" id=\"email-from\">info@autobutler.ai</p><div id=\"email-body\"><p>Thank you for joining Autobutler. We're excited to have you on board!</p></div></div></div></div><script src=\"/public/scripts/email.js\"></script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

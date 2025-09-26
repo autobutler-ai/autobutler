@@ -1,0 +1,32 @@
+package email_list
+
+import (
+	"autobutler/internal/server/ui/types"
+	"fmt"
+)
+
+templ Component(emails []types.Email) {
+	<div id="email-list">
+		<ul>
+			for i, email := range emails {
+				{{ id := fmt.Sprintf("email-%d", i) }}
+				<li
+					id={ id }
+					class="p-4 border-b cursor-pointer hover:bg-gray-600"
+					hx-on:click={ templ.JSFuncCall(
+						"showEmail",
+						len(emails),
+						id,
+						email.Subject,
+						email.Body,
+						email.From,
+					) }
+				>
+					<strong>{ email.Subject }</strong>
+					<br/>
+					<span class="text-sm text-gray-400">{ email.From }</span>
+				</li>
+			}
+		</ul>
+	</div>
+}

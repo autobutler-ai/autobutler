@@ -1,27 +1,49 @@
 package email
 
-templ Component() {
+import (
+	"autobutler/internal/server/ui/components/email/email_list"
+	"autobutler/internal/server/ui/types"
+)
+
+templ Component(emails []types.Email) {
 	<div id="email" class="h-screen flex flex-col m-4">
 		<div class="flex flex-row h-full">
-			<!-- Email List -->
 			<div class="w-1/3 border-r overflow-y-auto">
-				<ul id="email-list">
-					<li id="email-0" class="p-4 border-b cursor-pointer bg-gray-600 underline hover:bg-gray-600" onclick="showEmail(0)">
-						<strong>Welcome to Autobutler</strong>
-						<br/>
-						<span class="text-sm text-gray-400">info@autobutler.ai</span>
-					</li>
-					<li id="email-1" class="p-4 border-b cursor-pointer hover:bg-gray-600" onclick="showEmail(1)">
-						<strong>Your Invoice</strong>
-						<br/>
-						<span class="text-sm text-gray-400">billing@autobutler.ai</span>
-					</li>
-					<li id="email-2" class="p-4 border-b cursor-pointer hover:bg-gray-600" onclick="showEmail(2)">
-						<strong>Service Reminder</strong>
-						<br/>
-						<span class="text-sm text-gray-400">service@autobutler.ai</span>
-					</li>
-				</ul>
+				<div id="email-actions" class="flex items-center mb-4">
+					<div id="new-email" class="mr-2">
+						<button
+							class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
+						>
+							<span class="sr-only">New eamil</span>
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+							</svg>
+						</button>
+					</div>
+					<div id="refresh-email">
+						<button
+							class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
+							hx-get="/api/v1/email"
+							hx-target="#email-list"
+							hx-swap="outerHTML"
+						>
+							<span class="sr-only">Refresh</span>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								class="h-5 w-5"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+							>
+								<path
+									stroke-width="2"
+									d="M1.7507,16.0022 C3.3517,20.0982 7.3367,23.0002 11.9997,23.0002 C18.0747,23.0002 22.9997,18.0752 22.9997,12.0002 M22.2497,7.9982 C20.6487,3.9012 16.6627,1.0002 11.9997,1.0002 C5.9247,1.0002 0.9997,5.9252 0.9997,12.0002 M8.9997,16.0002 L0.9997,16.0002 L0.9997,24.0002 M22.9997,0.0002 L22.9997,8.0002 L14.9997,8.0002"
+								></path>
+							</svg>
+						</button>
+					</div>
+				</div>
+				@email_list.Component(emails)
 			</div>
 			<!-- Email Viewer -->
 			<div class="w-2/3 p-6" id="email-viewer">
@@ -32,36 +54,6 @@ templ Component() {
 				</div>
 			</div>
 		</div>
-		<script>
-		const emails = [
-			{
-				subject: "Welcome to Autobutler",
-				from: "info@autobutler.ai",
-				body: "Thank you for joining Autobutler. We're excited to have you on board!"
-			},
-			{
-				subject: "Your Invoice",
-				from: "billing@autobutler.ai",
-				body: "Please find attached your invoice for this month. Contact us if you have any questions."
-			},
-			{
-				subject: "Service Reminder",
-				from: "service@autobutler.ai",
-				body: "This is a reminder for your upcoming car service appointment. Let us know if you need to reschedule."
-			}
-		];
-		function showEmail(index) {
-			for (let i = 0; i < emails.length; i++) {
-				document.getElementById(`email-${i}`).classList.remove('bg-gray-600');
-				document.getElementById(`email-${i}`).classList.remove('underline');
-			}
-			document.getElementById(`email-${index}`).classList.add('bg-gray-600');
-			document.getElementById(`email-${index}`).classList.add('underline');
-			document.getElementById('email-subject').textContent = emails[index].subject;
-			document.getElementById('email-from').textContent = emails[index].from;
-			document.getElementById('email-body').innerHTML = `<p>${emails[index].body}</p>`;
-		}
-	</script>
 	</div>
 	<script src="/public/scripts/email.js"></script>
 }

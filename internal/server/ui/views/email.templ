@@ -9,14 +9,14 @@ import (
 	"autobutler/internal/server/ui/types"
 )
 
-templ Email(pageState types.PageState) {
+templ Email(pageState types.PageState, emails []types.Email) {
 	{{ pageState.CurrentPageName = types.PageEmail }}
 	<!DOCTYPE html>
 	<html lang="en">
 		@header.Component()
 		@topnav.Component(pageState)
 		@body.Component() {
-			@email.Component()
+			@email.Component(emails)
 		}
 		@footer.Component()
 	</html>
