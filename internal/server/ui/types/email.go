@@ -12,7 +12,7 @@ var mockEmails = []Email{
 	{
 		Subject: "Welcome to Autobutler",
 		From:    "info@autobutler.ai",
-		Body:    "Thank you for joining Autobutler. We're excited to have you on board!",
+		Body:    "Thank you for joining <strong>Autobutler</strong>. We're excited to have you on board!",
 	},
 	{
 		Subject: "Your Invoice",

@@ -7,14 +7,14 @@ import (
 
 templ Component(emails []types.Email) {
 	<div id="email" class="h-screen flex flex-col m-4">
-		<div class="flex flex-row h-full">
+		<div class="flex flex-row  max-h-[90vh]">
 			<div class="w-1/3 border-r overflow-y-auto">
 				<div id="email-actions" class="flex items-center mb-4">
 					<div id="new-email" class="mr-2">
 						<button
 							class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
 						>
-							<span class="sr-only">New eamil</span>
+							<span class="sr-only">New email</span>
 							<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
 							</svg>
@@ -46,14 +46,19 @@ templ Component(emails []types.Email) {
 				@email_list.Component(emails)
 			</div>
 			<!-- Email Viewer -->
+			{{ var firstEmail types.Email }}
+			if len(emails) > 0 {
+				{{ firstEmail = emails[0] }}
+			}
 			<div class="w-2/3 p-6" id="email-viewer">
-				<h2 class="text-xl font-bold mb-2" id="email-subject">Welcome to Autobutler</h2>
-				<p class="text-sm text-gray-400 mb-4" id="email-from">info@autobutler.ai</p>
-				<div id="email-body">
-					<p>Thank you for joining Autobutler. We're excited to have you on board!</p>
-				</div>
+				<h2 class="text-xl font-bold mb-2" id="email-subject">{ firstEmail.Subject }</h2>
+				<p class="text-sm text-gray-400 mb-4" id="email-from">{ firstEmail.From }</p>
+				<iframe id="email-body" class="bg-white w-full h-[80vh]"></iframe>
 			</div>
 		</div>
 	</div>
 	<script src="/public/scripts/email.js"></script>
+	<script>
+		fillIframe({{ firstEmail.Body }});
+	</script>
 }
