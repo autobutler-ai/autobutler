@@ -1,4 +1,4 @@
-package context_menu
+package file_context_menu
 
 import (
 	"autobutler/internal/server/ui/types"
@@ -28,6 +28,7 @@ templ Component(pageState types.PageState, file fs.FileInfo) {
 				>
 					Download
 				</a>
+				<hr/>
 			</li>
 			<li>
 				<button
@@ -37,6 +38,7 @@ templ Component(pageState types.PageState, file fs.FileInfo) {
 				>
 					File Details
 				</button>
+				<hr/>
 			</li>
 			<li>
 				<button

@@ -162,6 +162,32 @@ function saveQuill(filePath) {
     });
 }
 
+function newFile(event, rootDir) {
+    preventDefault(event);
+    const fileName = prompt("Enter the new file name (including extension):");
+    if (fileName) {
+        const uploadForm = document.getElementById('file-upload-form');
+        const formData = new FormData();
+        // NOTE: Creating an empty file
+        formData.append('files', new Blob([''], { type: 'text/plain' }), fileName);
+        htmx.ajax('POST',
+            uploadForm.getAttribute('hx-post') + rootDir, {
+            values: {
+                files: formData.getAll('files'),
+                returnDir: rootDir,
+            },
+            source: uploadForm,
+        });
+    }
+}
+
+function showFolderDetails(event) {
+    preventDefault(event);
+    alert("Folder details to be implemented.");
+}
+
+// SELECTO
+
 var SELECTABLE_TARGETS = ['.file-node'];
 
 function clearSelectedFiles() {
