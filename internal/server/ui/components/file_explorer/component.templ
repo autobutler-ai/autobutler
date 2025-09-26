@@ -9,16 +9,14 @@ import (
 
 	"autobutler/internal/server/ui/types"
 	"fmt"
-	"golang.org/x/sys/unix"
 	"path/filepath"
 	"strings"
 )
 
 templ Component(pageState types.PageState, files []fs.FileInfo) {
 	// TODO: This works on firefox, but not on chrome as it will rapidly open and close the upload area.
-	{{ var stat unix.Statfs_t }}
 	{{ fileDir := util.GetFilesDir() }}
-	{{ unix.Statfs(fileDir, &stat) }}
+	{{ availableBytes := util.GetAvailableSpaceInBytes(fileDir) }}
 	<script src="/public/vendor/selecto/selecto.min.js"></script>
 	<div
 		id="file-explorer"
@@ -28,7 +26,7 @@ templ Component(pageState types.PageState, files []fs.FileInfo) {
 		<div class="flex items-center mb-4">
 			<div>
 				<h2 class="text-2xl font-bold mr-4 whitespace-nowrap">File Explorer</h2>
-				<div class="text-gray-500">Available Space: { fmt.Sprintf("%.2fGB", util.BytesToGB(stat.Bavail * uint64(stat.Bsize))) }</div>
+				<div class="text-gray-500">Available Space: { fmt.Sprintf("%.2fGB", util.BytesToGB(availableBytes)) }</div>
 			</div>
 			@file_operations.Component(pageState)
 			@dnd(pageState)

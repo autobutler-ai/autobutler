@@ -192,3 +192,7 @@ func StatFilesInDir(dir string) ([]fs.FileInfo, error) {
 	})
 	return files, nil
 }
+
+func GetAvailableSpaceInBytes(fileDir string) uint64 {
+	return getAvailableSpaceInBytes(fileDir)
+}
