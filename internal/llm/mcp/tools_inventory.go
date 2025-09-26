@@ -2,6 +2,7 @@ package mcp
 
 import (
 	"autobutler/pkg/db"
+	"context"
 	"fmt"
 )
 
@@ -62,16 +63,12 @@ type QueryInventoryResponse struct {
 }
 
 func (r McpRegistry) QueryInventory(itemName string) QueryInventoryResponse {
-	item, err := db.Instance.QueryInventoryByName(itemName)
+	item, err := db.DatabaseQueries.GetInventoryByName(
+		context.Background(),
+		itemName,
+	)
 	if err != nil {
 		panic(fmt.Sprintf("failed to query inventory for item %s: %v", itemName, err))
-	}
-	if item == nil {
-		return QueryInventoryResponse{
-			Item:      itemName,
-			Inventory: 0.0,
-			Unit:      "",
-		}
 	}
 	return QueryInventoryResponse{
 		Item:      item.Name,

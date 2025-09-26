@@ -14,6 +14,16 @@ WHERE
 LIMIT
     1;
 
+-- name: GetInventoryByName :one
+SELECT
+    *
+FROM
+    inventory
+WHERE
+    name = ?
+LIMIT
+    1;
+
 -- name: ListInventories :many
 SELECT
     *

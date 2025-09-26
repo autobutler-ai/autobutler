@@ -68,6 +68,29 @@ func (q *Queries) GetInventory(ctx context.Context, id int64) (Inventory, error)
 	return i, err
 }
 
+const getInventoryByName = `-- name: GetInventoryByName :one
+SELECT
+    id, name, amount, unit
+FROM
+    inventory
+WHERE
+    name = ?
+LIMIT
+    1
+`
+
+func (q *Queries) GetInventoryByName(ctx context.Context, name string) (Inventory, error) {
+	row := q.db.QueryRowContext(ctx, getInventoryByName, name)
+	var i Inventory
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Amount,
+		&i.Unit,
+	)
+	return i, err
+}
+
 const listInventories = `-- name: ListInventories :many
 SELECT
     id, name, amount, unit
