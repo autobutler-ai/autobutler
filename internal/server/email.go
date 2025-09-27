@@ -10,7 +10,8 @@ import (
 
 func serveEmail() error {
 	config := &guerrilla.AppConfig{
-		LogFile: "stdout",
+		AllowedHosts: []string{"example.com"},
+		LogFile:      "stdout",
 		BackendConfig: backends.BackendConfig{
 			"gw_save_timeout":     "1s",
 			"gw_val_rcpt_timeout": "1s",
@@ -21,6 +22,7 @@ func serveEmail() error {
 			"save_workers_size":   1,
 			"sql_driver":          "sqlite",
 			"sql_dsn":             util.GetDatabasePath(),
+			"sql_values":          "(CURRENT_TIMESTAMP, ?, ?, ?, ? , ?, 0, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?)",
 		},
 	}
 	daemon := guerrilla.Daemon{

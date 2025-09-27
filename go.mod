@@ -4,7 +4,7 @@ go 1.25.1
 
 require (
 	github.com/a-h/templ v0.3.943
-	github.com/autobutler-ai/go-guerrilla v0.0.0-20250927223233-9083d1c8dd83
+	github.com/autobutler-ai/go-guerrilla v0.0.0-20250927232516-a0c9d9570431
 	github.com/gin-contrib/cors v1.7.6
 	github.com/gin-contrib/static v1.1.5
 	github.com/gin-gonic/gin v1.10.1
