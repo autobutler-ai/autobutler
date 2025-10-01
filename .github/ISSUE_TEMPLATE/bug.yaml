@@ -18,13 +18,14 @@ body:
       multiple: true
       options:
         - N/A
-        - UI
+        - Calendar
+        - Chat
+        - Cirrus (Drive)
+        - General UI
         - Backend
-        - LLM
-        - Home Assistant
       default: 0
     validations:
-      required: true  
+      required: true
   - type: textarea
     id: what-happened
     attributes:
