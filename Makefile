@@ -119,17 +119,6 @@ watch: env-LLM_AZURE_API_KEY ## Watch backend for changes
 version: ## Print version
 	go run main.go version
 
-exercise: env-LLM_AZURE_API_KEY ## Exercise the backend chat feature
-	killall main || true
-	$(MAKE) serve &
-	sleep 5
-	echo ""
-	curl \
-		--silent \
-		-X GET \
-		"http://localhost:8080/chat?prompt=How+much+milk+is+in+the+house" | tee ./exercise.json
-	killall main || true
-
 env-%: ## Check for env var
 	if [ -z "$($*)" ]; then \
 		echo "Error: Environment variable '$*' is not set."; \

@@ -4,12 +4,12 @@
 
 Before any of these, set the `LLM_AZURE_API_KEY` environment variable to your Azure OpenAI API key
 
-### Make an LLM call
+### Watch the backend
 
-To make a call to the LLM, you can use the following command:
+To serve the backend with a watcher, you can use the following command:
 
 ```shell
-go run main.go chat "How much milk is in my house?"
+make watch
 ```
 
 ### Run the backend
@@ -24,5 +24,4 @@ make serve
 
 ```shell
 make build
-./build/autobutler chat "How much milk is in my house?"
 ```
