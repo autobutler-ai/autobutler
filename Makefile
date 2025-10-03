@@ -106,10 +106,10 @@ upgrade: ## Upgrade dependencies
 tidy: ## Tidy go mod
 	go mod tidy
 
-serve: generate env-LLM_AZURE_API_KEY ## Serve backend
+serve: generate ## Serve backend
 	go run main.go serve
 
-watch: env-LLM_AZURE_API_KEY ## Watch backend for changes
+watch: ## Watch backend for changes
 	templ generate \
 		-watch \
 		-watch-pattern='(.+\.go$$)|(.+\.templ$$)|(.+_templ\.txt$$)|(.+\.js$$)' \

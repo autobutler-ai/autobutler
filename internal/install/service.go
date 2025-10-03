@@ -13,7 +13,6 @@ After=network.target
 
 [Service]
 ExecStart=/usr/local/bin/autobutler serve
-Environment="LLM_AZURE_API_KEY=%s"
 Environment="PORT=8081"
 Restart=always
 StandardOutput=append:/var/log/autobutler.app
@@ -36,7 +35,6 @@ WantedBy=multi-user.target`
     </array>
     <key>EnvironmentVariables</key>
     <dict>
-        <key>LLM_AZURE_API_KEY</key>
         <string>%s</string>
         <key>PORT</key>
         <string>8081</string>
