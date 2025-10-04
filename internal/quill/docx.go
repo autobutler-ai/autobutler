@@ -117,7 +117,8 @@ func FromDocx(filename string) (Delta, error) {
 							if property.Italic != nil {
 								op.Attributes["italic"] = true
 							}
-							if property.Underline != nil {
+							if property.Underline != nil &&
+								property.Underline.Val != types.UnderlineNone {
 								op.Attributes["underline"] = true
 							}
 							if property.Color != nil {
