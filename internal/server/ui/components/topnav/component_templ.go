@@ -34,7 +34,7 @@ func Component(pageState types.PageState) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<nav class=\"bg-gray-800\"><ul class=\"flex\"><li class=\"flex p-4\"><a href=\"/\" class=\"text-white hover:text-gray-300\"><img src=\"/public/img/butler.png\" height=\"24\" width=\"24\"></a></li>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<nav class=\"bg-gray-800 relative z-50\"><ul class=\"flex\"><li class=\"flex p-4\"><a href=\"/\" class=\"text-white hover:text-gray-300\"><img src=\"/public/img/butler.png\" height=\"24\" width=\"24\"></a></li>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
