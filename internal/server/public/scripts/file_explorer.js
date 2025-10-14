@@ -171,12 +171,11 @@ function saveQuill(filePath) {
     });
 }
 
-function renameFile(event, rootDir, fileName) {
+function moveFile(event, rootDir, fileName) {
     preventDefault(event);
-    const filePath = `${rootDir}${fileName}`;
-    const newFileName = prompt("Enter the new file name (including extension):", fileName);
-    const newFilePath = `${rootDir}${newFileName}`;
-    if (newFileName && newFileName !== filePath) {
+    const filePath = `${rootDir}/${fileName}`;
+    const newFilePath = prompt("Enter the new file name (including extension):", filePath);
+    if (newFilePath !== filePath) {
         htmx.ajax('PUT',
             `/api/v1/files/${filePath}`, {
             values: {
