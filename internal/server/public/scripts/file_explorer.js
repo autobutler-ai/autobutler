@@ -173,8 +173,11 @@ function saveQuill(filePath) {
 
 function moveFile(event, rootDir, fileName) {
     preventDefault(event);
+    while (rootDir && rootDir[0] == '/') {
+        rootDir = rootDir.slice(1);
+    }
     const filePath = `${rootDir}/${fileName}`;
-    const newFilePath = prompt("Enter the new file name (including extension):", filePath);
+    const newFilePath = prompt("Enter the preferred file name (including extension):", filePath);
     if (newFilePath !== filePath) {
         htmx.ajax('PUT',
             `/api/v1/files/${filePath}`, {
