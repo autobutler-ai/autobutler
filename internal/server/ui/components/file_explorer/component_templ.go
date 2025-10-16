@@ -187,7 +187,7 @@ func Component(pageState types.PageState, files []fs.FileInfo) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<div id=\"file-explorer-sort\" class=\"flex items-center\"><button id=\"sort-name\" class=\"flex flex-1 px-2 py-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700\" type=\"button\" hx-on:click=\"sortFiles('name')\">Name</button> <button id=\"sort-size\" class=\"justify-self-end px-2 py-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700\" type=\"button\" hx-on:click=\"sortFiles('size')\">Size</button></div><ul id=\"file-explorer-list\" class=\"divide-y divide-gray-200 max-h-[70vh] overflow-y-auto pr-4\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<div class=\"max-h-[70vh] overflow-y-auto\"><table id=\"file-explorer-table\" class=\"w-full\"><thead class=\"bg-gray-50 dark:bg-gray-800 sticky top-0\"><tr><th class=\"text-left\"><button id=\"sort-name\" class=\"flex flex-1 w-full px-2 py-1 text-left rounded hover:bg-gray-200 dark:hover:bg-gray-700\" type=\"button\" hx-on:click=\"sortFiles('name')\">Name</button></th><th class=\"text-right w-24\"><button id=\"sort-size\" class=\"w-full px-2 py-1 text-right rounded hover:bg-gray-200 dark:hover:bg-gray-700\" type=\"button\" hx-on:click=\"sortFiles('size')\">Size</button></th><th class=\"w-10\"></th></tr></thead> <tbody id=\"file-explorer-list\" class=\"divide-y divide-gray-200 dark:divide-gray-700\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -201,7 +201,7 @@ func Component(pageState types.PageState, files []fs.FileInfo) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</ul>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</tbody></table></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
