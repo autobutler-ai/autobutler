@@ -277,7 +277,6 @@ var currentSortColumn = null;
 var currentSortDirection = 'asc'; // 'asc' or 'desc'
 
 function sortFiles(column) {
-    // Toggle direction if clicking the same column, otherwise default to ascending
     if (currentSortColumn === column) {
         currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
     } else {
@@ -289,7 +288,7 @@ function sortFiles(column) {
     const rows = Array.from(tbody.querySelectorAll('tr'));
 
     // Separate the spacer row (last row with "Drop files here...")
-    const spacerRow = rows.find(row => row.querySelector('.file-name')?.textContent?.includes('Drop files here'));
+    const spacerRow = rows.find(row => row.querySelector('.spacer'));
     const fileRows = rows.filter(row => row !== spacerRow);
 
     fileRows.sort((a, b) => {

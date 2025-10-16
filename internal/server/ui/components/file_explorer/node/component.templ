@@ -52,7 +52,7 @@ templ Component(pageState types.PageState, file fs.FileInfo) {
 				</td>
 			case util.FileTypeSpacer:
 				<td colspan="3" class="py-3 text-center italic text-gray-400" hx-on:click="document.getElementById('file-upload-input').click()">
-					<span class="file-name">Drop files here&#8230;</span>
+					<span class="spacer file-name">Drop files here&#8230;</span>
 					@explorer_context_menu.Component(pageState)
 				</td>
 			default:

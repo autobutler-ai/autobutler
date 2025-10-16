@@ -164,7 +164,7 @@ func Component(pageState types.PageState, file fs.FileInfo) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		case util.FileTypeSpacer:
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<td colspan=\"3\" class=\"py-3 text-center italic text-gray-400\" hx-on:click=\"document.getElementById('file-upload-input').click()\"><span class=\"file-name\">Drop files here&#8230;</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<td colspan=\"3\" class=\"py-3 text-center italic text-gray-400\" hx-on:click=\"document.getElementById('file-upload-input').click()\"><span class=\"spacer file-name\">Drop files here&#8230;</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
