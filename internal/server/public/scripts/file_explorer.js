@@ -270,3 +270,94 @@ selecto.on("select", e => {
 selecto.on('selectEnd', e => {
     setSelectedFiles(e.selected.map(el => el.dataset.name));
 });
+
+// SORTING
+
+var currentSortColumn = null;
+var currentSortDirection = 'asc'; // 'asc' or 'desc'
+
+function sortFiles(column) {
+    // Toggle direction if clicking the same column, otherwise default to ascending
+    if (currentSortColumn === column) {
+        currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+        currentSortDirection = 'asc';
+    }
+    currentSortColumn = column;
+
+    const tbody = document.getElementById('file-explorer-list');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    
+    // Separate the spacer row (last row with "Drop files here...")
+    const spacerRow = rows.find(row => row.querySelector('.file-name')?.textContent?.includes('Drop files here'));
+    const fileRows = rows.filter(row => row !== spacerRow);
+
+    fileRows.sort((a, b) => {
+        let aValue, bValue;
+        
+        if (column === 'name') {
+            aValue = a.dataset.name || '';
+            bValue = b.dataset.name || '';
+            
+            // Sort folders first, then files
+            const aIsFolder = a.querySelector('td:first-child a[href]') !== null;
+            const bIsFolder = b.querySelector('td:first-child a[href]') !== null;
+            
+            if (aIsFolder && !bIsFolder) return -1;
+            if (!aIsFolder && bIsFolder) return 1;
+            
+            // Both are same type, sort alphabetically
+            return currentSortDirection === 'asc' 
+                ? aValue.localeCompare(bValue, undefined, { numeric: true, sensitivity: 'base' })
+                : bValue.localeCompare(aValue, undefined, { numeric: true, sensitivity: 'base' });
+        } else if (column === 'size') {
+            // Extract size text and convert to bytes for comparison
+            const aSizeText = a.querySelector('td:nth-child(2)')?.textContent?.trim() || '0 B';
+            const bSizeText = b.querySelector('td:nth-child(2)')?.textContent?.trim() || '0 B';
+            
+            aValue = parseSize(aSizeText);
+            bValue = parseSize(bSizeText);
+            
+            return currentSortDirection === 'asc' ? aValue - bValue : bValue - aValue;
+        }
+        
+        return 0;
+    });
+
+    // Clear tbody and re-append sorted rows
+    tbody.innerHTML = '';
+    fileRows.forEach(row => tbody.appendChild(row));
+    
+    // Add spacer row back at the end
+    if (spacerRow) {
+        tbody.appendChild(spacerRow);
+    }
+}
+
+function parseSize(sizeText) {
+    const units = { 'B': 1, 'KB': 1024, 'MB': 1024*1024, 'GB': 1024*1024*1024, 'TB': 1024*1024*1024*1024 };
+    const match = sizeText.match(/^([\d.]+)\s*([A-Z]+)$/);
+    if (!match) return 0;
+    
+    const value = parseFloat(match[1]);
+    const unit = match[2];
+    return value * (units[unit] || 1);
+}
+
+function updateSortArrows(column) {
+    // Hide all arrows first
+    const allArrows = document.querySelectorAll('[id$="-sort-asc"], [id$="-sort-desc"]');
+    allArrows.forEach(arrow => {
+        arrow.classList.add('hidden');
+        arrow.classList.remove('text-gray-700', 'dark:text-gray-300');
+        arrow.classList.add('text-gray-400');
+    });
+
+    // Show the appropriate arrow for the current column and direction
+    const arrowId = `${column}-sort-${currentSortDirection}`;
+    const arrow = document.getElementById(arrowId);
+    if (arrow) {
+        arrow.classList.remove('hidden', 'text-gray-400');
+        arrow.classList.add('text-gray-700', 'dark:text-gray-300');
+    }
+}

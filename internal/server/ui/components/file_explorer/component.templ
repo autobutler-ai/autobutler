@@ -96,15 +96,15 @@ templ Component(pageState types.PageState, files []fs.FileInfo) {
 										id="sort-name"
 										class="flex items-center justify-between w-full px-2 py-1 text-left rounded hover:bg-gray-200 dark:hover:bg-gray-700"
 										type="button"
-										hx-on:click="sortFiles('name')"
+										hx-on:click="sortFiles('name'); updateSortArrows('name')"
 									>
 										<span>Name</span>
 										<div class="flex flex-col ml-1">
 											<svg id="name-sort-asc" class="w-3 h-3 text-gray-400 hidden" fill="currentColor" viewBox="0 0 24 24">
-												<path d="M7 14l5-5 5 5z"/>
+												<path d="M7 14l5-5 5 5z"></path>
 											</svg>
 											<svg id="name-sort-desc" class="w-3 h-3 text-gray-400 hidden" fill="currentColor" viewBox="0 0 24 24">
-												<path d="M7 10l5 5 5-5z"/>
+												<path d="M7 10l5 5 5-5z"></path>
 											</svg>
 										</div>
 									</button>
@@ -114,15 +114,15 @@ templ Component(pageState types.PageState, files []fs.FileInfo) {
 										id="sort-size"
 										class="flex items-center justify-end w-full px-2 py-1 text-right rounded hover:bg-gray-200 dark:hover:bg-gray-700"
 										type="button"
-										hx-on:click="sortFiles('size')"
+										hx-on:click="sortFiles('size'); updateSortArrows('size')"
 									>
 										<span>Size</span>
 										<div class="flex flex-col ml-1">
 											<svg id="size-sort-asc" class="w-3 h-3 text-gray-400 hidden" fill="currentColor" viewBox="0 0 24 24">
-												<path d="M7 14l5-5 5 5z"/>
+												<path d="M7 14l5-5 5 5z"></path>
 											</svg>
 											<svg id="size-sort-desc" class="w-3 h-3 text-gray-400 hidden" fill="currentColor" viewBox="0 0 24 24">
-												<path d="M7 10l5 5 5-5z"/>
+												<path d="M7 10l5 5 5-5z"></path>
 											</svg>
 										</div>
 									</button>
