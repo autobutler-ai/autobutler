@@ -375,22 +375,16 @@ function toggleMixedSorting() {
 
     if (mixedSorting) {
         // Mixed sorting enabled - show both icons
-        button.classList.add('bg-blue-100', 'dark:bg-blue-900', 'border-2', 'border-blue-300', 'dark:border-blue-600');
         button.title = 'Currently: Mixed sorting (folders and files together)\nClick to switch to folders first';
         label.textContent = 'Mixed';
-        label.classList.add('text-blue-700', 'dark:text-blue-300');
-        label.classList.remove('text-gray-600', 'dark:text-gray-400');
 
         // Show both folder and file icons
         folderIcon.classList.remove('invisible');
         fileIcon.classList.remove('invisible');
     } else {
         // Mixed sorting disabled - show only folder icon
-        button.classList.remove('bg-blue-100', 'dark:bg-blue-900', 'border-2', 'border-blue-300', 'dark:border-blue-600');
         button.title = 'Currently: Folders first sorting\nClick to switch to mixed sorting (folders and files together)';
         label.textContent = 'Folders';
-        label.classList.remove('text-blue-700', 'dark:text-blue-300');
-        label.classList.add('text-gray-600', 'dark:text-gray-400');
 
         // Show only folder icon (file icon invisible but still takes space)
         folderIcon.classList.remove('invisible');
