@@ -12,7 +12,7 @@ import (
 	"autobutler/internal/server/ui/components/file_explorer/file_operations"
 	"autobutler/internal/server/ui/components/file_explorer/file_viewer"
 	"autobutler/internal/server/ui/components/file_explorer/node"
-	"autobutler/internal/server/ui/components/icons/sort"
+	"autobutler/internal/server/ui/components/file_explorer/sort_button"
 	"autobutler/pkg/util"
 	"io/fs"
 
@@ -188,23 +188,23 @@ func Component(pageState types.PageState, files []fs.FileInfo) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<div class=\"max-h-[70vh] overflow-y-auto\"><table id=\"file-explorer-table\" class=\"w-full\"><thead class=\"bg-gray-50 dark:bg-gray-800 sticky top-0\"><tr><th class=\"text-left\"><button id=\"sort-name\" class=\"flex items-center justify-between w-full px-2 py-1 text-left rounded hover:bg-gray-200 dark:hover:bg-gray-700\" type=\"button\" hx-on:click=\"sortFiles('name'); updateSortArrows('name')\"><span>Name</span><div class=\"flex flex-col ml-1\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<div class=\"max-h-[70vh] overflow-y-auto\"><table id=\"file-explorer-table\" class=\"w-full\"><thead class=\"bg-gray-50 dark:bg-gray-900 sticky top-0\"><tr><th class=\"text-left\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = sort.Component("name").Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = sort_button.Component("name").Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</div></button></th><th class=\"text-right w-24\"><button id=\"sort-size\" class=\"flex items-center justify-end w-full px-2 py-1 text-right rounded hover:bg-gray-200 dark:hover:bg-gray-700\" type=\"button\" hx-on:click=\"sortFiles('size'); updateSortArrows('size')\"><span>Size</span><div class=\"flex flex-col ml-1\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</th><th class=\"text-right w-24\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = sort.Component("size").Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = sort_button.Component("size").Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</div></button></th><th class=\"w-10\"></th></tr></thead> <tbody id=\"file-explorer-list\" class=\"divide-y divide-gray-200 dark:divide-gray-700\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</th><th class=\"w-10\"><button id=\"refresh-button\" style=\"display: block ruby;\" class=\"w-full h-full flex items-center justify-center px-1 py-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700\" type=\"button\" title=\"Refresh\" hx-on:click=\"location.reload()\"><svg class=\"w-4 h-4 text-gray-600 dark:text-gray-400\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15\"></path></svg></button></th></tr></thead> <tbody id=\"file-explorer-list\" class=\"divide-y divide-gray-200 dark:divide-gray-700\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
