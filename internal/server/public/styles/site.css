@@ -1,24 +1,3 @@
-/**
- * AutoButler Site Stylesheet - Modular Architecture
- * 
- * This is the main entry point for all site styles.
- * Component styles are organized into semantic modules for better maintainability.
- * 
- * Module Organization:
- * 1. variables.css   - CSS custom properties (colors, spacing, typography, etc.)
- * 2. reset.css       - Global resets and base HTML/body styles
- * 3. forms.css       - Form input styling with browser defaults
- * 4. layout.css      - Site-wide layout containers and backgrounds
- * 5. navigation.css  - Top navigation bar
- * 6. buttons.css     - Button components and variants
- * 7. icons.css       - SVG icon styling and file type colors
- * 8. hero.css        - Landing page hero section
- * 9. file-explorer.css - Complete file browsing interface
- * 10. calendar.css   - Calendar grid and events
- * 11. modals.css     - Modal dialogs and forms
- * 12. utility.css    - Helper classes and error states
- */
-
 /* Import order matters for CSS cascade */
 @import url('variables.css');
 @import url('reset.css');
