@@ -397,3 +397,128 @@ function toggleMixedSorting() {
         updateSortArrows(currentSortColumn);
     }
 }
+
+// Keyboard navigation for file table
+function handleTableKeyNavigation(event) {
+    if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+        return;
+    }
+
+    const currentElement = document.activeElement;
+    const table = document.getElementById('file-explorer-list');
+    if (!table || !table.contains(currentElement)) {
+        return;
+    }
+
+    event.preventDefault();
+
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        // Up/Down: Navigate between file rows (focusing on the file name)
+        const currentRow = currentElement.closest('tr');
+        if (!currentRow) return;
+
+        const allRows = Array.from(table.querySelectorAll('tr'));
+        const currentIndex = allRows.indexOf(currentRow);
+
+        if (currentIndex === -1) return;
+
+        let nextIndex;
+        if (event.key === 'ArrowDown') {
+            nextIndex = currentIndex + 1;
+            if (nextIndex >= allRows.length) {
+                nextIndex = 0; // Wrap to first row
+            }
+        } else { // ArrowUp
+            nextIndex = currentIndex - 1;
+            if (nextIndex < 0) {
+                nextIndex = allRows.length - 1; // Wrap to last row
+            }
+        }
+
+        // Focus on the file name (first focusable element in the row)
+        const nextRow = allRows[nextIndex];
+        const firstFocusable = nextRow.querySelector('[tabindex="0"]');
+        if (firstFocusable) {
+            firstFocusable.focus();
+        }
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        // Left/Right: Navigate between elements in the same row
+        const currentRow = currentElement.closest('tr');
+        if (!currentRow) return;
+
+        const focusableInRow = Array.from(currentRow.querySelectorAll('[tabindex="0"]'));
+        const currentIndex = focusableInRow.indexOf(currentElement);
+
+        if (currentIndex === -1) return;
+
+        let nextIndex;
+        if (event.key === 'ArrowRight') {
+            nextIndex = currentIndex + 1;
+            if (nextIndex >= focusableInRow.length) {
+                nextIndex = 0; // Wrap to first element in row
+            }
+        } else { // ArrowLeft
+            nextIndex = currentIndex - 1;
+            if (nextIndex < 0) {
+                nextIndex = focusableInRow.length - 1; // Wrap to last element in row
+            }
+        }
+
+        focusableInRow[nextIndex].focus();
+    }
+}
+
+// Add event listener for keyboard navigation
+document.addEventListener('keydown', handleTableKeyNavigation);
+
+// Add keyboard support for sort buttons and controls
+document.addEventListener('keydown', function (event) {
+    const activeElement = document.activeElement;
+
+    if (event.key === 'Enter' || event.key === ' ') {
+        // Check if focused element is a sort button
+        if (activeElement && activeElement.classList.contains('sort-button')) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+
+            // Extract column name from button id (format: "sort-{columnName}")
+            const columnName = activeElement.id.replace('sort-', '');
+
+            if (columnName) {
+                sortFiles(columnName);
+                updateSortArrows(columnName);
+            }
+            return false;
+        }
+
+        // Check if focused element is the mixed sort toggle
+        if (activeElement && activeElement.id === 'mixed-sort-toggle') {
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+            toggleMixedSorting();
+            return false;
+        }
+    }
+}, true); // Use capture phase to intercept before htmx
+
+// Add keyboard shortcut for creating new folder
+document.addEventListener('keydown', function (event) {
+    // Check if the '+' key is pressed (can be '+' or '=' with shift)
+    if ((event.key === '+' || event.key === '=') && !event.ctrlKey && !event.metaKey && !event.altKey) {
+        // Don't trigger if user is typing in an input field
+        const activeElement = document.activeElement;
+        if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
+            return;
+        }
+
+        // Get the new folder button
+        const addFolderBtn = document.getElementById('add-folder-btn');
+        if (addFolderBtn) {
+            event.preventDefault();
+            // Click the button to show the input
+            addFolderBtn.click();
+        }
+    }
+});
