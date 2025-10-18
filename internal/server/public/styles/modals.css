@@ -12,10 +12,12 @@
 }
 
 .modal {
-	border-radius: var(--border-radius);
+	border-radius: var(--border-radius-lg);
 	background-color: white;
-	padding: var(--spacing-sm);
+	padding: var(--spacing-lg);
 	width: 24rem;
+	box-shadow: var(--shadow-lg);
+	border: 1px solid var(--color-gray-200);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -106,10 +108,12 @@
 /* ========== CALENDAR EVENT EDITOR MODAL ========== */
 
 .event-editor-modal {
-	border-radius: var(--border-radius);
+	border-radius: var(--border-radius-lg);
 	background-color: white;
-	padding: var(--spacing-sm);
+	padding: var(--spacing-lg);
 	width: 24rem;
+	box-shadow: var(--shadow-lg);
+	border: 1px solid var(--color-gray-200);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -220,11 +224,28 @@
 
 .event-editor-cancel-btn {
 	padding: var(--spacing-md) var(--spacing-lg);
-	background-color: var(--color-gray-300);
+	background-color: white;
 	color: var(--color-gray-700);
 	border-radius: var(--border-radius);
-	border: none;
+	border: 1px solid var(--color-gray-300);
 	cursor: pointer;
+}
+
+.event-editor-cancel-btn:hover {
+	background-color: var(--color-gray-50);
+	border-color: var(--color-gray-400);
+}
+
+@media (prefers-color-scheme: dark) {
+	.event-editor-cancel-btn {
+		background-color: var(--color-gray-700);
+		color: var(--color-gray-200);
+		border-color: var(--color-gray-600);
+	}
+
+	.event-editor-cancel-btn:hover {
+		background-color: var(--color-gray-600);
+	}
 }
 
 .event-editor-submit-btn {

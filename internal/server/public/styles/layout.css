@@ -4,9 +4,9 @@
  */
 
 .site-body {
-	background: linear-gradient(135deg, var(--color-gray-400) 0%, rgba(255,255,255,0) 100%);
+	background-color: var(--color-gray-50);
 	min-height: 100vh;
-	color: #000;
+	color: var(--color-gray-900);
 }
 
 @media (prefers-color-scheme: dark) {

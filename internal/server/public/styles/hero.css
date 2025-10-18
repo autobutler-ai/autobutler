@@ -32,14 +32,22 @@
 
 .hero-title {
 	font-size: var(--font-size-5xl);
-	font-weight: bold;
+	font-weight: 800;
 	margin-bottom: var(--spacing-lg);
+	color: var(--color-gray-900);
+}
+
+@media (prefers-color-scheme: dark) {
+	.hero-title {
+		color: white;
+	}
 }
 
 .hero-description {
 	font-size: var(--font-size-xl);
 	color: var(--color-gray-600);
 	margin-bottom: var(--spacing-2xl);
+	line-height: 1.6;
 }
 
 @media (prefers-color-scheme: dark) {

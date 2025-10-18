@@ -12,8 +12,15 @@
 
 .calendar-title {
 	font-size: var(--font-size-5xl);
-	font-weight: bold;
+	font-weight: 800;
 	margin-bottom: var(--spacing-lg);
+	color: var(--color-gray-900);
+}
+
+@media (prefers-color-scheme: dark) {
+	.calendar-title {
+		color: white;
+	}
 }
 
 .calendar-table {
