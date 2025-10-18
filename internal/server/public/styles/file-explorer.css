@@ -152,6 +152,13 @@
 
 .file-table-row:hover {
 	background-color: var(--color-gray-100);
+}
+
+.file-table-row:hover .file-table-link {
+	text-decoration: underline;
+}
+
+.file-table-row:hover .file-table-cell--clickable span {
 	text-decoration: underline;
 }
 
@@ -182,6 +189,22 @@
 	text-align: center;
 	font-style: italic;
 	color: var(--color-gray-400);
+	cursor: pointer;
+}
+
+.file-table-cell--spacer:hover {
+	background-color: var(--color-gray-100);
+}
+
+@media (prefers-color-scheme: dark) {
+	.file-table-cell--spacer:hover {
+		background-color: var(--color-gray-800);
+	}
+}
+
+/* Prevent underline in context menu cells */
+.file-table-cell > div {
+	text-decoration: none;
 }
 
 .file-table-link {
@@ -242,6 +265,7 @@
 	align-items: center;
 	justify-content: center;
 	padding: var(--spacing-xs);
+	padding-left: var(--spacing-sm);
 	border: none;
 	background: transparent;
 	font-size: var(--font-size-xs);
@@ -266,6 +290,7 @@
 	gap: var(--spacing-xs);
 	margin-bottom: var(--spacing-xs);
 	height: 1rem;
+	padding-left: var(--spacing-xs);
 }
 
 .sort-switcher-label {
@@ -374,7 +399,8 @@
 	}
 }
 
-.context-menu--hidden {
+/* Hidden state - JavaScript toggles this class */
+.context-menu.hidden {
 	display: none;
 }
 
@@ -388,7 +414,13 @@
 	cursor: pointer;
 	display: block;
 	text-decoration: none;
-	color: inherit;
+	color: var(--color-gray-900);
+}
+
+@media (prefers-color-scheme: dark) {
+	.context-menu-item {
+		color: var(--color-gray-100);
+	}
 }
 
 .context-menu-item:hover {
@@ -412,12 +444,16 @@
 
 /* Context menu button/trigger */
 .context-menu-trigger {
-	margin-left: var(--spacing-sm);
-	padding: var(--spacing-xs);
+	display: inline-flex;
+	align-items: center;
+	justify-content: flex-start;
+	width: 100%;
+	padding: 0 var(--spacing-sm);
 	border-radius: var(--border-radius);
 	border: none;
 	background: transparent;
 	cursor: pointer;
+	text-decoration: none;
 }
 
 .context-menu-trigger:hover {
@@ -530,4 +566,14 @@
 	border-radius: var(--border-radius-lg);
 	z-index: 10;
 	text-align: center;
+}
+
+.dnd-overlay:hover {
+	background-color: var(--color-gray-700);
+}
+
+@media (prefers-color-scheme: dark) {
+	.dnd-overlay:hover {
+		background-color: var(--color-gray-600);
+	}
 }
