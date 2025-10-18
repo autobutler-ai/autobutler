@@ -40,7 +40,7 @@ templ Component(pageState types.PageState, file fs.FileInfo) {
 				{{ filePath := filepath.Join("/files", pageState.RootDir, fileName) }}
 				<td class="file-table-cell file-table-cell--content">
 					@folder.Component()
-					<a href={ filePath } class="file-table-link">
+					<a href={ filePath } class="file-table-link" tabindex="0">
 						<span>{ fileName }</span>
 					</a>
 				</td>
@@ -51,7 +51,7 @@ templ Component(pageState types.PageState, file fs.FileInfo) {
 					@file_context_menu.Component(pageState, file)
 				</td>
 			case util.FileTypeSpacer:
-				<td colspan="3" class="file-table-cell file-table-cell--spacer" hx-on:click="document.getElementById('file-upload-input').click()">
+				<td colspan="3" class="file-table-cell file-table-cell--spacer" hx-on:click="document.getElementById('file-upload-input').click()" tabindex="0" hx-on:keydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); document.getElementById('file-upload-input').click(); }">
 					<span class="spacer">Drop files here&#8230;</span>
 					@explorer_context_menu.Component(pageState)
 				</td>
@@ -63,6 +63,8 @@ templ Component(pageState types.PageState, file fs.FileInfo) {
 					hx-target="#file-viewer-content"
 					hx-swap="innerHTML"
 					hx-on:click="document.getElementById('file-viewer').showModal();"
+					tabindex="0"
+					hx-on:keydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); document.getElementById('file-viewer').showModal(); htmx.ajax('GET', this.getAttribute('hx-get'), {target: '#file-viewer-content', swap: 'innerHTML'}); }"
 				>
 					{{ /* Render the appropriate icon based on the file type */ }}
 					switch fileType {

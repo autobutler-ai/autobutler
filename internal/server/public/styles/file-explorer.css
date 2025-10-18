@@ -195,12 +195,30 @@
 	cursor: pointer;
 }
 
+.file-table-cell--clickable:focus {
+	outline: 2px solid var(--color-primary-600);
+	outline-offset: -2px;
+}
+
+.file-table-cell--clickable:focus:not(:focus-visible) {
+	outline: none;
+}
+
 .file-table-cell--spacer {
 	text-align: center;
 	font-style: italic;
 	color: var(--color-gray-400);
 	cursor: pointer;
 	padding: var(--spacing-sm) 0;
+}
+
+.file-table-cell--spacer:focus {
+	outline: 2px solid var(--color-primary-600);
+	outline-offset: -2px;
+}
+
+.file-table-cell--spacer:focus:not(:focus-visible) {
+	outline: none;
 }
 
 .file-table-cell--spacer:hover {
@@ -225,6 +243,18 @@
 	color: inherit;
 	display: flex;
 	align-items: center;
+	border-radius: var(--border-radius);
+	padding: var(--spacing-xs);
+	margin: calc(-1 * var(--spacing-xs));
+}
+
+.file-table-link:focus {
+	outline: 2px solid var(--color-primary-600);
+	outline-offset: 2px;
+}
+
+.file-table-link:focus:not(:focus-visible) {
+	outline: none;
 }
 
 .file-table-size {
@@ -418,6 +448,15 @@
 
 .context-menu-trigger:hover {
 	background-color: var(--color-gray-200);
+}
+
+.context-menu-trigger:focus {
+	outline: 2px solid var(--color-primary-600);
+	outline-offset: 2px;
+}
+
+.context-menu-trigger:focus:not(:focus-visible) {
+	outline: none;
 }
 
 @media (prefers-color-scheme: dark) {
