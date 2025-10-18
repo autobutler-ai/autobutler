@@ -115,6 +115,7 @@
 @media (prefers-color-scheme: dark) {
 	.event-editor-modal {
 		background-color: var(--color-gray-800);
+		color: white;
 	}
 }
 
@@ -131,6 +132,12 @@
 	background: transparent;
 	color: var(--color-gray-600);
 	cursor: pointer;
+}
+
+@media (prefers-color-scheme: dark) {
+	.event-editor-delete-btn {
+		color: var(--color-gray-400);
+	}
 }
 
 .event-editor-delete-btn:hover {
@@ -163,6 +170,46 @@
 	display: flex;
 	flex-direction: column;
 	gap: var(--spacing-lg);
+}
+
+/* Event editor form labels */
+.event-editor-form .modal-label {
+	display: block;
+	font-size: var(--font-size-sm);
+	font-weight: 500;
+	color: var(--color-gray-700);
+	margin-bottom: var(--spacing-xs);
+}
+
+@media (prefers-color-scheme: dark) {
+	.event-editor-form .modal-label {
+		color: var(--color-gray-200);
+	}
+}
+
+/* Event editor form inputs */
+.event-editor-form .modal-input,
+.event-editor-form .modal-textarea {
+	margin-top: var(--spacing-xs);
+	display: block;
+	border: 1px solid var(--color-gray-300);
+	border-radius: var(--border-radius);
+	width: 100%;
+	padding: var(--spacing-sm);
+}
+
+.event-editor-form .modal-textarea {
+	min-height: 4rem;
+	resize: vertical;
+}
+
+@media (prefers-color-scheme: dark) {
+	.event-editor-form .modal-input,
+	.event-editor-form .modal-textarea {
+		background-color: var(--color-gray-700);
+		border-color: var(--color-gray-600);
+		color: white;
+	}
 }
 
 .event-editor-actions {
