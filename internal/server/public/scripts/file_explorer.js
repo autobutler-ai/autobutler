@@ -284,7 +284,7 @@ function sortFiles(column) {
         currentSortDirection = 'asc';
     }
     currentSortColumn = column;
-    
+
     applySorting();
 }
 
