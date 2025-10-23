@@ -1,18 +1,18 @@
 package column_view
 
 import (
-	"autobutler/internal/server/ui/components/icons/folder"
 	"autobutler/internal/server/ui/components/icons/archive"
+	"autobutler/internal/server/ui/components/icons/folder"
 	"autobutler/internal/server/ui/components/icons/generic"
 	"autobutler/internal/server/ui/components/icons/image"
 	"autobutler/internal/server/ui/components/icons/pdf"
 	"autobutler/internal/server/ui/components/icons/slideshow"
 	"autobutler/internal/server/ui/types"
 	"autobutler/pkg/util"
+	"fmt"
 	"io/fs"
 	"path/filepath"
 	"strings"
-	"fmt"
 )
 
 templ Component(pageState types.PageState, files []fs.FileInfo) {
@@ -24,7 +24,6 @@ templ Component(pageState types.PageState, files []fs.FileInfo) {
 templ renderColumnLayout(pageState types.PageState, files []fs.FileInfo) {
 	{{ pathSegments := strings.Split(strings.Trim(pageState.RootDir, "/"), "/") }}
 	{{ columnCount := len(pathSegments) + 1 }}
-	
 	<div class="column-view-columns">
 		// Render columns for each path segment
 		{{ accumulatedPath := "" }}
@@ -34,10 +33,8 @@ templ renderColumnLayout(pageState types.PageState, files []fs.FileInfo) {
 				@renderColumn(pageState, accumulatedPath, i, false)
 			}
 		}
-		
 		// Render the current directory column
-		@renderColumn(pageState, pageState.RootDir, columnCount - 1, true)
-		
+		@renderColumn(pageState, pageState.RootDir, columnCount-1, true)
 		// Render preview pane
 		@renderPreviewPane()
 	</div>
@@ -46,7 +43,6 @@ templ renderColumnLayout(pageState types.PageState, files []fs.FileInfo) {
 templ renderColumn(pageState types.PageState, dirPath string, columnIndex int, isCurrentDir bool) {
 	{{ fullPath := filepath.Join(util.GetFilesDir(), dirPath) }}
 	{{ columnFiles, _ := util.StatFilesInDir(fullPath) }}
-	
 	<div class={ "column-view-column", templ.KV("column-view-column--active", isCurrentDir) } data-column-index={ fmt.Sprintf("%d", columnIndex) }>
 		<div class="column-view-column-header">
 			<span class="column-view-column-title">{ filepath.Base(dirPath) }</span>
@@ -71,8 +67,7 @@ templ renderColumnItem(pageState types.PageState, parentPath string, file fs.Fil
 	{{ isFolder := fileType == util.FileTypeFolder }}
 	{{ filePath := filepath.Join("/files", parentPath, fileName) }}
 	{{ isSelected := isCurrentDir && strings.HasSuffix(pageState.RootDir, fileName) }}
-	
-	<li 
+	<li
 		class={ "column-view-item", templ.KV("column-view-item--selected", isSelected), templ.KV("column-view-item--folder", isFolder) }
 		data-name={ fileName }
 		data-is-folder={ fmt.Sprintf("%t", isFolder) }
@@ -86,7 +81,7 @@ templ renderColumnItem(pageState types.PageState, parentPath string, file fs.Fil
 				<span class="column-view-chevron">›</span>
 			</a>
 		} else {
-			<div 
+			<div
 				class="column-view-link column-view-link--file"
 				hx-get={ filepath.Join("/components/files/viewer", filePath) }
 				hx-target="#column-preview-content"
@@ -121,8 +116,8 @@ templ renderPreviewPane() {
 		<div class="column-view-preview-content" id="column-preview-content">
 			<div class="column-view-preview-placeholder">
 				<svg xmlns="http://www.w3.org/2000/svg" class="column-view-preview-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
 				</svg>
 				<p class="column-view-preview-text">File viewer window will go here</p>
 				<p class="column-view-preview-subtext">Select a file to preview</p>

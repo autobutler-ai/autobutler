@@ -105,10 +105,10 @@ templ Component(pageState types.PageState, files []fs.FileInfo, view string) {
 						C
 					</button>
 				</div>
+			</div>
+			<div id="file-explorer-status"></div>
+			@ViewContent(pageState, files, view)
 		</div>
-		<div id="file-explorer-status"></div>
-		@ViewContent(pageState, files, view)
-	</div>
 	</div>
 	<script src="/public/scripts/file_explorer.js"></script>
 }

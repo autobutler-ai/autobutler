@@ -1,8 +1,8 @@
 package file_explorer
 
 import (
-	"autobutler/internal/server/ui/components/file_explorer/list_view"
 	"autobutler/internal/server/ui/components/file_explorer/column_view"
+	"autobutler/internal/server/ui/components/file_explorer/list_view"
 	"autobutler/internal/server/ui/types"
 	"autobutler/pkg/util"
 	"io/fs"
@@ -22,4 +22,3 @@ templ ViewContent(pageState types.PageState, files []fs.FileInfo, view string) {
 		}
 	</div>
 }
-
