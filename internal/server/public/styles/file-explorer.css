@@ -606,3 +606,228 @@
 		background-color: var(--color-gray-600);
 	}
 }
+
+
+/* Column View Container */
+.column-view-container {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	background: var(--color-gray-50);
+	border: 1px solid var(--color-gray-200);
+	border-radius: 8px;
+  }
+  
+  /* Columns Layout */
+  .column-view-columns {
+	display: flex;
+	height: 100%;
+	overflow-x: auto;
+	overflow-y: hidden;
+  }
+  
+  /* Individual Column */
+  .column-view-column {
+	min-width: 250px;
+	max-width: 250px;
+	height: 100%;
+	border-right: 1px solid var(--color-gray-300);
+	background: white;
+	display: flex;
+	flex-direction: column;
+  }
+  
+  .column-view-column--active {
+	background: var(--color-gray-50);
+  }
+  
+  /* Column Header */
+  .column-view-column-header {
+	padding: 12px 16px;
+	border-bottom: 1px solid var(--color-gray-200);
+	background: var(--color-gray-100);
+	font-weight: 600;
+	font-size: 14px;
+	color: var(--color-gray-700);
+  }
+  
+  /* Column Content */
+  .column-view-column-content {
+	flex: 1;
+	overflow-y: auto;
+	overflow-x: hidden;
+  }
+  
+  .column-view-empty {
+	padding: 32px 16px;
+	text-align: center;
+	color: var(--color-gray-500);
+	font-size: 14px;
+  }
+  
+  /* Column List */
+  .column-view-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+  }
+  
+  /* Column Item */
+  .column-view-item {
+	border-bottom: 1px solid var(--color-gray-100);
+	transition: background-color 0.15s ease;
+  }
+  
+  .column-view-item:hover {
+	background: var(--color-gray-100);
+  }
+  
+  .column-view-item--selected {
+	background: var(--color-blue-100);
+  }
+  
+  .column-view-item--selected:hover {
+	background: var(--color-blue-200);
+  }
+  
+  /* Column Link */
+  .column-view-link {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 10px 16px;
+	text-decoration: none;
+	color: var(--color-gray-900);
+	cursor: pointer;
+	transition: all 0.15s ease;
+  }
+  
+  .column-view-link--file {
+	cursor: pointer;
+  }
+  
+  .column-view-icon {
+	flex-shrink: 0;
+	width: 20px;
+	height: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+  }
+  
+  .column-view-name {
+	flex: 1;
+	font-size: 14px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+  }
+  
+  .column-view-chevron {
+	flex-shrink: 0;
+	color: var(--color-gray-400);
+	font-size: 18px;
+	font-weight: 300;
+  }
+  
+  /* Preview Pane */
+  .column-view-preview {
+	min-width: 300px;
+	flex: 1;
+	background: white;
+	display: flex;
+	flex-direction: column;
+  }
+  
+  .column-view-preview-content {
+	flex: 1;
+	overflow: auto;
+  }
+  
+  .column-view-preview-placeholder {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	padding: 48px 32px;
+	text-align: center;
+  }
+  
+  .column-view-preview-icon {
+	width: 64px;
+	height: 64px;
+	color: var(--color-gray-300);
+	margin-bottom: 16px;
+  }
+  
+  .column-view-preview-text {
+	font-size: 16px;
+	font-weight: 600;
+	color: var(--color-gray-700);
+	margin: 0 0 8px 0;
+  }
+  
+  .column-view-preview-subtext {
+	font-size: 14px;
+	color: var(--color-gray-500);
+	margin: 0;
+  }
+  
+  /* Scrollbar Styling */
+  .column-view-columns::-webkit-scrollbar,
+  .column-view-column-content::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+  }
+  
+  .column-view-columns::-webkit-scrollbar-track,
+  .column-view-column-content::-webkit-scrollbar-track {
+	background: var(--color-gray-100);
+  }
+  
+  .column-view-columns::-webkit-scrollbar-thumb,
+  .column-view-column-content::-webkit-scrollbar-thumb {
+	background: var(--color-gray-400);
+	border-radius: 4px;
+  }
+  
+  .column-view-columns::-webkit-scrollbar-thumb:hover,
+  .column-view-column-content::-webkit-scrollbar-thumb:hover {
+	background: var(--color-gray-500);
+  }
+
+.file-explorer-controls {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+
+/* View Switcher */
+.view-switcher {
+	display: flex;
+	gap: 0.5rem;
+}
+
+.view-switcher-btn {
+	padding: 0.5rem 0.75rem;
+	border: 1px solid var(--color-border, #ccc);
+	background: var(--color-bg-secondary, #fff);
+	color: var(--color-text, #333);
+	border-radius: 4px;
+	cursor: pointer;
+	font-weight: 500;
+	transition: all 0.2s ease;
+}
+
+.view-switcher-btn:hover {
+	background: var(--color-bg-hover, #f5f5f5);
+	border-color: var(--color-primary, #007bff);
+}
+
+.view-switcher-btn--active {
+	background: var(--color-primary, #007bff);
+	color: white;
+	border-color: var(--color-primary, #007bff);
+}

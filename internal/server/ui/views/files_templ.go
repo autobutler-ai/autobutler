@@ -79,7 +79,7 @@ func Files(pageState types.PageState) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = file_explorer.Component(pageState, files).Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = file_explorer.Component(pageState, files, pageState.View).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

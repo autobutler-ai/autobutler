@@ -19,7 +19,7 @@ templ Files(pageState types.PageState) {
 			if err != nil {
 				<div class="error-text">Error loading files: { err.Error() }</div>
 			} else {
-				@file_explorer.Component(pageState, files)
+				@file_explorer.Component(pageState, files, pageState.View)
 			}
 		}
 	</html>

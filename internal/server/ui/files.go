@@ -26,14 +26,37 @@ func SetupFileRoutes(router *gin.Engine) {
 
 func setupFileView(router *gin.Engine) {
 	uiRoute(router, "/files", func(c *gin.Context) {
-		if err := views.Files(types.NewPageState()).Render(c.Request.Context(), c.Writer); err != nil {
+		view := c.Query("view")
+		if view == "" {
+			view = "list"
+		}
+
+		// If this is an htmx request, return just the view content
+		if c.GetHeader("HX-Request") == "true" {
+			RenderFileExplorerViewContent(c, "", view)
+			return
+		}
+
+		if err := views.Files(types.NewPageState().WithView(view)).Render(c.Request.Context(), c.Writer); err != nil {
 			c.Status(400)
 			return
 		}
 		c.Status(200)
 	})
 	uiRoute(router, "/files/*rootDir", func(c *gin.Context) {
-		if err := views.Files(types.NewPageState().WithRootDir(c.Param("rootDir"))).Render(c.Request.Context(), c.Writer); err != nil {
+		rootDir := c.Param("rootDir")
+		view := c.Query("view")
+		if view == "" {
+			view = "list"
+		}
+
+		// If this is an htmx request, return just the view content
+		if c.GetHeader("HX-Request") == "true" {
+			RenderFileExplorerViewContent(c, rootDir, view)
+			return
+		}
+
+		if err := views.Files(types.NewPageState().WithRootDir(rootDir).WithView(view)).Render(c.Request.Context(), c.Writer); err != nil {
 			c.Status(400)
 			return
 		}
@@ -47,6 +70,14 @@ func setupComponentRoutes(router *gin.Engine) {
 }
 
 func RenderFileExplorer(c *gin.Context, rootDir string) {
+	renderFileExplorerHelper(c, rootDir, false)
+}
+
+func RenderFileExplorerViewContent(c *gin.Context, rootDir string, view string) {
+	renderFileExplorerHelper(c, rootDir, true, view)
+}
+
+func renderFileExplorerHelper(c *gin.Context, rootDir string, viewContentOnly bool, view ...string) {
 	fullPathDir := ""
 	if rootDir == "" {
 		fullPathDir = util.GetFilesDir()
@@ -58,8 +89,23 @@ func RenderFileExplorer(c *gin.Context, rootDir string) {
 		c.Writer.WriteString(`<span class="text-red-500">Failed to load files: ` + html.EscapeString(err.Error()) + `</span>`)
 		return
 	}
-	explorerComponent := file_explorer.Component(types.NewPageState().WithRootDir(rootDir), files)
-	if err := explorerComponent.Render(c.Request.Context(), c.Writer); err != nil {
+	
+	viewStr := c.Query("view")
+	if len(view) > 0 && view[0] != "" {
+		viewStr = view[0]
+	}
+	if viewStr == "" {
+		viewStr = "list"
+	}
+	
+	var component templ.Component
+	if viewContentOnly {
+		component = file_explorer.ViewContent(types.NewPageState().WithRootDir(rootDir), files, viewStr)
+	} else {
+		component = file_explorer.Component(types.NewPageState().WithRootDir(rootDir), files, viewStr)
+	}
+	
+	if err := component.Render(c.Request.Context(), c.Writer); err != nil {
 		c.Status(500)
 		return
 	}

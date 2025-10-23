@@ -6,6 +6,7 @@ type PageState struct {
 	CurrentPageName PageName
 	RootDir         string
 	NavLinks        []Page
+	View            string
 }
 
 func NewPageState() PageState {
@@ -29,5 +30,14 @@ func (p PageState) WithRootDir(rootDir string) PageState {
 		rootDir = "/" + rootDir
 	}
 	p.RootDir = rootDir
+	return p
+}
+
+func (p PageState) WithView(view string) PageState {
+	if view == "" {
+		view = "list"
+	}
+
+	p.View = view
 	return p
 }

@@ -17,6 +17,8 @@ import (
 
 templ Component(pageState types.PageState, file fs.FileInfo) {
 	// TODO: Refactor this into small parts, so we don't do so much spaghetti for folder vs file, but share common bits
+	// TODO: this is the page where the greater table is loaded in @brandon
+	// Get file type and name
 	{{ fileType := util.DetermineFileType(pageState.RootDir, file) }}
 	{{ fileName := "" }}
 	if file != nil {
