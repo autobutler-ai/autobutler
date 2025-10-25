@@ -85,13 +85,13 @@ func TBToBytes(size float64) uint64 {
 }
 
 func DetermineFileTypeFromPath(filePath string) FileType {
-	ext := filepath.Ext(filePath)
+	ext := strings.ToLower(filepath.Ext(filePath))
 	switch ext {
 	case ".pdf":
 		return FileTypePDF
 	case ".pptx", ".ppt":
 		return FileTypeSlideshow
-	case ".png", ".jpg", ".jpeg", ".gif":
+	case ".png", ".jpg", ".jpeg", ".gif", ".svg", ".heic", ".heif", ".webp", ".bmp", ".tiff", ".tif", ".avif":
 		return FileTypeImage
 	case ".mp4", ".m4v", ".webm", ".ogg", ".avi", ".mov":
 		return FileTypeVideo

@@ -1,0 +1,64 @@
+package photos
+
+import (
+	"autobutler/internal/server/ui/components/file_explorer/file_viewer"
+	"autobutler/internal/server/ui/types"
+	"autobutler/pkg/util"
+	"path/filepath"
+)
+
+templ Component(pageState types.PageState, photos []util.RecursivePhotoInfo) {
+	<div id="photos-library" class="photos-library">
+		@file_viewer.Component()
+		<div class="photos-container">
+			@Sidebar()
+			<div class="photos-main">
+				<div class="photos-header">
+					<h2 class="photos-title">All Photos</h2>
+					<div class="photos-count">{ formatPhotoCount(len(photos)) }</div>
+				</div>
+				@PhotoGrid(pageState, photos)
+			</div>
+		</div>
+	</div>
+	<script src="/public/scripts/file_explorer.js"></script>
+}
+
+templ PhotoGrid(pageState types.PageState, photos []util.RecursivePhotoInfo) {
+	<div class="photo-grid">
+		for _, photo := range photos {
+			@PhotoGridItem(pageState, photo)
+		}
+	</div>
+}
+
+templ PhotoGridItem(pageState types.PageState, photo util.RecursivePhotoInfo) {
+	{{ 
+		fileName := photo.FileInfo.Name()
+		// Use the relative path from the photo
+		filePath := filepath.Join("/files", photo.RelPath)
+		thumbnailPath := filepath.Join("/api/v1/thumbnails", photo.RelPath)
+	}}
+	<div 
+		class="photo-grid-item"
+		hx-get={ filepath.Join("/components/files/viewer", filePath) }
+		hx-target="#file-viewer-content"
+		hx-swap="innerHTML"
+		hx-on:click="document.getElementById('file-viewer').showModal();"
+	>
+		<img 
+			class="photo-grid-image"
+			src={ thumbnailPath }
+			alt={ fileName }
+			loading="lazy"
+		/>
+	</div>
+}
+
+func formatPhotoCount(count int) string {
+	if count == 1 {
+		return "1 photo"
+	}
+	return util.FormatNumber(count) + " photos"
+}
+

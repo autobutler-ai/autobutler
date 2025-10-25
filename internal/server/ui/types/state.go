@@ -16,6 +16,7 @@ func NewPageState() PageState {
 		NavLinks: []Page{
 			newPage(PageFiles, "/files"),
 			newPage(PageCalendar, "/calendar"),
+			newPage(PagePhotos, "/photos"),
 		},
 	}
 }
