@@ -23,7 +23,7 @@ templ Component(pageState types.PageState, files []fs.FileInfo) {
 
 templ renderColumnLayout(pageState types.PageState, files []fs.FileInfo) {
 	{{ pathSegments := strings.Split(strings.Trim(pageState.RootDir, "/"), "/") }}
-	{{ 
+	{{
 		// Filter out empty segments
 		var validSegments []string
 		for _, seg := range pathSegments {
@@ -33,7 +33,7 @@ templ renderColumnLayout(pageState types.PageState, files []fs.FileInfo) {
 		}
 	}}
 	<div class="column-view-columns">
-		{{ 
+		{{
 			// Build parent directories to show columns for each level
 			// For path /files/bingus, we want:
 			// - Column showing contents of /files (with bingus highlighted)
@@ -49,7 +49,7 @@ templ renderColumnLayout(pageState types.PageState, files []fs.FileInfo) {
 		}}
 		// Render a column for each parent directory showing its contents
 		for i, parentPath := range parentPaths {
-			{{ 
+			{{
 				nextSegment := ""
 				if i < len(validSegments) {
 					nextSegment = validSegments[i]
@@ -66,7 +66,7 @@ templ renderColumnLayout(pageState types.PageState, files []fs.FileInfo) {
 
 // renderParentColumn renders a parent directory column, highlighting the next segment in the path
 templ renderParentColumn(pageState types.PageState, dirPath string, columnIndex int, nextSegment string) {
-	{{ 
+	{{
 		fullPath := util.GetFilesDir()
 		if dirPath != "" {
 			fullPath = filepath.Join(fullPath, dirPath)
@@ -99,9 +99,10 @@ templ renderParentColumn(pageState types.PageState, dirPath string, columnIndex 
 // renderCurrentColumn renders the current directory being viewed
 templ renderCurrentColumn(pageState types.PageState, files []fs.FileInfo, columnIndex int) {
 	{{ columnTitle := filepath.Base(pageState.RootDir) }}
-	{{ if columnTitle == "" || columnTitle == "/" {
-		columnTitle = "files"
-	}}}
+	{{if columnTitle == "" || columnTitle == "/" {
+	columnTitle = "files"
+}
+	}}
 	<div class="column-view-column column-view-column--active" data-column-index={ fmt.Sprintf("%d", columnIndex) }>
 		<div class="column-view-column-header">
 			<span class="column-view-column-title">{ columnTitle }</span>
@@ -122,7 +123,7 @@ templ renderCurrentColumn(pageState types.PageState, files []fs.FileInfo, column
 
 // renderParentColumnItem renders an item in a parent directory column
 templ renderParentColumnItem(pageState types.PageState, parentPath string, file fs.FileInfo, isSelected bool) {
-	{{ 
+	{{
 		fileType := util.DetermineFileType(parentPath, file)
 		fileName := file.Name()
 		isFolder := fileType == util.FileTypeFolder
@@ -166,7 +167,7 @@ templ renderParentColumnItem(pageState types.PageState, parentPath string, file 
 
 // renderCurrentColumnItem renders an item in the current directory column
 templ renderCurrentColumnItem(pageState types.PageState, file fs.FileInfo) {
-	{{ 
+	{{
 		fileType := util.DetermineFileType(pageState.RootDir, file)
 		fileName := file.Name()
 		isFolder := fileType == util.FileTypeFolder

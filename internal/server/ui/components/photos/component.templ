@@ -33,20 +33,20 @@ templ PhotoGrid(pageState types.PageState, photos []util.RecursivePhotoInfo) {
 }
 
 templ PhotoGridItem(pageState types.PageState, photo util.RecursivePhotoInfo) {
-	{{ 
+	{{
 		fileName := photo.FileInfo.Name()
 		// Use the relative path from the photo
 		filePath := filepath.Join("/files", photo.RelPath)
 		thumbnailPath := filepath.Join("/api/v1/thumbnails", photo.RelPath)
 	}}
-	<div 
+	<div
 		class="photo-grid-item"
 		hx-get={ filepath.Join("/components/files/viewer", filePath) }
 		hx-target="#file-viewer-content"
 		hx-swap="innerHTML"
 		hx-on:click="document.getElementById('file-viewer').showModal();"
 	>
-		<img 
+		<img
 			class="photo-grid-image"
 			src={ thumbnailPath }
 			alt={ fileName }
@@ -61,4 +61,3 @@ func formatPhotoCount(count int) string {
 	}
 	return util.FormatNumber(count) + " photos"
 }
-
