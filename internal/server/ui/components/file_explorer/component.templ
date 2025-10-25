@@ -87,20 +87,18 @@ templ Component(pageState types.PageState, files []fs.FileInfo, view string) {
 				</div>
 				<div class="view-switcher">
 					<button
-						class={ "view-switcher-btn", templ.KV("view-switcher-btn--active", view == "list") }
-						hx-get={ filepath.Join("/files", pageState.RootDir) + "?view=list" }
-						hx-target="#file-explorer-view-content"
-						hx-swap="innerHTML"
+						class={ "btn btn--icon btn--secondary", templ.KV("btn--primary", view == "list") }
+						onclick="switchView('list')"
 						title="List View"
+						type="button"
 					>
 						L
 					</button>
 					<button
-						class={ "view-switcher-btn", templ.KV("view-switcher-btn--active", view == "column") }
-						hx-get={ filepath.Join("/files", pageState.RootDir) + "?view=column" }
-						hx-target="#file-explorer-view-content"
-						hx-swap="innerHTML"
+						class={ "btn btn--icon btn--secondary", templ.KV("btn--primary", view == "column") }
+						onclick="switchView('column')"
 						title="Column View"
+						type="button"
 					>
 						C
 					</button>

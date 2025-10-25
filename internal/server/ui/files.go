@@ -24,12 +24,26 @@ func SetupFileRoutes(router *gin.Engine) {
 	setupComponentRoutes(router)
 }
 
+func getViewFromRequest(c *gin.Context) string {
+	// Check custom header first (from HTMX requests)
+	if view := c.GetHeader("X-File-Explorer-View"); view != "" {
+		return view
+	}
+	// Check cookie (synced from localStorage)
+	if view, err := c.Cookie("fileExplorerView"); err == nil && view != "" {
+		return view
+	}
+	// Fall back to query parameter (for direct URL access with ?view=)
+	if view := c.Query("view"); view != "" {
+		return view
+	}
+	// Default to list view
+	return "list"
+}
+
 func setupFileView(router *gin.Engine) {
 	uiRoute(router, "/files", func(c *gin.Context) {
-		view := c.Query("view")
-		if view == "" {
-			view = "list"
-		}
+		view := getViewFromRequest(c)
 
 		// If this is an htmx request, return just the view content
 		if c.GetHeader("HX-Request") == "true" {
@@ -45,10 +59,7 @@ func setupFileView(router *gin.Engine) {
 	})
 	uiRoute(router, "/files/*rootDir", func(c *gin.Context) {
 		rootDir := c.Param("rootDir")
-		view := c.Query("view")
-		if view == "" {
-			view = "list"
-		}
+		view := getViewFromRequest(c)
 
 		// If this is an htmx request, return just the view content
 		if c.GetHeader("HX-Request") == "true" {
@@ -90,19 +101,17 @@ func renderFileExplorerHelper(c *gin.Context, rootDir string, viewContentOnly bo
 		return
 	}
 
-	viewStr := c.Query("view")
+	viewStr := getViewFromRequest(c)
 	if len(view) > 0 && view[0] != "" {
 		viewStr = view[0]
 	}
-	if viewStr == "" {
-		viewStr = "list"
-	}
 
 	var component templ.Component
+	pageState := types.NewPageState().WithRootDir(rootDir).WithView(viewStr)
 	if viewContentOnly {
-		component = file_explorer.ViewContent(types.NewPageState().WithRootDir(rootDir), files, viewStr)
+		component = file_explorer.ViewContent(pageState, files, viewStr)
 	} else {
-		component = file_explorer.Component(types.NewPageState().WithRootDir(rootDir), files, viewStr)
+		component = file_explorer.Component(pageState, files, viewStr)
 	}
 
 	if err := component.Render(c.Request.Context(), c.Writer); err != nil {
