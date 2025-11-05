@@ -1,0 +1,115 @@
+package device_card
+
+import (
+	"fmt"
+)
+
+type Device struct {
+	Name           string
+	Type           string  // e.g., "Internal • ext4", "External USB 3.0 • NTFS"
+	DevicePath     string  // e.g., "/dev/sdc1", "/dev/sda1"
+	CapacityGB     float64
+	UsedGB         float64
+	PercentUsed    int
+	Mount          string
+	Health         string  // "Good", "Excellent", "Warning", etc.
+	Status         string  // "Online", "Offline"
+	// Content breakdown - TODO: Get from actual disk analysis
+	SystemGB       float64
+	DocumentsGB    float64
+	MediaGB        float64
+	BackupsGB      float64
+	FreeGB         float64
+}
+
+templ Component(device Device) {
+	<div class="device-card">
+		<div class="device-card-header">
+			<div class="device-card-icon">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+					<line x1="8" y1="21" x2="16" y2="21"></line>
+					<line x1="12" y1="17" x2="12" y2="21"></line>
+				</svg>
+			</div>
+			<div class="device-card-title-section">
+				<h3 class="device-card-title">{ device.Name }</h3>
+				<p class="device-card-type">{ device.Type } • { device.DevicePath }</p>
+			</div>
+			<div class="device-card-status">
+				<span class={ "device-status-badge", templ.KV("device-status-online", device.Status == "Online"), templ.KV("device-status-offline", device.Status == "Offline") }>
+					{ device.Status }
+				</span>
+			</div>
+		</div>
+		<div class="device-card-body">
+			<div class="device-card-capacity">
+				<div class="device-capacity-info">
+					<span class="device-capacity-label">Capacity: { fmt.Sprintf("%.0f GB", device.CapacityGB) }</span>
+					<span class="device-capacity-used">Used: { fmt.Sprintf("%d%%", device.PercentUsed) } • { fmt.Sprintf("%.2f GB", device.UsedGB) }</span>
+				</div>
+			</div>
+		<div class="device-storage-bar">
+			<!-- Calculate usable capacity (used + free) for accurate percentage display -->
+			{{ usableCapacity := device.UsedGB + device.FreeGB }}
+			<!-- TODO: Add actual breakdown by scanning disk -->
+			if device.SystemGB > 0 {
+				<div class="device-storage-segment device-storage-system" style={ fmt.Sprintf("width: %.1f%%", (device.SystemGB/usableCapacity)*100) } title={ fmt.Sprintf("System: %.2f GB", device.SystemGB) }></div>
+			}
+			if device.DocumentsGB > 0 {
+				<div class="device-storage-segment device-storage-documents" style={ fmt.Sprintf("width: %.1f%%", (device.DocumentsGB/usableCapacity)*100) } title={ fmt.Sprintf("Documents: %.2f GB", device.DocumentsGB) }></div>
+			}
+			if device.MediaGB > 0 {
+				<div class="device-storage-segment device-storage-media" style={ fmt.Sprintf("width: %.1f%%", (device.MediaGB/usableCapacity)*100) } title={ fmt.Sprintf("Media: %.2f GB", device.MediaGB) }></div>
+			}
+			if device.BackupsGB > 0 {
+				<div class="device-storage-segment device-storage-backups" style={ fmt.Sprintf("width: %.1f%%", (device.BackupsGB/usableCapacity)*100) } title={ fmt.Sprintf("Backups: %.2f GB", device.BackupsGB) }></div>
+			}
+			if device.FreeGB > 0 {
+				<div class="device-storage-segment device-storage-free" style={ fmt.Sprintf("width: %.1f%%", (device.FreeGB/usableCapacity)*100) } title={ fmt.Sprintf("Free: %.2f GB", device.FreeGB) }></div>
+			}
+		</div>
+			<div class="device-card-categories">
+				if device.SystemGB > 0 {
+					<div class="device-category">
+						<span class="device-category-dot device-category-system"></span>
+						<span class="device-category-label">System { fmt.Sprintf("%.0f GB", device.SystemGB) }</span>
+					</div>
+				}
+				if device.DocumentsGB > 0 {
+					<div class="device-category">
+						<span class="device-category-dot device-category-documents"></span>
+						<span class="device-category-label">Documents { fmt.Sprintf("%.2f GB", device.DocumentsGB) }</span>
+					</div>
+				}
+				if device.MediaGB > 0 {
+					<div class="device-category">
+						<span class="device-category-dot device-category-media"></span>
+						<span class="device-category-label">Media { fmt.Sprintf("%.2f GB", device.MediaGB) }</span>
+					</div>
+				}
+				if device.BackupsGB > 0 {
+					<div class="device-category">
+						<span class="device-category-dot device-category-backups"></span>
+						<span class="device-category-label">Backups { fmt.Sprintf("%.2f GB", device.BackupsGB) }</span>
+					</div>
+				}
+				if device.FreeGB > 0 {
+					<div class="device-category">
+						<span class="device-category-dot device-category-free"></span>
+						<span class="device-category-label">Free { fmt.Sprintf("%.2f GB", device.FreeGB) }</span>
+					</div>
+				}
+			</div>
+		</div>
+		<div class="device-card-footer">
+			<div class="device-card-mount">
+				<span class="device-mount-label">Mount: { device.Mount }</span>
+			</div>
+			<div class="device-card-health">
+				<span class="device-health-label">Health: <span class={ "device-health-status", templ.KV("device-health-good", device.Health == "Good"), templ.KV("device-health-excellent", device.Health == "Excellent") }>{ device.Health }</span></span>
+			</div>
+		</div>
+	</div>
+}
+

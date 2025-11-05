@@ -4,6 +4,7 @@ type PageName string
 
 const (
 	PageCalendar PageName = "Calendar"
+	PageDevices  PageName = "Devices"
 	PageFiles    PageName = "Files"
 	PageHome     PageName = "Home"
 	PagePhotos   PageName = "Photos"

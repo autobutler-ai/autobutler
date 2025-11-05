@@ -26,6 +26,7 @@ func setupApiRoutes(router *gin.Engine) {
 	v1.SetupDocRoutes(apiV1Group)
 	v1.SetupFilesRoutes(apiV1Group)
 	v1.SetupCalendarRoutes(apiV1Group)
+	v1.SetupStorageRoutes(apiV1Group)
 	v1.SetupUpdateRoutes(apiV1Group)
 	v1.SetupHealthRoutes(apiV1Group)
 	v1.SetupThumbnailRoutes(apiV1Group)
@@ -53,6 +54,7 @@ func setupStaticRoutes(router *gin.Engine) error {
 func setupUiRoutes(router *gin.Engine) {
 	ui.SetupIndexRoutes(router)
 	ui.SetupCalendarRoutes(router)
+	ui.SetupDevicesRoutes(router)
 	ui.SetupFileRoutes(router)
 	ui.SetupPhotoRoutes(router)
 }
