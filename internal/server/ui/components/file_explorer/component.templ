@@ -49,6 +49,14 @@ templ Component(pageState types.PageState, files []fs.FileInfo, view string) {
 						L
 					</button>
 					<button
+						class={ "btn btn--icon btn--secondary", templ.KV("btn--primary", view == "grid") }
+						onclick="switchView('grid')"
+						title="Grid View"
+						type="button"
+					>
+						G
+					</button>
+					<button
 						class={ "btn btn--icon btn--secondary", templ.KV("btn--primary", view == "column") }
 						onclick="switchView('column')"
 						title="Column View"
