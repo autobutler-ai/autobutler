@@ -36,7 +36,6 @@ RUN mkdir -p ${HOME}/autobutler/data
 # Set environment variables
 ENV PORT=8080
 ENV GIN_MODE=release
-ENV DATA_DIR=${HOME}/autobutler/data
 
 # Expose the port
 EXPOSE 8080
