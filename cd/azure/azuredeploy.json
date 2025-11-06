@@ -136,7 +136,7 @@
             },
             {
               "name": "DATA_DIR",
-              "value": "/data"
+              "value": "/root/autobutler/data"
             }
           ],
           "azureStorageAccounts": {
@@ -144,7 +144,7 @@
               "type": "AzureFiles",
               "accountName": "[parameters('storageAccountName')]",
               "shareName": "[parameters('fileShareName')]",
-              "mountPath": "/data",
+              "mountPath": "/root/autobutler/data",
               "accessKey": "[listKeys(variables('storageAccountId'), '2023-01-01').keys[0].value]"
             }
           }

@@ -31,12 +31,12 @@ COPY --from=builder /build/autobutler .
 COPY --from=builder /build/internal/server/public ./internal/server/public
 
 # Create data directory for volume mount
-RUN mkdir -p /data
+RUN mkdir -p ${HOME}/autobutler/data
 
 # Set environment variables
 ENV PORT=8080
 ENV GIN_MODE=release
-ENV DATA_DIR=/data
+ENV DATA_DIR=${HOME}/autobutler/data
 
 # Expose the port
 EXPOSE 8080
