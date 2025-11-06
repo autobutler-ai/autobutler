@@ -20,6 +20,7 @@ templ monthView(now time.Time) {
 			hx-get={ fmt.Sprintf("/api/v1/calendar/month?year=%d&month=%d", prevMonth.Year(), int(prevMonth.Month())) }
 			hx-target="#calendar"
 			hx-swap="outerHTML"
+			hx-push-url={ fmt.Sprintf("/calendar?year=%d&month=%d", prevMonth.Year(), int(prevMonth.Month())) }
 			aria-label="Previous month"
 		>
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -32,6 +33,7 @@ templ monthView(now time.Time) {
 			hx-get={ fmt.Sprintf("/api/v1/calendar/month?year=%d&month=%d", nextMonth.Year(), int(nextMonth.Month())) }
 			hx-target="#calendar"
 			hx-swap="outerHTML"
+			hx-push-url={ fmt.Sprintf("/calendar?year=%d&month=%d", nextMonth.Year(), int(nextMonth.Month())) }
 			aria-label="Next month"
 		>
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
