@@ -1,8 +1,5 @@
 name: Deploy to Azure
 on:
-  push:
-    branches:
-      - azure-cd
   workflow_dispatch:
     inputs:
       environment:
