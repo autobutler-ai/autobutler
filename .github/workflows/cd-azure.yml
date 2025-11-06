@@ -13,11 +13,6 @@ on:
         options:
           - production
           - staging
-      docker-image-tag:
-        description: 'Docker image tag to deploy'
-        required: true
-        default: latest
-        type: string
       app-name:
         description: 'Azure App Service name'
         required: true
@@ -33,7 +28,6 @@ env:
   AZURE_RESOURCE_GROUP: autobutler
   ACR_NAME: autobutleracr
   ENVIRONMENT: ${{ inputs.environment || 'production' }}
-  DOCKER_IMAGE_TAG: ${{ inputs.docker-image-tag || 'latest' }}
   APP_NAME: ${{ inputs.app-name || 'autobutlerdemo' }}
   STORAGE_ACCOUNT_NAME: ${{ inputs.storage-account-name || 'autobutlerdemo' }}
 
@@ -67,19 +61,19 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Building version: $VERSION"
 
-      - name: Deploy ACR (if not exists)
+      - name: Deploy/Update ACR
         working-directory: cd/azure
         run: |
           # Check if ACR exists
           if ! az acr show --name ${{ env.ACR_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} &>/dev/null; then
             echo "ACR does not exist, deploying..."
-            az deployment group create \
-              --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-              --template-file azuredeploy.acr.json \
-              --parameters azuredeploy.acr.parameters.json
           else
-            echo "ACR already exists, skipping deployment"
+            echo "ACR already exists, updating..."
           fi
+          az deployment group create \
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+            --template-file azuredeploy.acr.json \
+            --parameters azuredeploy.acr.parameters.json
 
       - name: Login to Azure Container Registry
         run: |
@@ -89,49 +83,34 @@ jobs:
         working-directory: cd/azure
         run: |
           docker build \
-            -t ${{ env.ACR_NAME }}.azurecr.io/autobutler:${{ env.DOCKER_IMAGE_TAG }} \
+            -t ${{ env.ACR_NAME }}.azurecr.io/autobutler:latest \
             -t ${{ env.ACR_NAME }}.azurecr.io/autobutler:${{ steps.version.outputs.version }} \
             --build-arg VERSION=${{ steps.version.outputs.version }} \
             -f Dockerfile \
             ../..
 
-          docker push ${{ env.ACR_NAME }}.azurecr.io/autobutler:${{ env.DOCKER_IMAGE_TAG }}
+          docker push ${{ env.ACR_NAME }}.azurecr.io/autobutler:latest
           docker push ${{ env.ACR_NAME }}.azurecr.io/autobutler:${{ steps.version.outputs.version }}
 
-      - name: Deploy App Service (if not exists)
+      - name: Deploy/Update App Service
         id: deploy-app
         working-directory: cd/azure
         run: |
           # Check if App Service exists
           if ! az webapp show --name ${{ env.APP_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} &>/dev/null; then
             echo "App Service does not exist, deploying..."
-            az deployment group create \
-              --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-              --template-file azuredeploy.json \
-              --parameters \
-                appName=${{ env.APP_NAME }} \
-                storageAccountName=${{ env.STORAGE_ACCOUNT_NAME }} \
-                dockerImageTag=${{ env.DOCKER_IMAGE_TAG }}
             echo "deployed=true" >> $GITHUB_OUTPUT
           else
-            echo "App Service already exists, skipping ARM deployment"
+            echo "App Service already exists, updating"
             echo "deployed=false" >> $GITHUB_OUTPUT
           fi
-
-      - name: Update container image (if app exists)
-        if: steps.deploy-app.outputs.deployed == 'false'
-        run: |
-          echo "Updating container image to ${{ env.DOCKER_IMAGE_TAG }}..."
-          az webapp config container set \
+          az deployment group create \
             --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-            --name ${{ env.APP_NAME }} \
-            --docker-custom-image-name ${{ env.ACR_NAME }}.azurecr.io/autobutler:${{ env.DOCKER_IMAGE_TAG }}
-
-      - name: Restart App Service
-        run: |
-          az webapp restart \
-            --resource-group ${{env.AZURE_RESOURCE_GROUP }} \
-            --name ${{ env.APP_NAME }}
+            --template-file azuredeploy.json \
+            --parameters \
+              appName=${{ env.APP_NAME }} \
+              storageAccountName=${{ env.STORAGE_ACCOUNT_NAME }} \
+              dockerImageTag=${{ steps.version.outputs.version }}
 
       - name: Get App Service URL
         id: app-url
@@ -148,7 +127,7 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- **Environment**: ${{ inputs.environment }}" >> $GITHUB_STEP_SUMMARY
           echo "- **App Name**: ${{ env.APP_NAME }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Docker Tag**: ${{ env.DOCKER_IMAGE_TAG }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Docker Tag**: ${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Version**: ${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
           echo "- **App URL**: ${{ steps.app-url.outputs.url }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Action**: ${{ steps.deploy-app.outputs.deployed == 'true' && 'New deployment' || 'Image update' }}" >> $GITHUB_STEP_SUMMARY

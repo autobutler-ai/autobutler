@@ -69,7 +69,7 @@ The deployment creates:
 
 1. **Azure Container Registry**: `autobutleracr` for storing Docker images
 2. **Storage Account**: For persistent data storage
-3. **Azure Files Share**: Mounted to `/data` in the container
+3. **Azure Files Share**: Mounted to `${HOME}/autobutler/data` in the container
 4. **App Service Plan**: Linux-based hosting plan
 5. **App Service**: Container-based web app with managed identity for ACR access
 
@@ -80,7 +80,7 @@ The deployment creates:
 The following environment variables are configured by default:
 
 - `PORT=8080` - The port the app listens on
-- `DATA_DIR=/data` - The directory for persistent data (mounted from Azure Files)
+- `DATA_DIR=${HOME}/autobutler/data` - The directory for persistent data (mounted from Azure Files)
 - `WEBSITES_ENABLE_APP_SERVICE_STORAGE=false` - Use custom storage mount instead
 
 ### Volume Mount
