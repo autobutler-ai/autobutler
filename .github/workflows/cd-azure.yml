@@ -45,6 +45,7 @@ jobs:
       - name: Set up Azure CLI
         run: |
           curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+          az version
 
       - name: Build version from git tag
         id: version
