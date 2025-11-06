@@ -89,16 +89,34 @@ jobs:
           docker push ${{ env.ACR_NAME }}.azurecr.io/autobutler:${{ inputs.dockerImageTag }}
           docker push ${{ env.ACR_NAME }}.azurecr.io/autobutler:${{ steps.version.outputs.version }}
 
-      - name: Deploy App Service
+      - name: Deploy App Service (if not exists)
+        id: deploy-app
         working-directory: cd/azure
         run: |
-          az deployment group create \
+          # Check if App Service exists
+          if ! az webapp show --name ${{ inputs.appName }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} &>/dev/null; then
+            echo "App Service does not exist, deploying..."
+            az deployment group create \
+              --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+              --template-file azuredeploy.json \
+              --parameters \
+                appName=${{ inputs.appName }} \
+                storageAccountName=${{ inputs.storageAccountName }} \
+                dockerImageTag=${{ inputs.dockerImageTag }}
+            echo "deployed=true" >> $GITHUB_OUTPUT
+          else
+            echo "App Service already exists, skipping ARM deployment"
+            echo "deployed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Update container image (if app exists)
+        if: steps.deploy-app.outputs.deployed == 'false'
+        run: |
+          echo "Updating container image to ${{ inputs.dockerImageTag }}..."
+          az webapp config container set \
             --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-            --template-file azuredeploy.json \
-            --parameters \
-              appName=${{ inputs.appName }} \
-              storageAccountName=${{ inputs.storageAccountName }} \
-              dockerImageTag=${{ inputs.dockerImageTag }}
+            --name ${{ inputs.appName }} \
+            --docker-custom-image-name ${{ env.ACR_NAME }}.azurecr.io/autobutler:${{ inputs.dockerImageTag }}
 
       - name: Restart App Service
         run: |
@@ -124,8 +142,9 @@ jobs:
           echo "- **Docker Tag**: ${{ inputs.dockerImageTag }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Version**: ${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
           echo "- **App URL**: ${{ steps.app-url.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Action**: ${{ steps.deploy-app.outputs.deployed == 'true' && 'New deployment' || 'Image update' }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Deployment completed successfully!" >> $GITHUB_STEP_SUMMARY
+          echo "🚀 Deployment completed successfully!" >> $GITHUB_STEP_SUMMARY
 
       - name: Logout from Azure
         if: always()
