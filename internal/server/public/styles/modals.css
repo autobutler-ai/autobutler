@@ -261,3 +261,47 @@
 	cursor: not-allowed;
 	background-color: var(--color-gray-400);
 }
+
+/* ========== MOBILE RESPONSIVE ========== */
+
+@media (max-width: 768px) {
+	.modal {
+		width: calc(100vw - var(--spacing-2xl));
+		max-width: 400px;
+	}
+
+	.event-editor-modal {
+		width: calc(100vw - var(--spacing-2xl));
+		max-width: 400px;
+	}
+}
+
+@media (max-width: 480px) {
+	.modal {
+		width: calc(100vw - var(--spacing-lg));
+		padding: var(--spacing-md);
+	}
+
+	.event-editor-modal {
+		width: calc(100vw - var(--spacing-lg));
+		padding: var(--spacing-md);
+	}
+
+	.modal-actions {
+		flex-direction: column;
+		gap: var(--spacing-xs);
+	}
+
+	.modal-actions button {
+		width: 100%;
+	}
+
+	.event-editor-actions {
+		flex-direction: column;
+		gap: var(--spacing-xs);
+	}
+
+	.event-editor-actions button {
+		width: 100%;
+	}
+}

@@ -9,6 +9,7 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
+	"autobutler/internal/server/ui/components/bottomnav"
 	"autobutler/internal/server/ui/components/footer"
 	"autobutler/internal/server/ui/components/gradient_overlays"
 	"autobutler/internal/server/ui/components/landing_nav"
@@ -57,6 +58,10 @@ func Component(pageState types.PageState) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = footer.Component().Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = bottomnav.Component(pageState).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

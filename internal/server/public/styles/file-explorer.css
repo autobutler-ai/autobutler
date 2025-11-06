@@ -851,3 +851,126 @@
 	color: white;
 	border-color: var(--color-primary, #007bff);
 }
+
+/* ========== MOBILE RESPONSIVE ========== */
+
+@media (max-width: 768px) {
+	.file-explorer {
+		margin: 0;
+		border-radius: 0;
+		padding: var(--spacing-md);
+		border-left: none;
+		border-right: none;
+		padding-bottom: 90px; /* Space for bottom nav */
+	}
+
+	.file-explorer-header {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--spacing-sm);
+	}
+
+	.file-explorer-title {
+		font-size: var(--font-size-xl);
+		margin-right: 0;
+	}
+
+	.file-explorer-space-info {
+		font-size: var(--font-size-xs);
+	}
+
+	.file-explorer-breadcrumbs {
+		font-size: var(--font-size-xs);
+		overflow-x: auto;
+		white-space: nowrap;
+		max-width: 100%;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	/* Table adjustments for mobile */
+	.file-explorer-table {
+		font-size: var(--font-size-sm);
+	}
+
+	.file-explorer-table th,
+	.file-explorer-table td {
+		padding: var(--spacing-sm);
+	}
+
+	/* Hide less important columns on mobile */
+	.file-explorer-table th:nth-child(3),
+	.file-explorer-table td:nth-child(3),
+	.file-explorer-table th:nth-child(4),
+	.file-explorer-table td:nth-child(4) {
+		display: none;
+	}
+
+	.file-explorer-controls {
+		flex-direction: column;
+		gap: var(--spacing-md);
+		align-items: stretch;
+	}
+
+	.view-switcher {
+		width: 100%;
+		justify-content: center;
+	}
+
+	/* Column view adjustments */
+	.column-view-container {
+		height: calc(100vh - 280px);
+	}
+
+	.column-view-column {
+		min-width: 200px;
+	}
+
+	.column-view-preview {
+		min-width: 250px;
+	}
+
+	/* List view adjustments */
+	.list-view-item {
+		padding: var(--spacing-md) var(--spacing-sm);
+	}
+
+	.list-view-icon {
+		width: 32px;
+		height: 32px;
+	}
+}
+
+@media (max-width: 480px) {
+	.file-explorer {
+		padding: var(--spacing-sm);
+		padding-bottom: 90px;
+	}
+
+	.file-explorer-title {
+		font-size: var(--font-size-lg);
+	}
+
+	.file-explorer-table {
+		font-size: var(--font-size-xs);
+	}
+
+	.file-explorer-table th,
+	.file-explorer-table td {
+		padding: var(--spacing-xs);
+	}
+
+	/* Show only name and action columns on small phones */
+	.file-explorer-table th:nth-child(2),
+	.file-explorer-table td:nth-child(2) {
+		display: none;
+	}
+
+	.view-switcher-btn {
+		padding: var(--spacing-sm);
+		font-size: var(--font-size-xs);
+	}
+
+	.column-view-column {
+		min-width: 180px;
+	}
+}

@@ -54,3 +54,33 @@
 	right: 0;
 	background-color: rgba(139, 92, 246, 0.1); /* purple-500/10 */
 }
+
+/* ========== MOBILE LAYOUT ADJUSTMENTS ========== */
+
+@media (max-width: 768px) {
+	.site-body {
+		min-height: 100vh;
+		padding-bottom: 0;
+	}
+
+	.site-main {
+		overflow-x: hidden;
+	}
+
+	.site-fullscreen-col {
+		min-height: 100vh;
+	}
+
+	/* Add safe area insets for devices with notches */
+	@supports (padding: max(0px)) {
+		.site-body {
+			padding-bottom: max(0px, env(safe-area-inset-bottom));
+		}
+	}
+}
+
+@media (max-width: 480px) {
+	.site-body {
+		font-size: var(--font-size-sm);
+	}
+}
