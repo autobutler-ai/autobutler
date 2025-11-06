@@ -28,6 +28,10 @@ env:
   AZURE_RESOURCE_GROUP: autobutler
   ACR_NAME: autobutleracr
 
+concurrency:
+  group: cd-azure-${{ inputs.environment }}
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
