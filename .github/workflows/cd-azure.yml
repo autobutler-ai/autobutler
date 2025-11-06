@@ -18,10 +18,12 @@ on:
       appName:
         description: 'Azure App Service name'
         required: true
+        default: 'autobutlerdemo'
         type: string
       storageAccountName:
         description: 'Azure Storage Account name'
         required: true
+        default: 'autobutlerdemo'
         type: string
 
 env:
