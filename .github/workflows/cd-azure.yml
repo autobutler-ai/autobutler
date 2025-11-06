@@ -54,6 +54,20 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Building version: $VERSION"
 
+      - name: Deploy ACR (if not exists)
+        working-directory: cd/azure
+        run: |
+          # Check if ACR exists
+          if ! az acr show --name ${{ env.ACR_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} &>/dev/null; then
+            echo "ACR does not exist, deploying..."
+            az deployment group create \
+              --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+              --template-file azuredeploy.acr.json \
+              --parameters azuredeploy.acr.parameters.json
+          else
+            echo "ACR already exists, skipping deployment"
+          fi
+
       - name: Login to Azure Container Registry
         run: |
           az acr login --name ${{ env.ACR_NAME }}
@@ -70,20 +84,6 @@ jobs:
 
           docker push ${{ env.ACR_NAME }}.azurecr.io/autobutler:${{ inputs.dockerImageTag }}
           docker push ${{ env.ACR_NAME }}.azurecr.io/autobutler:${{ steps.version.outputs.version }}
-
-      - name: Deploy ACR (if not exists)
-        working-directory: cd/azure
-        run: |
-          # Check if ACR exists
-          if ! az acr show --name ${{ env.ACR_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} &>/dev/null; then
-            echo "ACR does not exist, deploying..."
-            az deployment group create \
-              --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-              --template-file azuredeploy.acr.json \
-              --parameters azuredeploy.acr.parameters.json
-          else
-            echo "ACR already exists, skipping deployment"
-          fi
 
       - name: Deploy App Service
         working-directory: cd/azure
