@@ -1,0 +1,123 @@
+name: Deploy to Azure
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+      dockerImageTag:
+        description: 'Docker image tag to deploy'
+        required: true
+        default: 'latest'
+        type: string
+      appName:
+        description: 'Azure App Service name'
+        required: true
+        type: string
+      storageAccountName:
+        description: 'Azure Storage Account name'
+        required: true
+        type: string
+
+env:
+  AZURE_RESOURCE_GROUP: autobutler-rg
+  ACR_NAME: autobutleracr
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Build version from git tag
+        id: version
+        run: |
+          VERSION=$(git describe --tags --abbrev=0 2>/dev/null || echo "dev-${{ github.sha }}")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Building version: $VERSION"
+
+      - name: Login to Azure Container Registry
+        run: |
+          az acr login --name ${{ env.ACR_NAME }}
+
+      - name: Build and push Docker image
+        working-directory: cd/azure
+        run: |
+          docker build \
+            -t ${{ env.ACR_NAME }}.azurecr.io/autobutler:${{ inputs.dockerImageTag }} \
+            -t ${{ env.ACR_NAME }}.azurecr.io/autobutler:${{ steps.version.outputs.version }} \
+            --build-arg VERSION=${{ steps.version.outputs.version }} \
+            -f Dockerfile \
+            ../..
+
+          docker push ${{ env.ACR_NAME }}.azurecr.io/autobutler:${{ inputs.dockerImageTag }}
+          docker push ${{ env.ACR_NAME }}.azurecr.io/autobutler:${{ steps.version.outputs.version }}
+
+      - name: Deploy ACR (if not exists)
+        working-directory: cd/azure
+        run: |
+          # Check if ACR exists
+          if ! az acr show --name ${{ env.ACR_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} &>/dev/null; then
+            echo "ACR does not exist, deploying..."
+            az deployment group create \
+              --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+              --template-file azuredeploy.acr.json \
+              --parameters azuredeploy.acr.parameters.json
+          else
+            echo "ACR already exists, skipping deployment"
+          fi
+
+      - name: Deploy App Service
+        working-directory: cd/azure
+        run: |
+          az deployment group create \
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+            --template-file azuredeploy.json \
+            --parameters \
+              appName=${{ inputs.appName }} \
+              storageAccountName=${{ inputs.storageAccountName }} \
+              dockerImageTag=${{ inputs.dockerImageTag }}
+
+      - name: Restart App Service
+        run: |
+          az webapp restart \
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+            --name ${{ inputs.appName }}
+
+      - name: Get App Service URL
+        id: app-url
+        run: |
+          URL=$(az webapp show \
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+            --name ${{ inputs.appName }} \
+            --query defaultHostName -o tsv)
+          echo "url=https://$URL" >> $GITHUB_OUTPUT
+
+      - name: Deployment Summary
+        run: |
+          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Environment**: ${{ inputs.environment }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **App Name**: ${{ inputs.appName }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Docker Tag**: ${{ inputs.dockerImageTag }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version**: ${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **App URL**: ${{ steps.app-url.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Deployment completed successfully!" >> $GITHUB_STEP_SUMMARY
+
+      - name: Logout from Azure
+        if: always()
+        run: az logout
