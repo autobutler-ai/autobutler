@@ -1,7 +1,19 @@
 package util
 
-func TrimLeading(path string, c byte) string {
-	for ; len(path) > 0 && path[0] == c; path = path[1:] { /* Trim leading slashes */
+import (
+	"fmt"
+	"strings"
+)
+
+// FormatNumber formats a number with commas for readability
+func FormatNumber(n int) string {
+	if n < 1000 {
+		return fmt.Sprintf("%d", n)
 	}
-	return path
+	return fmt.Sprintf("%s,%03d", FormatNumber(n/1000), n%1000)
+}
+
+// TrimLeading trims leading characters from a string
+func TrimLeading(s string, char rune) string {
+	return strings.TrimLeft(s, string(char))
 }

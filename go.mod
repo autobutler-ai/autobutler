@@ -9,6 +9,7 @@ require (
 	github.com/gin-gonic/gin v1.10.1
 	github.com/golang-migrate/migrate/v4 v4.19.0
 	github.com/nbio/xml v0.0.0-20250908152200-27e14820def6
+	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/spf13/cobra v1.10.1
 	golang.org/x/sys v0.36.0
 	golang.org/x/text v0.29.0

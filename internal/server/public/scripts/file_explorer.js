@@ -6,6 +6,41 @@ var contextMenuPosition = {
 var navigationListener = null;
 var loadedBook = null;
 
+// VIEW STATE MANAGEMENT
+const VIEW_STORAGE_KEY = 'fileExplorerView';
+
+function getViewPreference() {
+    return localStorage.getItem(VIEW_STORAGE_KEY) || 'list';
+}
+
+function setViewPreference(view) {
+    localStorage.setItem(VIEW_STORAGE_KEY, view);
+    // Also set cookie so server can read it on regular page loads
+    document.cookie = `fileExplorerView=${view}; path=/; max-age=31536000`; // 1 year
+}
+
+function switchView(view) {
+    setViewPreference(view);
+    // Use HTMX to reload the content without a full page refresh
+    const currentPath = window.location.pathname;
+    htmx.ajax('GET', currentPath, {
+        target: '#file-explorer-view-content',
+        swap: 'innerHTML'
+    });
+}
+
+// Initialize - sync localStorage to cookie on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const view = getViewPreference();
+    setViewPreference(view); // Ensures cookie is set
+});
+
+// Send view preference in all HTMX requests via custom header
+document.body.addEventListener('htmx:configRequest', function(event) {
+    const view = getViewPreference();
+    event.detail.headers['X-File-Explorer-View'] = view;
+});
+
 function preventDefault(event) {
     if (event) {
         event.preventDefault();
@@ -212,6 +247,23 @@ function newFile(event, rootDir) {
 function showFolderDetails(event) {
     preventDefault(event);
     alert("Folder details to be implemented.");
+}
+
+function navigateToParentAndPreview(event, parentPath, previewPath) {
+    preventDefault(event);
+    // Use HTMX to navigate to parent (removes child columns) without full page reload
+    htmx.ajax('GET', parentPath, {
+        target: '#file-explorer-view-content',
+        swap: 'innerHTML'
+    }).then(function() {
+        // After the file explorer updates, load the preview
+        htmx.ajax('GET', previewPath, {
+            target: '#column-preview-content',
+            swap: 'innerHTML'
+        });
+    });
+    // Update the URL
+    history.pushState({}, '', parentPath);
 }
 
 // SELECTO

@@ -24,16 +24,50 @@ func SetupFileRoutes(router *gin.Engine) {
 	setupComponentRoutes(router)
 }
 
+func getViewFromRequest(c *gin.Context) string {
+	// Check custom header first (from HTMX requests)
+	if view := c.GetHeader("X-File-Explorer-View"); view != "" {
+		return view
+	}
+	// Check cookie (synced from localStorage)
+	if view, err := c.Cookie("fileExplorerView"); err == nil && view != "" {
+		return view
+	}
+	// Fall back to query parameter (for direct URL access with ?view=)
+	if view := c.Query("view"); view != "" {
+		return view
+	}
+	// Default to list view
+	return "list"
+}
+
 func setupFileView(router *gin.Engine) {
 	uiRoute(router, "/files", func(c *gin.Context) {
-		if err := views.Files(types.NewPageState()).Render(c.Request.Context(), c.Writer); err != nil {
+		view := getViewFromRequest(c)
+
+		// If this is an htmx request, return just the view content with OOB breadcrumb
+		if c.GetHeader("HX-Request") == "true" {
+			RenderFileExplorerViewContentWithBreadcrumb(c, "", view)
+			return
+		}
+
+		if err := views.Files(types.NewPageState().WithView(view)).Render(c.Request.Context(), c.Writer); err != nil {
 			c.Status(400)
 			return
 		}
 		c.Status(200)
 	})
 	uiRoute(router, "/files/*rootDir", func(c *gin.Context) {
-		if err := views.Files(types.NewPageState().WithRootDir(c.Param("rootDir"))).Render(c.Request.Context(), c.Writer); err != nil {
+		rootDir := c.Param("rootDir")
+		view := getViewFromRequest(c)
+
+		// If this is an htmx request, return just the view content with OOB breadcrumb
+		if c.GetHeader("HX-Request") == "true" {
+			RenderFileExplorerViewContentWithBreadcrumb(c, rootDir, view)
+			return
+		}
+
+		if err := views.Files(types.NewPageState().WithRootDir(rootDir).WithView(view)).Render(c.Request.Context(), c.Writer); err != nil {
 			c.Status(400)
 			return
 		}
@@ -47,6 +81,18 @@ func setupComponentRoutes(router *gin.Engine) {
 }
 
 func RenderFileExplorer(c *gin.Context, rootDir string) {
+	renderFileExplorerHelper(c, rootDir, false)
+}
+
+func RenderFileExplorerViewContent(c *gin.Context, rootDir string, view string) {
+	renderFileExplorerHelper(c, rootDir, true, view)
+}
+
+func RenderFileExplorerViewContentWithBreadcrumb(c *gin.Context, rootDir string, view string) {
+	renderFileExplorerHelper(c, rootDir, true, view, true)
+}
+
+func renderFileExplorerHelper(c *gin.Context, rootDir string, viewContentOnly bool, view ...interface{}) {
 	fullPathDir := ""
 	if rootDir == "" {
 		fullPathDir = util.GetFilesDir()
@@ -58,8 +104,35 @@ func RenderFileExplorer(c *gin.Context, rootDir string) {
 		c.Writer.WriteString(`<span class="text-red-500">Failed to load files: ` + html.EscapeString(err.Error()) + `</span>`)
 		return
 	}
-	explorerComponent := file_explorer.Component(types.NewPageState().WithRootDir(rootDir), files)
-	if err := explorerComponent.Render(c.Request.Context(), c.Writer); err != nil {
+
+	viewStr := getViewFromRequest(c)
+	withBreadcrumb := false
+
+	// Parse variadic args: first is view string, second (optional) is withBreadcrumb bool
+	if len(view) > 0 {
+		if v, ok := view[0].(string); ok && v != "" {
+			viewStr = v
+		}
+	}
+	if len(view) > 1 {
+		if wb, ok := view[1].(bool); ok {
+			withBreadcrumb = wb
+		}
+	}
+
+	var component templ.Component
+	pageState := types.NewPageState().WithRootDir(rootDir).WithView(viewStr)
+	if viewContentOnly {
+		if withBreadcrumb {
+			component = file_explorer.ViewContentWithBreadcrumb(pageState, files, viewStr)
+		} else {
+			component = file_explorer.ViewContent(pageState, files, viewStr)
+		}
+	} else {
+		component = file_explorer.Component(pageState, files, viewStr)
+	}
+
+	if err := component.Render(c.Request.Context(), c.Writer); err != nil {
 		c.Status(500)
 		return
 	}

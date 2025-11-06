@@ -3,20 +3,15 @@ package file_explorer
 import (
 	"autobutler/internal/server/ui/components/file_explorer/file_operations"
 	"autobutler/internal/server/ui/components/file_explorer/file_viewer"
-	"autobutler/internal/server/ui/components/file_explorer/node"
-	"autobutler/internal/server/ui/components/file_explorer/sort_button"
-	"autobutler/internal/server/ui/components/file_explorer/sort_switcher"
 	"autobutler/pkg/util"
 	"io/fs"
 
 	"autobutler/internal/server/ui/components/file_explorer/explorer_context_menu"
 	"autobutler/internal/server/ui/types"
 	"fmt"
-	"path/filepath"
-	"strings"
 )
 
-templ Component(pageState types.PageState, files []fs.FileInfo) {
+templ Component(pageState types.PageState, files []fs.FileInfo, view string) {
 	// TODO: This works on firefox, but not on chrome as it will rapidly open and close the upload area.
 	{{ fileDir := util.GetFilesDir() }}
 	{{ availableBytes := util.GetAvailableSpaceInBytes(fileDir) }}
@@ -40,81 +35,33 @@ templ Component(pageState types.PageState, files []fs.FileInfo) {
 			hx-on:mouseleave="closeContextMenu(null, this)"
 		>
 			@explorer_context_menu.Component(pageState)
-			<div id="breadcrumbs">
-				<nav class="file-explorer-breadcrumbs" data-path={ pageState.RootDir }>
-					{{ accumulatedDir := "" }}
-					for i, dir := range strings.Split(pageState.RootDir, "/") {
-						if i == 0 {
-							{{ dir = "files" }}
-						}
-						if i > 0 && dir == "" {
-							{{ continue }}
-						}
-						<span class="file-explorer-breadcrumb">
-							{{ accumulatedDir = filepath.Join(accumulatedDir, dir) }}
-							<a href={ filepath.Join("/", accumulatedDir) }>
-								{ dir }
-							</a>
-							<span>/</span>
-						</span>
-					}
-					<div class="file-explorer-folder-controls">
-						// Add a plus button SVG
-						<button
-							id="add-folder-btn"
-							class="file-explorer-add-folder btn btn--icon"
-							title="Add Folder"
-							type="button"
-							hx-on:click="toggleFolderInput(event)"
-						>
-							<svg xmlns="http://www.w3.org/2000/svg" class="icon icon--base" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: var(--color-green-600);">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-							</svg>
-						</button>
-						<input
-							type="text"
-							id="folder-input"
-							name="folderName"
-							class="file-explorer-folder-input hidden"
-							placeholder="New folder name"
-							hx-include="[name='folderName']"
-							hx-post={ filepath.Join("/api/v1/folder/files", pageState.RootDir) }
-							hx-target="#file-explorer"
-							hx-swap="outerHTML"
-							hx-trigger="keydown[keyCode==13] from:body"
-							hx-disabled-elt="this"
-						/>
-					</div>
-				</nav>
+			<div class="file-explorer-controls">
+				<div>
+					@Breadcrumb(pageState, view)
+				</div>
+				<div class="view-switcher">
+					<button
+						class={ "btn btn--icon btn--secondary", templ.KV("btn--primary", view == "list") }
+						onclick="switchView('list')"
+						title="List View"
+						type="button"
+					>
+						L
+					</button>
+					<button
+						class={ "btn btn--icon btn--secondary", templ.KV("btn--primary", view == "column") }
+						onclick="switchView('column')"
+						title="Column View"
+						type="button"
+					>
+						C
+					</button>
+				</div>
 			</div>
 			<div id="file-explorer-status"></div>
-			if len(files) == 0 {
-				<span class="file-explorer-empty">No files found in { filepath.Join(util.GetFilesDir(), pageState.RootDir) }</span>
-			} else {
-				<div class="file-table-container">
-					<table id="file-explorer-table" class="file-table">
-						<thead class="file-table-header">
-							<tr>
-								<th class="file-table-header-cell file-table-header-cell--left">
-									@sort_button.Component("name")
-								</th>
-								<th class="file-table-header-cell file-table-header-cell--right">
-									@sort_button.Component("size")
-								</th>
-								<th class="file-table-header-cell file-table-header-cell--toggle">
-									@sort_switcher.Component()
-								</th>
-							</tr>
-						</thead>
-						<tbody id="file-explorer-list" class="file-table-body">
-							for _, file := range files {
-								@node.Component(pageState, file)
-							}
-							@node.Component(pageState, nil)
-						</tbody>
-					</table>
-				</div>
-			}
+			<div id="file-explorer-view-content">
+				@ViewContent(pageState, files, view)
+			</div>
 		</div>
 	</div>
 	<script src="/public/scripts/file_explorer.js"></script>
