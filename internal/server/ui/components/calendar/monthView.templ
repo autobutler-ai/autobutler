@@ -70,7 +70,7 @@ templ monthView(now time.Time) {
 						} else {
 							{{ dayTitle = fmt.Sprintf("%d", renderDay.Day()) }}
 						}
-						@day(renderDay, dayTitle, outsideOfMonth, events)
+						@day(renderDay, dayTitle, outsideOfMonth, events, now)
 						{{ dayCounter++ }}
 					}
 				</tr>

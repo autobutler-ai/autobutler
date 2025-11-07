@@ -28,6 +28,10 @@ templ ComponentWithEvent(
 					hx-target="#calendar"
 					hx-swap="outerHTML"
 					hx-on:keydown="if (event.key === 'Enter') { preventDefault(event); }"
+					hx-vals="js:{
+						viewYear: document.getElementById('view-year').value,
+						viewMonth: document.getElementById('view-month').value,
+					}"
 				>
 					@trash.Component()
 				</button>
@@ -69,6 +73,18 @@ templ ComponentWithEvent(
 					type="hidden"
 					name="day"
 					value={ event.StartTime.Day() }
+				/>
+				<input
+					id="view-year"
+					type="hidden"
+					name="viewYear"
+					value=""
+				/>
+				<input
+					id="view-month"
+					type="hidden"
+					name="viewMonth"
+					value=""
 				/>
 				<div class="modal-field">
 					<label
@@ -178,6 +194,8 @@ templ ComponentWithEvent(
 								endTime: document.getElementById('end-time').value,
 								description: document.getElementById('description').value,
 								location: document.getElementById('location').value,
+								viewYear: document.getElementById('view-year').value,
+								viewMonth: document.getElementById('view-month').value,
 							}"
 						/>
 					} else {
@@ -199,6 +217,8 @@ templ ComponentWithEvent(
 								endTime: document.getElementById('end-time').value,
 								description: document.getElementById('description').value,
 								location: document.getElementById('location').value,
+								viewYear: document.getElementById('view-year').value,
+								viewMonth: document.getElementById('view-month').value,
 							}`, event.ID)) }
 						/>
 					}

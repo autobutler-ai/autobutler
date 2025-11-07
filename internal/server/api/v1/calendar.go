@@ -28,11 +28,33 @@ func deleteCalendarEvent(apiV1Group *gin.RouterGroup) {
 			c.Status(400)
 			return
 		}
+
+		viewYearString := c.Query("viewYear")
+		viewMonthString := c.Query("viewMonth")
+
 		if err := db.Instance.DeleteCalendarEvent(eventId); err != nil {
 			c.Writer.WriteString(`<span class="text-red-500">` + err.Error() + `</span>`)
 			c.Status(500)
 			return
 		}
+
+		// Return to the month the user was viewing
+		if viewYearString != "" && viewMonthString != "" {
+			viewYear, err := strconv.Atoi(viewYearString)
+			if err == nil {
+				viewMonth, err := strconv.Atoi(viewMonthString)
+				if err == nil && viewMonth >= 1 && viewMonth <= 12 {
+					targetTime := time.Date(viewYear, time.Month(viewMonth), 1, 0, 0, 0, 0, time.UTC)
+					if err := cal.ComponentWithTime(calendar.CalendarViewMonth, targetTime).Render(c.Request.Context(), c.Writer); err != nil {
+						c.Status(400)
+						return
+					}
+					return
+				}
+			}
+		}
+
+		// Fallback to current month if no view context provided
 		if err := cal.Component(calendar.CalendarViewMonth).Render(c.Request.Context(), c.Writer); err != nil {
 			c.Status(400)
 			return
@@ -101,6 +123,9 @@ func newCalendarEvent(apiV1Group *gin.RouterGroup) {
 		endTimeString := c.PostForm("endTime")
 		description := c.PostForm("description")
 		location := c.PostForm("location")
+		viewYearString := c.PostForm("viewYear")
+		viewMonthString := c.PostForm("viewMonth")
+
 		startTime, err := makeTime(yearString, monthString, dayString, startTimeString)
 		if err != nil {
 			c.Writer.WriteString(`<span class="text-red-500">Invalid start time: ` + err.Error() + `</span>`)
@@ -139,6 +164,24 @@ func newCalendarEvent(apiV1Group *gin.RouterGroup) {
 			c.Status(500)
 			return
 		}
+
+		// Return to the month the user was viewing
+		if viewYearString != "" && viewMonthString != "" {
+			viewYear, err := strconv.Atoi(viewYearString)
+			if err == nil {
+				viewMonth, err := strconv.Atoi(viewMonthString)
+				if err == nil && viewMonth >= 1 && viewMonth <= 12 {
+					targetTime := time.Date(viewYear, time.Month(viewMonth), 1, 0, 0, 0, 0, time.UTC)
+					if err := cal.ComponentWithTime(calendar.CalendarViewMonth, targetTime).Render(c.Request.Context(), c.Writer); err != nil {
+						c.Status(400)
+						return
+					}
+					return
+				}
+			}
+		}
+
+		// Fallback to current month if no view context provided
 		if err := cal.Component(calendar.CalendarViewMonth).Render(c.Request.Context(), c.Writer); err != nil {
 			c.Status(400)
 			return
@@ -157,6 +200,9 @@ func updateCalendarEvent(apiV1Group *gin.RouterGroup) {
 		endTimeString := c.PostForm("endTime")
 		description := c.PostForm("description")
 		location := c.PostForm("location")
+		viewYearString := c.PostForm("viewYear")
+		viewMonthString := c.PostForm("viewMonth")
+
 		startTime, err := makeTime(yearString, monthString, dayString, startTimeString)
 		if err != nil {
 			c.Writer.WriteString(`<span class="text-red-500">Invalid start time: ` + err.Error() + `</span>`)
@@ -204,6 +250,24 @@ func updateCalendarEvent(apiV1Group *gin.RouterGroup) {
 			c.Status(500)
 			return
 		}
+
+		// Return to the month the user was viewing
+		if viewYearString != "" && viewMonthString != "" {
+			viewYear, err := strconv.Atoi(viewYearString)
+			if err == nil {
+				viewMonth, err := strconv.Atoi(viewMonthString)
+				if err == nil && viewMonth >= 1 && viewMonth <= 12 {
+					targetTime := time.Date(viewYear, time.Month(viewMonth), 1, 0, 0, 0, 0, time.UTC)
+					if err := cal.ComponentWithTime(calendar.CalendarViewMonth, targetTime).Render(c.Request.Context(), c.Writer); err != nil {
+						c.Status(400)
+						return
+					}
+					return
+				}
+			}
+		}
+
+		// Fallback to current month if no view context provided
 		if err := cal.Component(calendar.CalendarViewMonth).Render(c.Request.Context(), c.Writer); err != nil {
 			c.Status(400)
 			return

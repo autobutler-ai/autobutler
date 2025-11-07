@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-templ day(renderDay time.Time, dayTitle string, outsideOfMonth bool, events calendar.EventMap) {
+templ day(renderDay time.Time, dayTitle string, outsideOfMonth bool, events calendar.EventMap, viewingMonth time.Time) {
 	{{ renderClass := "calendar-day" }}
 	if outsideOfMonth {
 		{{ renderClass += " calendar-day--outside" }}
@@ -24,7 +24,7 @@ templ day(renderDay time.Time, dayTitle string, outsideOfMonth bool, events cale
 			} else {
 				<div class="calendar-day-title">{ dayTitle }</div>
 				for _, event := range dayEvents {
-					@dayEvent(*event, outsideOfMonth)
+					@dayEvent(*event, outsideOfMonth, viewingMonth)
 				}
 			}
 		</div>

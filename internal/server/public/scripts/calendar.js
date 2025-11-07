@@ -12,6 +12,18 @@ function showEventDialog(event, eventId) {
     const dialog = document.getElementById(`event-dialog-${eventId}`);
     if (dialog) {
         dialog.showModal();
+
+        // Set the viewing context fields after content loads
+        setTimeout(() => {
+            const viewYear = dialog.getAttribute("data-view-year");
+            const viewMonth = dialog.getAttribute("data-view-month");
+            const viewYearInput = document.getElementById("view-year");
+            const viewMonthInput = document.getElementById("view-month");
+            if (viewYearInput && viewMonthInput) {
+                viewYearInput.value = viewYear;
+                viewMonthInput.value = viewMonth;
+            }
+        }, 10);
     }
     return false;
 }
@@ -39,10 +51,16 @@ function newCalendarEvent(event) {
     const dialog = document.getElementById("new-event-dialog");
     if (dialog) {
         dialog.showModal();
-        // Optionally, set hidden fields or inputs in the dialog for year, month, day
+        // Set the event date fields
         document.getElementById("new-event-year").value = year;
         document.getElementById("new-event-month").value = month;
         document.getElementById("new-event-day").value = day;
+
+        // Set the viewing context fields
+        const viewYear = dialog.getAttribute("data-view-year");
+        const viewMonth = dialog.getAttribute("data-view-month");
+        document.getElementById("view-year").value = viewYear;
+        document.getElementById("view-month").value = viewMonth;
     }
     return false;
 }
