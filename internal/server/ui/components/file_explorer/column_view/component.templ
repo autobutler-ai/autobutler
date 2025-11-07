@@ -1,6 +1,7 @@
 package column_view
 
 import (
+	"autobutler/internal/server/ui/components/file_explorer/context_menu_items"
 	"autobutler/internal/server/ui/components/icons/archive"
 	"autobutler/internal/server/ui/components/icons/folder"
 	"autobutler/internal/server/ui/components/icons/generic"
@@ -169,7 +170,9 @@ templ renderParentColumnItem(pageState types.PageState, parentPath string, file 
 		>
 			⋮
 		</div>
-		@renderParentContextMenu(pageState, parentPath, file)
+		<div class="context-menu hidden">
+			@context_menu_items.Component(pageState, file, parentPath)
+		</div>
 	</li>
 }
 
@@ -221,7 +224,9 @@ templ renderCurrentColumnItem(pageState types.PageState, file fs.FileInfo) {
 		>
 			⋮
 		</div>
-		@renderContextMenu(pageState, file)
+		<div class="context-menu hidden">
+			@context_menu_items.Component(pageState, file, pageState.RootDir)
+		</div>
 	</li>
 }
 
@@ -252,79 +257,5 @@ templ renderPreviewPane() {
 				<p class="column-view-preview-subtext">Select a file to preview</p>
 			</div>
 		</div>
-	</div>
-}
-
-templ renderContextMenu(pageState types.PageState, file fs.FileInfo) {
-	{{
-		fileType := util.DetermineFileType(pageState.RootDir, file)
-		fileName := file.Name()
-		isFolder := fileType == util.FileTypeFolder
-		downloadPath := filepath.Join("/api/v1/files", pageState.RootDir, fileName)
-	}}
-	<div class="context-menu hidden">
-		if !isFolder {
-			<a
-				href={ templ.SafeURL(downloadPath) }
-				download
-				class="context-menu-item"
-			>
-				Download
-			</a>
-		}
-		<button
-			type="button"
-			class="context-menu-item"
-			hx-on:click={ templ.JSFuncCall("moveFile", templ.JSExpression("event"), pageState.RootDir, fileName) }
-		>
-			Rename/Move
-		</button>
-		<button
-			type="button"
-			class="context-menu-item context-menu-item--danger"
-			hx-target="#file-explorer"
-			hx-swap="outerHTML"
-			hx-delete={ filepath.Join(`/api/v1/files`) }
-			hx-vals={ `{"rootDir":"` + pageState.RootDir + `", "filePaths":["` + fileName + `"]}` }
-		>
-			Delete
-		</button>
-	</div>
-}
-
-templ renderParentContextMenu(pageState types.PageState, parentPath string, file fs.FileInfo) {
-	{{
-		fileType := util.DetermineFileType(parentPath, file)
-		fileName := file.Name()
-		isFolder := fileType == util.FileTypeFolder
-		downloadPath := filepath.Join("/api/v1/files", parentPath, fileName)
-	}}
-	<div class="context-menu hidden">
-		if !isFolder {
-			<a
-				href={ templ.SafeURL(downloadPath) }
-				download
-				class="context-menu-item"
-			>
-				Download
-			</a>
-		}
-		<button
-			type="button"
-			class="context-menu-item"
-			hx-on:click={ templ.JSFuncCall("moveFile", templ.JSExpression("event"), parentPath, fileName) }
-		>
-			Rename/Move
-		</button>
-		<button
-			type="button"
-			class="context-menu-item context-menu-item--danger"
-			hx-target="#file-explorer"
-			hx-swap="outerHTML"
-			hx-delete={ filepath.Join(`/api/v1/files`) }
-			hx-vals={ `{"rootDir":"` + parentPath + `", "filePaths":["` + fileName + `"]}` }
-		>
-			Delete
-		</button>
 	</div>
 }

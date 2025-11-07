@@ -23,6 +23,10 @@ function setViewPreference(view) {
 
 function switchView(view) {
     setViewPreference(view);
+    
+    // Update button states immediately
+    updateViewButtonStates(view);
+    
     // Use HTMX to reload the content without a full page refresh
     const currentPath = window.location.pathname;
     htmx.ajax('GET', currentPath, {
@@ -31,10 +35,33 @@ function switchView(view) {
     });
 }
 
-// Initialize - sync localStorage to cookie on page load
+function updateViewButtonStates(activeView) {
+    // Get all view switcher buttons
+    const viewSwitcher = document.querySelector('.view-switcher');
+    if (!viewSwitcher) return;
+    
+    const buttons = viewSwitcher.querySelectorAll('button');
+    buttons.forEach((button, index) => {
+        const views = ['list', 'grid', 'column'];
+        const buttonView = views[index];
+        
+        if (buttonView === activeView) {
+            // Make this button active
+            button.classList.remove('btn--secondary');
+            button.classList.add('btn--primary');
+        } else {
+            // Make this button inactive
+            button.classList.remove('btn--primary');
+            button.classList.add('btn--secondary');
+        }
+    });
+}
+
+// Initialize - sync localStorage to cookie on page load and update button states
 document.addEventListener('DOMContentLoaded', function() {
     const view = getViewPreference();
     setViewPreference(view); // Ensures cookie is set
+    updateViewButtonStates(view); // Ensure button states match the active view
 });
 
 // Send view preference in all HTMX requests via custom header

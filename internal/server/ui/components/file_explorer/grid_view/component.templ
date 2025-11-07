@@ -1,6 +1,7 @@
 package grid_view
 
 import (
+	"autobutler/internal/server/ui/components/file_explorer/context_menu_items"
 	"autobutler/internal/server/ui/components/icons/archive"
 	"autobutler/internal/server/ui/components/icons/folder"
 	"autobutler/internal/server/ui/components/icons/generic"
@@ -91,7 +92,9 @@ templ renderGridItem(pageState types.PageState, file fs.FileInfo) {
 		>
 			⋮
 		</div>
-		@renderContextMenu(pageState, file)
+		<div class="context-menu hidden">
+			@context_menu_items.Component(pageState, file, pageState.RootDir)
+		</div>
 	</div>
 }
 
@@ -108,41 +111,4 @@ templ renderFileIcon(fileType util.FileType) {
 		default:
 			@generic.Component()
 	}
-}
-
-templ renderContextMenu(pageState types.PageState, file fs.FileInfo) {
-	{{
-		fileType := util.DetermineFileType(pageState.RootDir, file)
-		fileName := file.Name()
-		isFolder := fileType == util.FileTypeFolder
-		downloadPath := filepath.Join("/api/v1/files", pageState.RootDir, fileName)
-	}}
-	<div class="context-menu hidden">
-		if !isFolder {
-			<a
-				href={ templ.SafeURL(downloadPath) }
-				download
-				class="context-menu-item"
-			>
-				Download
-			</a>
-		}
-		<button
-			type="button"
-			class="context-menu-item"
-			hx-on:click={ templ.JSFuncCall("moveFile", templ.JSExpression("event"), pageState.RootDir, fileName) }
-		>
-			Rename/Move
-		</button>
-		<button
-			type="button"
-			class="context-menu-item context-menu-item--danger"
-			hx-target="#file-explorer"
-			hx-swap="outerHTML"
-			hx-delete={ filepath.Join(`/api/v1/files`) }
-			hx-vals={ `{"rootDir":"` + pageState.RootDir + `", "filePaths":["` + fileName + `"]}` }
-		>
-			Delete
-		</button>
-	</div>
 }
