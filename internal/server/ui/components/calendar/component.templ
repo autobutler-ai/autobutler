@@ -22,6 +22,8 @@ templ Component(calendarView calendar.CalendarView) {
 		<dialog
 			id="new-event-dialog"
 			class="modal-backdrop"
+			data-view-year={ now.Year() }
+			data-view-month={ calendar.MonthToInt(now.Month()) }
 		>
 			@event_editor.Component()
 		</dialog>
@@ -44,6 +46,8 @@ templ ComponentWithTime(calendarView calendar.CalendarView, targetTime time.Time
 		<dialog
 			id="new-event-dialog"
 			class="modal-backdrop"
+			data-view-year={ targetTime.Year() }
+			data-view-month={ calendar.MonthToInt(targetTime.Month()) }
 		>
 			@event_editor.Component()
 		</dialog>

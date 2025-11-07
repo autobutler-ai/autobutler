@@ -10,7 +10,7 @@ func getTimeString(t time.Time) string {
 	return t.Format("15:04")
 }
 
-templ dayEvent(event calendar.CalendarEvent, outsideOfMonth bool) {
+templ dayEvent(event calendar.CalendarEvent, outsideOfMonth bool, viewingMonth time.Time) {
 	<div class="calendar-event">
 		{{ renderClass := "calendar-event-item" }}
 		if outsideOfMonth {
@@ -39,6 +39,8 @@ templ dayEvent(event calendar.CalendarEvent, outsideOfMonth bool) {
 		<dialog
 			id={ fmt.Sprintf("event-dialog-%d", event.ID) }
 			class="modal-backdrop"
+			data-view-year={ viewingMonth.Year() }
+			data-view-month={ calendar.MonthToInt(viewingMonth.Month()) }
 		></dialog>
 	</div>
 }

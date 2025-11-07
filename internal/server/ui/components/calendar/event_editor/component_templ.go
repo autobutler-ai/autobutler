@@ -99,7 +99,7 @@ func ComponentWithEvent(
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\" hx-target=\"#calendar\" hx-swap=\"outerHTML\" hx-on:keydown=\"if (event.key === 'Enter') { preventDefault(event); }\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\" hx-target=\"#calendar\" hx-swap=\"outerHTML\" hx-on:keydown=\"if (event.key === 'Enter') { preventDefault(event); }\" hx-vals=\"js:{\n\t\t\t\t\t\tviewYear: document.getElementById('view-year').value,\n\t\t\t\t\t\tviewMonth: document.getElementById('view-month').value,\n\t\t\t\t\t}\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -124,7 +124,7 @@ func ComponentWithEvent(
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(event.StartTime.Year())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/calendar/event_editor/component.templ`, Line: 59, Col: 35}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/calendar/event_editor/component.templ`, Line: 63, Col: 35}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -137,7 +137,7 @@ func ComponentWithEvent(
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(calendar.MonthToInt(event.StartTime.Month()))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/calendar/event_editor/component.templ`, Line: 65, Col: 57}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/calendar/event_editor/component.templ`, Line: 69, Col: 57}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -150,20 +150,20 @@ func ComponentWithEvent(
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(event.StartTime.Day())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/calendar/event_editor/component.templ`, Line: 71, Col: 34}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/calendar/event_editor/component.templ`, Line: 75, Col: 34}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\"><div class=\"modal-field\"><label for=\"title\" class=\"modal-label\">Title</label> <input type=\"text\" name=\"title\" id=\"title\" autofocus required hx-on:input=\"checkNewEventFormInputs(event)\" hx-on:keydown=\"if (event.key === 'Enter') { preventDefault(event); }\" class=\"modal-input\" value=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\"> <input id=\"view-year\" type=\"hidden\" name=\"viewYear\" value=\"\"> <input id=\"view-month\" type=\"hidden\" name=\"viewMonth\" value=\"\"><div class=\"modal-field\"><label for=\"title\" class=\"modal-label\">Title</label> <input type=\"text\" name=\"title\" id=\"title\" autofocus required hx-on:input=\"checkNewEventFormInputs(event)\" hx-on:keydown=\"if (event.key === 'Enter') { preventDefault(event); }\" class=\"modal-input\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(event.Title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/calendar/event_editor/component.templ`, Line: 87, Col: 25}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/calendar/event_editor/component.templ`, Line: 103, Col: 25}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
@@ -176,7 +176,7 @@ func ComponentWithEvent(
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(event.StartTime.Format("15:04"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/calendar/event_editor/component.templ`, Line: 103, Col: 45}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/calendar/event_editor/component.templ`, Line: 119, Col: 45}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
@@ -199,7 +199,7 @@ func ComponentWithEvent(
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(event.StartTime.Format("15:04"))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/calendar/event_editor/component.templ`, Line: 126, Col: 46}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/calendar/event_editor/component.templ`, Line: 142, Col: 46}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
@@ -217,7 +217,7 @@ func ComponentWithEvent(
 		var templ_7745c5c3_Var11 string
 		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(event.Description)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/calendar/event_editor/component.templ`, Line: 140, Col: 25}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/calendar/event_editor/component.templ`, Line: 156, Col: 25}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 		if templ_7745c5c3_Err != nil {
@@ -230,7 +230,7 @@ func ComponentWithEvent(
 		var templ_7745c5c3_Var12 string
 		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(event.Location)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/calendar/event_editor/component.templ`, Line: 153, Col: 28}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/calendar/event_editor/component.templ`, Line: 169, Col: 28}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 		if templ_7745c5c3_Err != nil {
@@ -241,7 +241,7 @@ func ComponentWithEvent(
 			return templ_7745c5c3_Err
 		}
 		if isNew {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<input type=\"submit\" value=\"New\" class=\"event-editor-submit-btn\" disabled hx-trigger=\"click\" hx-post=\"/api/v1/calendar/events\" hx-target=\"#calendar\" hx-swap=\"outerHTML\" hx-vals=\"js:{\n\t\t\t\t\t\t\t\tyear: document.getElementById('new-event-year').value,\n\t\t\t\t\t\t\t\tmonth: document.getElementById('new-event-month').value,\n\t\t\t\t\t\t\t\tday: document.getElementById('new-event-day').value,\n\t\t\t\t\t\t\t\ttitle: document.getElementById('title').value,\n\t\t\t\t\t\t\t\tstartTime: document.getElementById('start-time').value,\n\t\t\t\t\t\t\t\tendTime: document.getElementById('end-time').value,\n\t\t\t\t\t\t\t\tdescription: document.getElementById('description').value,\n\t\t\t\t\t\t\t\tlocation: document.getElementById('location').value,\n\t\t\t\t\t\t\t}\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<input type=\"submit\" value=\"New\" class=\"event-editor-submit-btn\" disabled hx-trigger=\"click\" hx-post=\"/api/v1/calendar/events\" hx-target=\"#calendar\" hx-swap=\"outerHTML\" hx-vals=\"js:{\n\t\t\t\t\t\t\t\tyear: document.getElementById('new-event-year').value,\n\t\t\t\t\t\t\t\tmonth: document.getElementById('new-event-month').value,\n\t\t\t\t\t\t\t\tday: document.getElementById('new-event-day').value,\n\t\t\t\t\t\t\t\ttitle: document.getElementById('title').value,\n\t\t\t\t\t\t\t\tstartTime: document.getElementById('start-time').value,\n\t\t\t\t\t\t\t\tendTime: document.getElementById('end-time').value,\n\t\t\t\t\t\t\t\tdescription: document.getElementById('description').value,\n\t\t\t\t\t\t\t\tlocation: document.getElementById('location').value,\n\t\t\t\t\t\t\t\tviewYear: document.getElementById('view-year').value,\n\t\t\t\t\t\t\t\tviewMonth: document.getElementById('view-month').value,\n\t\t\t\t\t\t\t}\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -261,9 +261,11 @@ func ComponentWithEvent(
 								endTime: document.getElementById('end-time').value,
 								description: document.getElementById('description').value,
 								location: document.getElementById('location').value,
+								viewYear: document.getElementById('view-year').value,
+								viewMonth: document.getElementById('view-month').value,
 							}`, event.ID)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/calendar/event_editor/component.templ`, Line: 202, Col: 21}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/calendar/event_editor/component.templ`, Line: 222, Col: 21}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 			if templ_7745c5c3_Err != nil {
