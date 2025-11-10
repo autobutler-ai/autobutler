@@ -1191,6 +1191,9 @@
 	align-items: center;
 }
 
+#file-explorer-view-content {
+	margin-top: var(--spacing-md);
+}
 
 /* View Switcher */
 .view-switcher {
