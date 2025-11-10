@@ -98,16 +98,21 @@ a, button, [role="button"], .clickable {
 }
 
 /* Mobile menu links - click highlighting before navigation */
-.mobile-menu-link:active {
-	background-color: var(--color-primary-900);
-	color: var(--color-primary-100);
-	transform: scale(0.98) translateX(2px);
+.mobile-menu-link:active,
+button.mobile-menu-link:active,
+a.mobile-menu-link:active {
+	background-color: var(--color-primary-700) !important;
+	color: white !important;
+	transform: scale(0.98) translateX(2px) !important;
+	transition: none;
 }
 
 @media (prefers-color-scheme: light) {
-	.mobile-menu-link:active {
-		background-color: var(--color-primary-100);
-		color: var(--color-primary-900);
+	.mobile-menu-link:active,
+	button.mobile-menu-link:active,
+	a.mobile-menu-link:active {
+		background-color: var(--color-primary-200) !important;
+		color: var(--color-primary-900) !important;
 	}
 }
 
