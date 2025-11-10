@@ -6,13 +6,14 @@ templ Component() {
 		class="file-viewer"
 		hx-on:close="closeFileViewer(event)"
 		closedby="none"
-		hx-on:keydown="if (event.key === 'Enter') { preventDefault(event); }"
+		hx-on:keydown="if (event.key === 'Enter' && !event.target.closest('.ace_text-input, #editor')) { preventDefault(event); }"
 		hx-on:click="if (event.target === event.currentTarget) { closeFileViewer(event); }"
 	>
 		<script src="/public/vendor/epub.js/jszip.min.js"></script>
 		<script src="/public/vendor/epub.js/epub.min.js"></script>
 		<link href="/public/vendor/quill/quill.snow.css" rel="stylesheet"/>
 		<script src="/public/vendor/quill/quill.js"></script>
+		<script src="/public/vendor/ace/ace.js" type="text/javascript" charset="utf-8"></script>
 		<button
 			class="file-viewer-close"
 			aria-label="Close"
