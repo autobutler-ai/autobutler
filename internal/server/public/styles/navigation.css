@@ -137,6 +137,31 @@
 	flex: 1;
 	display: flex;
 	justify-content: center;
+	border-radius: 12px;
+	transition: background-color 0.2s ease;
+}
+
+/* Hover styles for bottomnav items */
+.bottomnav-item:hover {
+	background-color: var(--color-gray-100);
+}
+
+@media (prefers-color-scheme: dark) {
+	.bottomnav-item:hover {
+		background-color: var(--color-gray-700);
+	}
+}
+
+/* Active (click) state - applied before navigation */
+.bottomnav-item:active {
+	background-color: var(--color-primary-100);
+	transform: scale(0.96);
+}
+
+@media (prefers-color-scheme: dark) {
+	.bottomnav-item:active {
+		background-color: var(--color-primary-900);
+	}
 }
 
 .bottomnav-link {
