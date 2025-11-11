@@ -2,7 +2,7 @@ name: Bug Report
 description: File a bug report.
 title: "[Bug] "
 labels: ["bug"]
-projects: ["autobutler-ai/2"]
+projects: ["autobutler-org/2"]
 type: Bug
 assignees: []
 body:

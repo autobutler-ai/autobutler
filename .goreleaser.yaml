@@ -51,8 +51,8 @@ changelog:
 
 release:
   github:
-    owner: autobutler-ai
-    name: autobutler.ai
+    owner: autobutler-org
+    name: autobutler.org
   footer: >-
 
     ---
