@@ -17,8 +17,8 @@ jobs:
           script: |
             const tag = context.ref.replace('refs/tags/', '');
             github.rest.actions.createWorkflowDispatch({
-              owner: 'autobutler-ai',
-              repo: 'autobutler.ai',
+              owner: 'autobutler-org',
+              repo: 'autobutler.org',
               workflow_id: 'release.yml',
               ref: 'main',
               inputs: {

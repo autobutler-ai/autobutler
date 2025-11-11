@@ -2,7 +2,7 @@ name: Feature Request
 description: Request a new feature
 title: "[Feature] "
 labels: ["enhancement"]
-projects: ["autobutler-ai/2"]
+projects: ["autobutler-org/2"]
 assignees: []
 type: Feature
 body:

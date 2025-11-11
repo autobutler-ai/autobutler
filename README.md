@@ -2,7 +2,7 @@
 
 ## Important Links
 
-- [Source Code](https://github.com/autobutler-ai/autobutler)
+- [Source Code](https://github.com/autobutler-org/autobutler)
 - [SVG Library](https://flowbite.com/icons/)
 
 ## Usage

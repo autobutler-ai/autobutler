@@ -22,7 +22,7 @@ Familiarize yourself with the following steps and guidelines.
 
 ## Communication
 
-- [Create an issue](https://github.com/autobutler-ai/autobutler/issues/new) if you find a bug or have an enhancement suggestion.
+- [Create an issue](https://github.com/autobutler-org/autobutler/issues/new) if you find a bug or have an enhancement suggestion.
 
 ## Additional Guidelines
 
