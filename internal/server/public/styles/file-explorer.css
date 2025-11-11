@@ -1311,12 +1311,15 @@
 	}
 
 	.file-explorer-header {
+		flex-wrap: wrap;
 		gap: var(--spacing-sm);
 		align-items: flex-start;
 	}
 
 	.file-explorer-header-content {
 		order: 1;
+		flex: 1;
+		min-width: 0;
 	}
 
 	.file-navigation {
