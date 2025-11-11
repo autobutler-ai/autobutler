@@ -1,14 +1,74 @@
 package file_operations
 
-import "autobutler/internal/server/ui/types"
+import (
+	"autobutler/internal/server/ui/types"
+	"path/filepath"
+)
 
 templ Component(pageState types.PageState) {
-	<div>
-		<div class="file-operations">
-			@upload(pageState)
-			@download(pageState)
-			@delete(pageState)
+	<div class="file-operations">
+		<div class="file-navigation">
+			<button
+				type="button"
+				class="file-nav-btn file-nav-btn--back"
+				onclick="history.back()"
+				title="Go back"
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="icon icon--md"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke="currentColor"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M15 19l-7-7 7-7"
+					></path>
+				</svg>
+			</button>
+			<button
+				type="button"
+				class="file-nav-btn file-nav-btn--forward"
+				onclick="history.forward()"
+				title="Go forward"
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="icon icon--md"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke="currentColor"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M9 5l7 7-7 7"
+					></path>
+				</svg>
+			</button>
 		</div>
+		<form
+			id="file-upload-form"
+			hx-encoding="multipart/form-data"
+			hx-post={ filepath.Join("/api/v1/files", pageState.RootDir) }
+			hx-swap="innerHTML"
+			hx-target="#file-explorer-status"
+			hx-indicator="#file-upload-progress"
+			style="display: none;"
+		>
+			<input
+				type="file"
+				id="file-upload-input"
+				name="files"
+				class="file-upload-input"
+				onchange="this.form.requestSubmit()"
+				multiple
+			/>
+		</form>
 		<progress
 			id="file-upload-progress"
 			class="file-upload-indicator"

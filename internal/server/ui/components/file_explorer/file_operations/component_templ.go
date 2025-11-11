@@ -8,7 +8,10 @@ package file_operations
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "autobutler/internal/server/ui/types"
+import (
+	"autobutler/internal/server/ui/types"
+	"path/filepath"
+)
 
 func Component(pageState types.PageState) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
@@ -31,23 +34,20 @@ func Component(pageState types.PageState) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><div class=\"file-operations\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"file-operations\"><div class=\"file-navigation\"><button type=\"button\" class=\"file-nav-btn file-nav-btn--back\" onclick=\"history.back()\" title=\"Go back\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon icon--md\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M15 19l-7-7 7-7\"></path></svg></button> <button type=\"button\" class=\"file-nav-btn file-nav-btn--forward\" onclick=\"history.forward()\" title=\"Go forward\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon icon--md\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M9 5l7 7-7 7\"></path></svg></button></div><form id=\"file-upload-form\" hx-encoding=\"multipart/form-data\" hx-post=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = upload(pageState).Render(ctx, templ_7745c5c3_Buffer)
+		var templ_7745c5c3_Var2 string
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(filepath.Join("/api/v1/files", pageState.RootDir))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/file_operations/component.templ`, Line: 57, Col: 62}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = download(pageState).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = delete(pageState).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div><progress id=\"file-upload-progress\" class=\"file-upload-indicator\" value=\"0\" max=\"100\"></progress><script>\n\t\t\thtmx.on(\n\t\t\t\t'#file-upload-form',\n\t\t\t\t'htmx:xhr:progress',\n\t\t\t\tfunction(evt) {\n\t\t\t\t\thtmx.find('#file-upload-progress').setAttribute(\n\t\t\t\t\t'value',\n\t\t\t\t\tevt.detail.loaded / evt.detail.total * 100,\n\t\t\t\t\t);\n\t\t\t\t}\n\t\t\t);\n\t\t</script></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" hx-swap=\"innerHTML\" hx-target=\"#file-explorer-status\" hx-indicator=\"#file-upload-progress\" style=\"display: none;\"><input type=\"file\" id=\"file-upload-input\" name=\"files\" class=\"file-upload-input\" onchange=\"this.form.requestSubmit()\" multiple></form><progress id=\"file-upload-progress\" class=\"file-upload-indicator\" value=\"0\" max=\"100\"></progress><script>\n\t\t\thtmx.on(\n\t\t\t\t'#file-upload-form',\n\t\t\t\t'htmx:xhr:progress',\n\t\t\t\tfunction(evt) {\n\t\t\t\t\thtmx.find('#file-upload-progress').setAttribute(\n\t\t\t\t\t'value',\n\t\t\t\t\tevt.detail.loaded / evt.detail.total * 100,\n\t\t\t\t\t);\n\t\t\t\t}\n\t\t\t);\n\t\t</script></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

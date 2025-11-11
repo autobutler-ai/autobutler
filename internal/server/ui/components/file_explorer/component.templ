@@ -25,7 +25,7 @@ templ Component(pageState types.PageState, files []fs.FileInfo, view string) {
 	>
 		@file_viewer.Component()
 		<div class="file-explorer-header">
-			<div>
+			<div class="file-explorer-header-content">
 				<h2 class="file-explorer-title">File Explorer</h2>
 				<div class="file-explorer-space-info">Available Space: { fmt.Sprintf("%.2fGB", util.BytesToGB(availableBytes)) }</div>
 			</div>
@@ -39,7 +39,7 @@ templ Component(pageState types.PageState, files []fs.FileInfo, view string) {
 		>
 			@explorer_context_menu.Component(pageState)
 			<div class="file-explorer-controls">
-				<div>
+				<div class="file-explorer-breadcrumb-wrapper">
 					@Breadcrumb(pageState, view)
 				</div>
 				<div class="view-switcher">

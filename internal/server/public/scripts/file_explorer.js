@@ -497,8 +497,17 @@ function clearSelectedFiles() {
 function setSelectedFiles(fileNames) {
     selectedFiles = fileNames;
     const hasSelectedFiles = selectedFiles.length > 0;
-    document.getElementById('file-delete-button').disabled = !hasSelectedFiles;
-    document.getElementById('file-download-button').disabled = !hasSelectedFiles;
+    
+    // Only update button states if they exist
+    const deleteButton = document.getElementById('file-delete-button');
+    const downloadButton = document.getElementById('file-download-button');
+    
+    if (deleteButton) {
+        deleteButton.disabled = !hasSelectedFiles;
+    }
+    if (downloadButton) {
+        downloadButton.disabled = !hasSelectedFiles;
+    }
 }
 
 // SELECTO
