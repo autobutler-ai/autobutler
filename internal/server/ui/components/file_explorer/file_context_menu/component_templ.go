@@ -35,7 +35,7 @@ func Component(pageState types.PageState, file fs.FileInfo) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><button class=\"context-menu-trigger\" hx-on:click=\"openContextMenu(event, this.parentElement)\" aria-label=\"Open context menu\" type=\"button\" tabindex=\"0\">&#x22EE;</button><ul class=\"context-menu hidden\" hx-on:mouseleave=\"closeContextMenu(null, this.parentElement)\"><li><a download class=\"context-menu-item\" href=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><button class=\"context-menu-trigger\" hx-on:click=\"toggleFloatingContextMenu(event, this.parentElement)\" aria-label=\"Open context menu\" type=\"button\" tabindex=\"0\">&#x22EE;</button><ul class=\"context-menu hidden\" hx-on:mouseleave=\"closeContextMenu(null, this.parentElement)\"><li><a download class=\"context-menu-item\" href=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

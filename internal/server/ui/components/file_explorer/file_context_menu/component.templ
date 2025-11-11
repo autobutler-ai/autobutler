@@ -10,7 +10,7 @@ templ Component(pageState types.PageState, file fs.FileInfo) {
 	<div>
 		<button
 			class="context-menu-trigger"
-			hx-on:click="openContextMenu(event, this.parentElement)"
+			hx-on:click="toggleFloatingContextMenu(event, this.parentElement)"
 			aria-label="Open context menu"
 			type="button"
 			tabindex="0"
