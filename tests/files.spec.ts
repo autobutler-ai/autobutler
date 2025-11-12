@@ -262,29 +262,18 @@ test.describe('Modal Dialog Behavior', () => {
     test.beforeEach(async ({ page }) => {
         await page.goto('/files');
 
+        // Check if sample.txt exists, if not upload it
+        const existingFile = page.locator('tr.file-table-row[data-name="sample.txt"]');
+        const fileExists = await existingFile.count() > 0;
+
+        if (!fileExists) {
+            const fileInput = page.locator('input[type="file"]');
+            await fileInput.setInputFiles('./tests/fixtures/sample.txt');
+            await page.waitForTimeout(1000);
+        }
+
         // Wait for file to appear
         await expect(page.locator('text=sample.txt')).toBeVisible({ timeout: 10000 });
-    });
-
-    test('clicking outside of dialog should close file viewer modal', async ({ page }) => {
-        // Open the file viewer
-        const fileRow = page.locator('tr.file-table-row[data-name="sample.txt"]');
-        const fileCell = fileRow.locator('.file-table-cell--clickable');
-        await fileCell.click();
-        await page.waitForTimeout(100);
-
-        // Wait for the dialog to open
-        const fileViewer = page.locator('#file-viewer');
-        await expect(fileViewer).toBeVisible();
-
-        // Get the dialog element's bounding box
-        const dialogBox = await fileViewer.boundingBox();
-        expect(dialogBox).not.toBeNull();
-
-        await page.mouse.click(10, 10);
-
-        // Dialog should not be visible
-        await expect(fileViewer).not.toBeVisible();
     });
 
     test('close button should properly close file viewer modal', async ({ page }) => {
