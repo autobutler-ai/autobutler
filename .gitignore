@@ -36,6 +36,7 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+test-output.log
 
 # Javascript
 node_modules/
