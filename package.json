@@ -1,0 +1,16 @@
+{
+  "name": "autobutler",
+  "version": "1.0.0",
+  "description": "## Important Links",
+  "scripts": {
+    "test": "npx playwright test",
+    "test/report": "npx playwright show-report"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@types/node": "^24.10.1"
+  }
+}
