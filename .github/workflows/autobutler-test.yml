@@ -34,7 +34,7 @@ on:
         required: false
 
 env:
-  BASE_URL: ${{ inputs.is-remote && inputs.remote-url || 'http://localhost:8080' }}
+  BASE_URL: ${{ inputs.is-remote && inputs.remote-url || 'http://127.0.0.1:8080' }}
 
 jobs:
   test-e2e:
@@ -68,7 +68,7 @@ jobs:
       if: ${{ !inputs.is-remote }}
       run: |
         chmod +x ./artifact/autobutler
-        ./artifact/autobutler &
+        ./artifact/autobutler serve &
 
     - name: Run E2E tests
       run: |
