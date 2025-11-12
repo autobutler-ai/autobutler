@@ -13,6 +13,7 @@
     "bradlc.vscode-tailwindcss",
     "vscode-icons-team.vscode-icons",
     "alexcvzz.vscode-sqlite",
-    "inferrinizzard.prettier-sql-vscode"
+    "inferrinizzard.prettier-sql-vscode",
+    "ms-playwright.playwright"
   ]
 }
