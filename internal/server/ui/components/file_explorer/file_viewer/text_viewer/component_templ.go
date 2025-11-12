@@ -79,19 +79,19 @@ func Component(filePath string) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div><script>\n\t\t\tif (typeof ace !== 'undefined') {\n\t\t\t\tvar editor = ace.edit(\"editor\");\n\t\t\t\teditor.setTheme(\"ace/theme/monokai\");\n\n\t\t\t\tvar filePath = ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div><script>\n\t\t\tinitializeTextEditor(")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			templ_7745c5c3_Var4, templ_7745c5c3_Err := templruntime.ScriptContentOutsideStringLiteral(filePath)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/file_viewer/text_viewer/component.templ`, Line: 31, Col: 30}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/file_explorer/file_viewer/text_viewer/component.templ`, Line: 27, Col: 35}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, ";\n\n\t\t\t\t// Determine ACE mode based on file extension\n\t\t\t\tfunction getAceModeFromExtension(filePath) {\n\t\t\t\t\tvar ext = filePath.split('.').pop().toLowerCase();\n\t\t\t\t\tvar modeMap = {\n\t\t\t\t\t\t// Web languages\n\t\t\t\t\t\t'js': 'javascript',\n\t\t\t\t\t\t'jsx': 'javascript',\n\t\t\t\t\t\t'ts': 'typescript',\n\t\t\t\t\t\t'tsx': 'typescript',\n\t\t\t\t\t\t'json': 'json',\n\t\t\t\t\t\t'html': 'html',\n\t\t\t\t\t\t'htm': 'html',\n\t\t\t\t\t\t'xml': 'xml',\n\t\t\t\t\t\t'css': 'css',\n\t\t\t\t\t\t'scss': 'scss',\n\t\t\t\t\t\t'sass': 'sass',\n\t\t\t\t\t\t'less': 'less',\n\n\t\t\t\t\t\t// Programming languages\n\t\t\t\t\t\t'py': 'python',\n\t\t\t\t\t\t'rb': 'ruby',\n\t\t\t\t\t\t'php': 'php',\n\t\t\t\t\t\t'java': 'java',\n\t\t\t\t\t\t'c': 'c_cpp',\n\t\t\t\t\t\t'cpp': 'c_cpp',\n\t\t\t\t\t\t'cc': 'c_cpp',\n\t\t\t\t\t\t'h': 'c_cpp',\n\t\t\t\t\t\t'hpp': 'c_cpp',\n\t\t\t\t\t\t'cs': 'csharp',\n\t\t\t\t\t\t'go': 'golang',\n\t\t\t\t\t\t'rs': 'rust',\n\t\t\t\t\t\t'swift': 'swift',\n\t\t\t\t\t\t'kt': 'kotlin',\n\t\t\t\t\t\t'scala': 'scala',\n\t\t\t\t\t\t'r': 'r',\n\t\t\t\t\t\t'lua': 'lua',\n\t\t\t\t\t\t'pl': 'perl',\n\n\t\t\t\t\t\t// Shell/Config\n\t\t\t\t\t\t'sh': 'sh',\n\t\t\t\t\t\t'bash': 'sh',\n\t\t\t\t\t\t'zsh': 'sh',\n\t\t\t\t\t\t'fish': 'sh',\n\t\t\t\t\t\t'yaml': 'yaml',\n\t\t\t\t\t\t'yml': 'yaml',\n\t\t\t\t\t\t'toml': 'toml',\n\t\t\t\t\t\t'ini': 'ini',\n\t\t\t\t\t\t'conf': 'ini',\n\t\t\t\t\t\t'env': 'ini',\n\n\t\t\t\t\t\t// Markup\n\t\t\t\t\t\t'md': 'markdown',\n\t\t\t\t\t\t'markdown': 'markdown',\n\t\t\t\t\t\t'rst': 'rst',\n\t\t\t\t\t\t'tex': 'latex',\n\n\t\t\t\t\t\t// Data\n\t\t\t\t\t\t'sql': 'sql',\n\t\t\t\t\t\t'csv': 'text',\n\n\t\t\t\t\t\t// Other\n\t\t\t\t\t\t'dockerfile': 'dockerfile',\n\t\t\t\t\t\t'makefile': 'makefile'\n\t\t\t\t\t};\n\n\t\t\t\t\treturn modeMap[ext] || 'text';\n\t\t\t\t}\n\n\t\t\t\tvar mode = getAceModeFromExtension(filePath);\n\t\t\t\teditor.getSession().setMode('ace/mode/' + mode);\n\n\t\t\t\t// Debounced save function\n\t\t\t\tlet saveTimeout;\n\t\t\t\teditor.getSession().on('change', function() {\n\t\t\t\t\tclearTimeout(saveTimeout);\n\t\t\t\t\tsaveTimeout = setTimeout(function() {\n\t\t\t\t\t\tvar content = editor.getValue();\n\t\t\t\t\t\tvar blob = new Blob([content], { type: 'text/plain' });\n\t\t\t\t\t\tvar formData = new FormData();\n\n\t\t\t\t\t\t// Extract filename from path for the blob\n\t\t\t\t\t\tvar fileName = filePath.split('/').pop();\n\t\t\t\t\t\tformData.append('files', blob, fileName);\n\n\t\t\t\t\t\t// Extract directory from full path\n\t\t\t\t\t\tvar dirPath = filePath.substring(0, filePath.lastIndexOf('/'));\n\n\t\t\t\t\t\t// POST to update the file\n\t\t\t\t\t\tfetch('/api/v1/files' + dirPath, {\n\t\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\t\tbody: formData\n\t\t\t\t\t\t}).catch(function(error) {\n\t\t\t\t\t\t\tconsole.error('Error saving file:', error);\n\t\t\t\t\t\t});\n\t\t\t\t\t}, 1000); // Save after 1 second of inactivity\n\t\t\t\t});\n\t\t\t}\n\t\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, ");\n\t\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
