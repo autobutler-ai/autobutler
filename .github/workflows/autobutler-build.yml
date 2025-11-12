@@ -1,4 +1,4 @@
-name: Autobutler Build
+name: Build
 on:
   push:
     branches:
@@ -13,6 +13,8 @@ defaults:
 jobs:
   autobutler-build:
     runs-on: ubuntu-latest
+    outputs:
+      run-id: ${{ github.run_id }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -27,3 +29,16 @@ jobs:
       - name: Build
         run: |
           make build
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: build/autobutler
+          if-no-files-found: error
+  autobutler-build-test:
+    uses: ./.github/workflows/autobutler-test.yml
+    needs:
+      - autobutler-build
+    with:
+      is-remote: false
+      run-id: ${{ needs.autobutler-build.outputs.run-id }}
+
