@@ -26,8 +26,8 @@ templ Component(device storage.Device) {
 				if systemBytes, ok := device.Categories[string(storage.CategorySystem)]; ok && systemBytes > 0 {
 					{{ systemPercent := float64(systemBytes) / float64(totalForCalc) * 100 }}
 					{{ systemGB := float64(systemBytes) / (1024 * 1024 * 1024) }}
-					<div 
-						class="storage-partition-segment storage-partition-system" 
+					<div
+						class="storage-partition-segment storage-partition-system"
 						style={ fmt.Sprintf("width: %.2f%%", systemPercent) }
 						title={ fmt.Sprintf("System: %.2f GB", systemGB) }
 					></div>
@@ -36,8 +36,8 @@ templ Component(device storage.Device) {
 				if docsBytes, ok := device.Categories[string(storage.CategoryDocuments)]; ok && docsBytes > 0 {
 					{{ docsPercent := float64(docsBytes) / float64(totalForCalc) * 100 }}
 					{{ docsGB := float64(docsBytes) / (1024 * 1024 * 1024) }}
-					<div 
-						class="storage-partition-segment storage-partition-documents" 
+					<div
+						class="storage-partition-segment storage-partition-documents"
 						style={ fmt.Sprintf("width: %.2f%%", docsPercent) }
 						title={ fmt.Sprintf("Documents: %.2f GB", docsGB) }
 					></div>
@@ -46,8 +46,8 @@ templ Component(device storage.Device) {
 				if mediaBytes, ok := device.Categories[string(storage.CategoryMedia)]; ok && mediaBytes > 0 {
 					{{ mediaPercent := float64(mediaBytes) / float64(totalForCalc) * 100 }}
 					{{ mediaGB := float64(mediaBytes) / (1024 * 1024 * 1024) }}
-					<div 
-						class="storage-partition-segment storage-partition-media" 
+					<div
+						class="storage-partition-segment storage-partition-media"
 						style={ fmt.Sprintf("width: %.2f%%", mediaPercent) }
 						title={ fmt.Sprintf("Media: %.2f GB", mediaGB) }
 					></div>
@@ -56,8 +56,8 @@ templ Component(device storage.Device) {
 				if backupsBytes, ok := device.Categories[string(storage.CategoryBackups)]; ok && backupsBytes > 0 {
 					{{ backupsPercent := float64(backupsBytes) / float64(totalForCalc) * 100 }}
 					{{ backupsGB := float64(backupsBytes) / (1024 * 1024 * 1024) }}
-					<div 
-						class="storage-partition-segment storage-partition-backups" 
+					<div
+						class="storage-partition-segment storage-partition-backups"
 						style={ fmt.Sprintf("width: %.2f%%", backupsPercent) }
 						title={ fmt.Sprintf("Backups: %.2f GB", backupsGB) }
 					></div>
@@ -66,8 +66,8 @@ templ Component(device storage.Device) {
 				if otherBytes, ok := device.Categories[string(storage.CategoryOther)]; ok && otherBytes > 0 {
 					{{ otherPercent := float64(otherBytes) / float64(totalForCalc) * 100 }}
 					{{ otherGB := float64(otherBytes) / (1024 * 1024 * 1024) }}
-					<div 
-						class="storage-partition-segment storage-partition-other" 
+					<div
+						class="storage-partition-segment storage-partition-other"
 						style={ fmt.Sprintf("width: %.2f%%", otherPercent) }
 						title={ fmt.Sprintf("Other: %.2f GB", otherGB) }
 					></div>
@@ -75,8 +75,8 @@ templ Component(device storage.Device) {
 				<!-- Free -->
 				if device.AvailBytes > 0 {
 					{{ freePercent := float64(device.AvailBytes) / float64(totalForCalc) * 100 }}
-					<div 
-						class="storage-partition-segment storage-partition-free" 
+					<div
+						class="storage-partition-segment storage-partition-free"
 						style={ fmt.Sprintf("width: %.2f%%", freePercent) }
 						title={ fmt.Sprintf("Free: %.1f GB", availGB) }
 					></div>
@@ -84,16 +84,16 @@ templ Component(device storage.Device) {
 			} else {
 				<!-- Fallback: Simple used/free if no categories -->
 				if device.PercentUsed > 0 {
-					<div 
-						class="storage-partition-segment storage-partition-used" 
+					<div
+						class="storage-partition-segment storage-partition-used"
 						style={ fmt.Sprintf("width: %d%%", device.PercentUsed) }
 						title={ fmt.Sprintf("Used: %.1f GB", usedGB) }
 					></div>
 				}
 				{{ freePercent := 100 - device.PercentUsed }}
 				if freePercent > 0 {
-					<div 
-						class="storage-partition-segment storage-partition-free" 
+					<div
+						class="storage-partition-segment storage-partition-free"
 						style={ fmt.Sprintf("width: %d%%", freePercent) }
 						title={ fmt.Sprintf("Free: %.1f GB", availGB) }
 					></div>
