@@ -225,13 +225,13 @@ test.describe('Files Page - File Upload', () => {
 });
 
 test.describe('Files Page - File Interactions', () => {
-    test('opens file viewer modal when clicking on a file', async ({ page }) => {
+    test('opens file viewer modal when double-clicking on a file', async ({ page }) => {
         await page.goto('/files');
 
-        // Click on the uploaded file
+        // Double-click on the uploaded file
         const fileRow = page.locator('tr.file-table-row[data-name="sample.txt"]');
         const fileCell = fileRow.locator('.file-table-cell--clickable');
-        await fileCell.click();
+        await fileCell.dblclick();
 
         // Verify the file viewer modal is visible
         const fileViewer = page.locator('#file-viewer');
@@ -243,7 +243,7 @@ test.describe('Files Page - File Interactions', () => {
 
         const fileRow = page.locator('tr.file-table-row[data-name="sample.txt"]');
         const fileCell = fileRow.locator('.file-table-cell--clickable');
-        await fileCell.click();
+        await fileCell.dblclick();
 
         // Wait for content to load
         await page.waitForTimeout(500);
@@ -258,7 +258,7 @@ test.describe('Files Page - File Interactions', () => {
 
         const fileRow = page.locator('tr.file-table-row[data-name="sample.txt"]');
         const fileCell = fileRow.locator('.file-table-cell--clickable');
-        await fileCell.click();
+        await fileCell.dblclick();
 
         const fileViewer = page.locator('#file-viewer');
         await expect(fileViewer).toBeVisible();
@@ -276,7 +276,7 @@ test.describe('Files Page - File Interactions', () => {
 
         const fileRow = page.locator('tr.file-table-row[data-name="sample.txt"]');
         const fileCell = fileRow.locator('.file-table-cell--clickable');
-        await fileCell.click();
+        await fileCell.dblclick();
 
         const fileViewer = page.locator('#file-viewer');
         await expect(fileViewer).toBeVisible();
@@ -326,7 +326,7 @@ test.describe('Modal Dialog Behavior', () => {
         // Open the file viewer
         const fileRow = page.locator('tr.file-table-row[data-name="sample.txt"]');
         const fileCell = fileRow.locator('.file-table-cell--clickable');
-        await fileCell.dispatchEvent('click');
+        await fileCell.dblclick();
         await page.waitForTimeout(100);
 
         const fileViewer = page.locator('#file-viewer');
@@ -344,7 +344,7 @@ test.describe('Modal Dialog Behavior', () => {
         // Open the file viewer
         const fileRow = page.locator('tr.file-table-row[data-name="sample.txt"]');
         const fileCell = fileRow.locator('.file-table-cell--clickable');
-        await fileCell.click();
+        await fileCell.dblclick();
         await page.waitForTimeout(100);
 
         const fileViewer = page.locator('#file-viewer');
@@ -441,9 +441,8 @@ test.describe('Files Page - Navigation', () => {
         const folderRow = page.locator('tr.file-table-row[data-name="test-nav-folder/"]');
         await expect(folderRow).toBeVisible();
 
-        // Navigate into the folder by clicking on it
-        const folderLink = folderRow.locator('a.file-table-link');
-        await folderLink.click();
+        // Navigate into the folder by double-clicking on it
+        await folderRow.dblclick();
         await page.waitForTimeout(100);
 
         // Verify we're in the subfolder (URL should change)
