@@ -224,6 +224,51 @@ test.describe('Files Page - File Upload', () => {
     });
 });
 
+
+test.describe('Files Page - Navigation', () => {
+    test('back button navigates from subfolder to parent folder', async ({ page }) => {
+        await page.goto('/files');
+
+        // Create a test folder
+        const addFolderBtn = page.locator('#add-folder-btn');
+        await addFolderBtn.click();
+        await page.waitForTimeout(100);
+        const folderInput = page.locator('#folder-input');
+        await folderInput.fill('test-nav-folder');
+        await folderInput.press('Enter');
+        await page.waitForTimeout(100);
+
+        // Verify folder was created
+        const folderRow = page.locator('tr.file-table-row[data-name="test-nav-folder/"]');
+        await expect(folderRow).toBeVisible();
+
+        // Navigate into the folder by double-clicking on it
+        await folderRow.dblclick();
+        await page.waitForTimeout(100);
+
+        // Verify we're in the subfolder (URL should change)
+        await expect(page).toHaveURL(/\/files\/test-nav-folder/);
+
+        // Find and click the back navigation button
+        const backButton = page.locator('#nav-back-btn');
+        await expect(backButton).toBeVisible();
+        await expect(backButton).not.toBeDisabled();
+        await backButton.click();
+        await page.waitForTimeout(1000);
+
+        // Verify we're back at the root (URL should be /files)
+        await expect(page).toHaveURL(/^.*\/files\/?$/);
+    });
+
+    test('back button is disabled at root directory', async ({ page }) => {
+        await page.goto('/files');
+
+        const backButton = page.locator('#nav-back-btn');
+        await expect(backButton).toBeVisible();
+        await expect(backButton).toBeDisabled();
+    });
+});
+
 test.describe('Files Page - File Interactions', () => {
     test('opens file viewer modal when double-clicking on a file', async ({ page }) => {
         await page.goto('/files');
@@ -405,7 +450,6 @@ test.describe('Modal Dialog Behavior', () => {
     });
 });
 
-
 test.describe('File Selection (Google Drive Style)', () => {
     test('single click on file in list view selects it', async ({ page }) => {
         await page.goto('/files');
@@ -414,8 +458,12 @@ test.describe('File Selection (Google Drive Style)', () => {
         const fileRow = page.locator('.file-table-row.file-node').first();
         await fileRow.waitFor({ state: 'visible' });
 
-        // Single click on the file
-        await fileRow.click();
+        // Single click on the file name cell
+        const fileCell = fileRow.locator('.file-table-cell--content');
+        await fileCell.click();
+
+        // Wait a bit for the selection to be applied
+        await page.waitForTimeout(100);
 
         // Verify the file is selected
         await expect(fileRow).toHaveClass(/file-node--selected/);
@@ -428,11 +476,13 @@ test.describe('File Selection (Google Drive Style)', () => {
         await fileRows.first().waitFor({ state: 'visible' });
 
         // Click first file
-        await fileRows.nth(0).click();
+        await fileRows.nth(0).locator('.file-table-cell--content').click();
+        await page.waitForTimeout(100);
         await expect(fileRows.nth(0)).toHaveClass(/file-node--selected/);
 
         // Click second file
-        await fileRows.nth(1).click();
+        await fileRows.nth(1).locator('.file-table-cell--content').click();
+        await page.waitForTimeout(100);
 
         // First should be deselected, second should be selected
         await expect(fileRows.nth(0)).not.toHaveClass(/file-node--selected/);
@@ -446,14 +496,6 @@ test.describe('File Selection (Google Drive Style)', () => {
         const folderRow = page.locator('.file-table-row.file-node').filter({
             has: page.locator('[data-file-type="folder"]')
         }).first();
-
-        // Wait for the folder to be visible
-        await folderRow.waitFor({ state: 'visible', timeout: 5000 });
-
-        // Get the folder name for verification
-        const folderName = await folderRow.getAttribute('data-name');
-
-        // Double click the folder
         await folderRow.dblclick();
 
         // Wait for navigation to complete (URL or breadcrumb should change)
@@ -477,8 +519,9 @@ test.describe('File Selection (Google Drive Style)', () => {
 
         await fileRow.waitFor({ state: 'visible', timeout: 5000 });
 
-        // Double click the file
-        await fileRow.dblclick();
+        // Double click the file cell
+        const fileCell = fileRow.locator('.file-table-cell--content');
+        await fileCell.dblclick();
 
         // Wait for the file viewer dialog to open
         const fileViewer = page.locator('#file-viewer');
@@ -566,12 +609,15 @@ test.describe('File Selection (Google Drive Style)', () => {
         await fileRow.waitFor({ state: 'visible' });
 
         // Select a file
-        await fileRow.click();
+        const fileCell = fileRow.locator('.file-table-cell--content');
+        await fileCell.click();
+        await page.waitForTimeout(100);
         await expect(fileRow).toHaveClass(/file-node--selected/);
 
         // Click on empty space in the file explorer
         const emptySpace = page.locator('.file-explorer');
         await emptySpace.click({ position: { x: 50, y: 50 } });
+        await page.waitForTimeout(100);
 
         // File should be deselected
         await expect(fileRow).not.toHaveClass(/file-node--selected/);
@@ -584,66 +630,25 @@ test.describe('File Selection (Google Drive Style)', () => {
         await fileRows.first().waitFor({ state: 'visible' });
 
         // Select first file with regular click
-        await fileRows.nth(0).click();
+        await fileRows.nth(0).locator('.file-table-cell--content').click();
+        await page.waitForTimeout(100);
         await expect(fileRows.nth(0)).toHaveClass(/file-node--selected/);
 
         // Ctrl+click second file (should add to selection)
-        await fileRows.nth(1).click({ modifiers: ['Control'] });
+        await fileRows.nth(1).locator('.file-table-cell--content').click({ modifiers: ['Control'] });
+        await page.waitForTimeout(100);
 
         // Both should be selected
         await expect(fileRows.nth(0)).toHaveClass(/file-node--selected/);
         await expect(fileRows.nth(1)).toHaveClass(/file-node--selected/);
 
         // Ctrl+click second file again (should deselect it)
-        await fileRows.nth(1).click({ modifiers: ['Control'] });
+        await fileRows.nth(1).locator('.file-table-cell--content').click({ modifiers: ['Control'] });
+        await page.waitForTimeout(100);
 
         // First still selected, second deselected
         await expect(fileRows.nth(0)).toHaveClass(/file-node--selected/);
         await expect(fileRows.nth(1)).not.toHaveClass(/file-node--selected/);
-    });
-});
-
-test.describe('Files Page - Navigation', () => {
-    test('back button navigates from subfolder to parent folder', async ({ page }) => {
-        await page.goto('/files');
-
-        // Create a test folder
-        const addFolderBtn = page.locator('#add-folder-btn');
-        await addFolderBtn.click();
-        await page.waitForTimeout(100);
-        const folderInput = page.locator('#folder-input');
-        await folderInput.fill('test-nav-folder');
-        await folderInput.press('Enter');
-        await page.waitForTimeout(100);
-
-        // Verify folder was created
-        const folderRow = page.locator('tr.file-table-row[data-name="test-nav-folder/"]');
-        await expect(folderRow).toBeVisible();
-
-        // Navigate into the folder by double-clicking on it
-        await folderRow.dblclick();
-        await page.waitForTimeout(100);
-
-        // Verify we're in the subfolder (URL should change)
-        await expect(page).toHaveURL(/\/files\/test-nav-folder/);
-
-        // Find and click the back navigation button
-        const backButton = page.locator('#nav-back-btn');
-        await expect(backButton).toBeVisible();
-        await expect(backButton).not.toBeDisabled();
-        await backButton.click();
-        await page.waitForTimeout(1000);
-
-        // Verify we're back at the root (URL should be /files)
-        await expect(page).toHaveURL(/^.*\/files\/?$/);
-    });
-
-    test('back button is disabled at root directory', async ({ page }) => {
-        await page.goto('/files');
-
-        const backButton = page.locator('#nav-back-btn');
-        await expect(backButton).toBeVisible();
-        await expect(backButton).toBeDisabled();
     });
 });
 
