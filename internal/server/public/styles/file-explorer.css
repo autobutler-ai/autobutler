@@ -214,6 +214,19 @@
 	}
 }
 
+/* Selected state for file nodes (Google Drive style) */
+.file-node--selected {
+	background-color: var(--color-blue-50) !important;
+	border-color: var(--color-blue-300) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+	.file-node--selected {
+		background-color: var(--color-blue-900) !important;
+		border-color: var(--color-blue-700) !important;
+	}
+}
+
 .file-table-cell {
 	padding: 0;
 }
@@ -293,6 +306,14 @@
 
 .file-table-link:focus:not(:focus-visible) {
 	outline: none;
+}
+
+.file-table-name {
+	flex: 1;
+	margin-left: var(--spacing-sm);
+	color: inherit;
+	display: flex;
+	align-items: center;
 }
 
 .file-table-size {
@@ -1027,6 +1048,11 @@
 		background: var(--color-gray-700);
 		border-color: var(--color-gray-600);
 	}
+}
+
+/* Selected state inherits from shared .file-node--selected */
+.grid-view-item.file-node--selected {
+	box-shadow: var(--shadow-sm);
 }
 
 .grid-view-item--folder {

@@ -468,3 +468,200 @@ test.describe('Files Page - Navigation', () => {
         await expect(backButton).toBeDisabled();
     });
 });
+
+test.describe('File Selection (Google Drive Style)', () => {
+    test('single click on file in list view selects it', async ({ page }) => {
+        await page.goto('/files');
+
+        // Find the first file row (not a folder)
+        const fileRow = page.locator('.file-table-row.file-node').first();
+        await fileRow.waitFor({ state: 'visible' });
+
+        // Single click on the file
+        await fileRow.click();
+
+        // Verify the file is selected
+        await expect(fileRow).toHaveClass(/file-node--selected/);
+    });
+
+    test('single click on second file deselects first and selects second', async ({ page }) => {
+        await page.goto('/files');
+
+        const fileRows = page.locator('.file-table-row.file-node');
+        await fileRows.first().waitFor({ state: 'visible' });
+
+        // Click first file
+        await fileRows.nth(0).click();
+        await expect(fileRows.nth(0)).toHaveClass(/file-node--selected/);
+
+        // Click second file
+        await fileRows.nth(1).click();
+        
+        // First should be deselected, second should be selected
+        await expect(fileRows.nth(0)).not.toHaveClass(/file-node--selected/);
+        await expect(fileRows.nth(1)).toHaveClass(/file-node--selected/);
+    });
+
+    test('double click on folder in list view navigates into it', async ({ page }) => {
+        await page.goto('/files');
+
+        // Find a folder in the list
+        const folderRow = page.locator('.file-table-row.file-node').filter({ 
+            has: page.locator('[data-file-type="folder"]') 
+        }).first();
+
+        // Wait for the folder to be visible
+        await folderRow.waitFor({ state: 'visible', timeout: 5000 });
+
+        // Get the folder name for verification
+        const folderName = await folderRow.getAttribute('data-name');
+
+        // Double click the folder
+        await folderRow.dblclick();
+
+        // Wait for navigation to complete (URL or breadcrumb should change)
+        await page.waitForTimeout(500); // Give time for HTMX to process
+
+        // Verify we navigated (breadcrumb or URL should contain the folder name)
+        const breadcrumb = page.locator('nav#breadcrumbs');
+        const breadcrumbText = await breadcrumb.textContent();
+        
+        // The breadcrumb should show we're in a subfolder now
+        expect(breadcrumbText).toBeTruthy();
+    });
+
+    test('double click on file in list view opens file viewer', async ({ page }) => {
+        await page.goto('/files');
+
+        // Find a file (not folder) in the list
+        const fileRow = page.locator('.file-table-row.file-node').filter({ 
+            hasNot: page.locator('[data-file-type="folder"]') 
+        }).first();
+
+        await fileRow.waitFor({ state: 'visible', timeout: 5000 });
+
+        // Double click the file
+        await fileRow.dblclick();
+
+        // Wait for the file viewer dialog to open
+        const fileViewer = page.locator('#file-viewer');
+        await expect(fileViewer).toBeVisible({ timeout: 3000 });
+
+        // Close the viewer for cleanup
+        const closeBtn = fileViewer.locator('.file-viewer-close');
+        if (await closeBtn.isVisible()) {
+            await closeBtn.click();
+        }
+    });
+
+    test('single click on file in grid view selects it', async ({ page }) => {
+        await page.goto('/files?view=grid');
+
+        // Wait for grid view to load
+        await page.locator('.grid-view-container').waitFor({ state: 'visible' });
+
+        // Find the first file in grid view
+        const gridItem = page.locator('.grid-view-item.file-node').first();
+        await gridItem.waitFor({ state: 'visible' });
+
+        // Single click on the file
+        await gridItem.click();
+
+        // Verify the file is selected
+        await expect(gridItem).toHaveClass(/file-node--selected/);
+    });
+
+    test('double click on folder in grid view navigates into it', async ({ page }) => {
+        await page.goto('/files?view=grid');
+
+        // Wait for grid view to load
+        await page.locator('.grid-view-container').waitFor({ state: 'visible' });
+
+        // Find a folder in grid view
+        const folderItem = page.locator('.grid-view-item.file-node').filter({ 
+            has: page.locator('[data-is-folder="true"]') 
+        }).first();
+
+        await folderItem.waitFor({ state: 'visible', timeout: 5000 });
+
+        // Double click the folder
+        await folderItem.dblclick();
+
+        // Wait for navigation
+        await page.waitForTimeout(500);
+
+        // Verify navigation occurred
+        const breadcrumb = page.locator('nav#breadcrumbs');
+        const breadcrumbText = await breadcrumb.textContent();
+        expect(breadcrumbText).toBeTruthy();
+    });
+
+    test('double click on file in grid view opens file viewer', async ({ page }) => {
+        await page.goto('/files?view=grid');
+
+        await page.locator('.grid-view-container').waitFor({ state: 'visible' });
+
+        // Find a non-folder file in grid view
+        const fileItem = page.locator('.grid-view-item.file-node').filter({ 
+            has: page.locator('[data-is-folder="false"]') 
+        }).first();
+
+        await fileItem.waitFor({ state: 'visible', timeout: 5000 });
+
+        // Double click the file
+        await fileItem.dblclick();
+
+        // File viewer should open
+        const fileViewer = page.locator('#file-viewer');
+        await expect(fileViewer).toBeVisible({ timeout: 3000 });
+
+        // Close for cleanup
+        const closeBtn = fileViewer.locator('.file-viewer-close');
+        if (await closeBtn.isVisible()) {
+            await closeBtn.click();
+        }
+    });
+
+    test('clicking on empty space deselects all files', async ({ page }) => {
+        await page.goto('/files');
+
+        const fileRow = page.locator('.file-table-row.file-node').first();
+        await fileRow.waitFor({ state: 'visible' });
+
+        // Select a file
+        await fileRow.click();
+        await expect(fileRow).toHaveClass(/file-node--selected/);
+
+        // Click on empty space in the file explorer
+        const emptySpace = page.locator('.file-explorer');
+        await emptySpace.click({ position: { x: 50, y: 50 } });
+
+        // File should be deselected
+        await expect(fileRow).not.toHaveClass(/file-node--selected/);
+    });
+
+    test('ctrl+click toggles file selection without deselecting others', async ({ page }) => {
+        await page.goto('/files');
+
+        const fileRows = page.locator('.file-table-row.file-node');
+        await fileRows.first().waitFor({ state: 'visible' });
+
+        // Select first file with regular click
+        await fileRows.nth(0).click();
+        await expect(fileRows.nth(0)).toHaveClass(/file-node--selected/);
+
+        // Ctrl+click second file (should add to selection)
+        await fileRows.nth(1).click({ modifiers: ['Control'] });
+        
+        // Both should be selected
+        await expect(fileRows.nth(0)).toHaveClass(/file-node--selected/);
+        await expect(fileRows.nth(1)).toHaveClass(/file-node--selected/);
+
+        // Ctrl+click second file again (should deselect it)
+        await fileRows.nth(1).click({ modifiers: ['Control'] });
+        
+        // First still selected, second deselected
+        await expect(fileRows.nth(0)).toHaveClass(/file-node--selected/);
+        await expect(fileRows.nth(1)).not.toHaveClass(/file-node--selected/);
+    });
+});

@@ -8,6 +8,11 @@ var contextMenuPosition = {
 var navigationListener = null;
 var loadedBook = null;
 
+// SELECTION STATE
+var selectedFiles = [];
+var clickTimer = null;
+var DOUBLE_CLICK_DELAY = 300; // ms
+
 // VIEW STATE MANAGEMENT
 var VIEW_STORAGE_KEY = 'fileExplorerView';
 
@@ -198,6 +203,128 @@ function closeFileViewer(event) {
     const fileViewer = document.getElementById('file-viewer');
     fileViewer.close();
     clearFileViewer();
+}
+
+// SELECTION MANAGEMENT (Google Drive style)
+
+/**
+ * Clear all selected files and remove visual selection
+ */
+function clearSelectedFiles() {
+    document.querySelectorAll('.file-node--selected').forEach(node => {
+        node.classList.remove('file-node--selected');
+    });
+    selectedFiles = [];
+}
+
+/**
+ * Select a single file node
+ */
+function selectFileNode(node) {
+    if (!node) return;
+    node.classList.add('file-node--selected');
+    const fileName = node.dataset.name;
+    if (fileName && !selectedFiles.includes(fileName)) {
+        selectedFiles.push(fileName);
+    }
+}
+
+/**
+ * Deselect a single file node
+ */
+function deselectFileNode(node) {
+    if (!node) return;
+    node.classList.remove('file-node--selected');
+    const fileName = node.dataset.name;
+    if (fileName) {
+        selectedFiles = selectedFiles.filter(name => name !== fileName);
+    }
+}
+
+/**
+ * Handle single click on a file node
+ * Single click = select the file (Google Drive style)
+ */
+function handleFileNodeClick(event, node) {
+    // Ignore if clicking on context menu trigger
+    if (event.target.closest('.context-menu-trigger') || 
+        event.target.closest('.grid-view-context-trigger') || 
+        event.target.closest('.column-view-context-trigger')) {
+        return;
+    }
+
+    // Clear any pending double-click timer
+    if (clickTimer) {
+        clearTimeout(clickTimer);
+        clickTimer = null;
+    }
+
+    // Wait to see if this becomes a double-click
+    clickTimer = setTimeout(() => {
+        clickTimer = null;
+        
+        // Single click behavior - toggle selection
+        if (event.ctrlKey || event.metaKey) {
+            // Ctrl/Cmd+Click: toggle this item's selection
+            if (node.classList.contains('file-node--selected')) {
+                deselectFileNode(node);
+            } else {
+                selectFileNode(node);
+            }
+        } else if (event.shiftKey) {
+            // Shift+Click: range selection (future enhancement)
+            // For now, just select this item
+            clearSelectedFiles();
+            selectFileNode(node);
+        } else {
+            // Regular click: select only this item
+            clearSelectedFiles();
+            selectFileNode(node);
+        }
+    }, DOUBLE_CLICK_DELAY);
+}
+
+/**
+ * Handle double-click on a file node
+ * Double-click = navigate/open the file (Google Drive style)
+ */
+function handleFileNodeDoubleClick(event, node) {
+    // Cancel the single-click timer
+    if (clickTimer) {
+        clearTimeout(clickTimer);
+        clickTimer = null;
+    }
+
+    preventDefault(event);
+
+    const fileType = node.dataset.fileType;
+    
+    if (fileType === 'folder') {
+        // Navigate to folder
+        const href = node.querySelector('[data-href]')?.dataset.href;
+        if (href) {
+            // Use HTMX to navigate
+            htmx.ajax('GET', href, {
+                target: '#file-explorer-view-content',
+                swap: 'innerHTML'
+            });
+            // Update browser URL
+            window.history.pushState({}, '', href);
+        }
+    } else {
+        // Open file viewer
+        const viewerPath = node.querySelector('[data-viewer-path]')?.dataset.viewerPath;
+        if (viewerPath) {
+            const fileViewer = document.getElementById('file-viewer');
+            if (fileViewer) {
+                fileViewer.showModal();
+                htmx.ajax('GET', viewerPath, {
+                    target: '#file-viewer-content',
+                    swap: 'innerHTML'
+                });
+            }
+        }
+    }
 }
 
 function supportsDirectoryUpload() {
@@ -851,5 +978,12 @@ document.addEventListener('click', function(event) {
         document.querySelectorAll('.context-menu:not(.hidden)').forEach(menu => {
             menu.classList.add('hidden');
         });
+    }
+    
+    // Clear file selection when clicking on empty space (not on a file node)
+    if (!event.target.closest('.file-node') && 
+        !event.target.closest('.context-menu') &&
+        !event.target.closest('dialog')) {
+        clearSelectedFiles();
     }
 });
