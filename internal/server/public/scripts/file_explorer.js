@@ -215,6 +215,7 @@ function clearSelectedFiles() {
         node.classList.remove('file-node--selected');
     });
     selectedFiles = [];
+    updateDownloadButton();
 }
 
 /**
@@ -235,6 +236,7 @@ function selectFileNode(node) {
     if (fileName && !selectedFiles.includes(fileName)) {
         selectedFiles.push(fileName);
     }
+    updateDownloadButton();
 }
 
 /**
@@ -246,6 +248,25 @@ function deselectFileNode(node) {
     const fileName = node.dataset.name;
     if (fileName) {
         selectedFiles = selectedFiles.filter(name => name !== fileName);
+    }
+    updateDownloadButton();
+}
+
+/**
+ * Update the download button state based on selection
+ */
+function updateDownloadButton() {
+    const downloadBtn = document.getElementById('file-download-button');
+    if (!downloadBtn) return;
+    
+    if (selectedFiles.length > 0) {
+        downloadBtn.disabled = false;
+        downloadBtn.classList.remove('btn--disabled');
+        downloadBtn.classList.add('btn--secondary');
+    } else {
+        downloadBtn.disabled = true;
+        downloadBtn.classList.remove('btn--secondary');
+        downloadBtn.classList.add('btn--disabled');
     }
 }
 
@@ -378,12 +399,16 @@ function dropOnNode(event, returnDir) {
 
 function downloadSelectedFiles(event, rootDir) {
     preventDefault(event);
+    if (!rootDir) rootDir = '';
+    
     selectedFiles.forEach(fileName => {
         const link = document.createElement('a');
         while (fileName.endsWith('/')) {
             fileName = fileName.slice(0, -1);
         }
-        link.href = `/api/v1/files${rootDir}/${fileName}`;
+        // Construct the proper path
+        const filePath = rootDir ? `/api/v1/files/${rootDir}/${fileName}` : `/api/v1/files/${fileName}`;
+        link.href = filePath;
         link.download = fileName;
         document.body.appendChild(link);
         link.click();

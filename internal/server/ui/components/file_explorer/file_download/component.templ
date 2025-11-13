@@ -1,4 +1,4 @@
-package file_do
+package file_download
 
 import "autobutler/internal/server/ui/types"
 
@@ -8,8 +8,9 @@ templ Component(pageState types.PageState) {
 		disabled
 		type="button"
 		class="btn btn--icon btn--disabled"
-		hx-on:click={ templ.JSFuncCall("downloadSelectedFiles", templ.JSExpression("event"), pageState.RootDir) }
+		onclick="downloadSelectedFiles(event, this.dataset.rootDir)"
 		title="Download selected files"
+		data-root-dir={ pageState.RootDir }
 	>
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
