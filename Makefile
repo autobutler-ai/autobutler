@@ -11,6 +11,15 @@ ifneq (,$(wildcard ./.env))
     export
 endif
 
+clean: clean/build clean/tests
+
+clean/build:
+	rm -rf ./build
+
+clean/tests:
+	rm -rf playwright-report/
+	rm -rf test-results/
+
 setup: setup/gotools setup/sqlc setup/templ ## Setup development environment
 
 setup/gotools: ## Install go tools
