@@ -11,7 +11,8 @@ var loadedBook = null;
 // SELECTION STATE
 var selectedFiles = [];
 var clickTimer = null;
-var DOUBLE_CLICK_DELAY = 200; // ms
+var DOUBLE_CLICK_DELAY = 300; // ms
+var lastSelectedNode = null; // Track last selected node for range selection
 
 // VIEW STATE MANAGEMENT
 var VIEW_STORAGE_KEY = 'fileExplorerView';
@@ -208,6 +209,33 @@ function closeFileViewer(event) {
 // SELECTION MANAGEMENT (Google Drive style)
 
 /**
+ * Get all file nodes in the current view in DOM order
+ */
+function getAllFileNodes() {
+    return Array.from(document.querySelectorAll('.file-node'));
+}
+
+/**
+ * Select a range of file nodes between two nodes (inclusive)
+ */
+function selectRange(startNode, endNode) {
+    const allNodes = getAllFileNodes();
+    const startIndex = allNodes.indexOf(startNode);
+    const endIndex = allNodes.indexOf(endNode);
+
+    if (startIndex === -1 || endIndex === -1) return;
+
+    // Determine the range direction
+    const minIndex = Math.min(startIndex, endIndex);
+    const maxIndex = Math.max(startIndex, endIndex);
+
+    // Select all nodes in the range
+    for (let i = minIndex; i <= maxIndex; i++) {
+        selectFileNode(allNodes[i]);
+    }
+}
+
+/**
  * Clear all selected files and remove visual selection
  */
 function clearSelectedFiles() {
@@ -236,6 +264,10 @@ function selectFileNode(node) {
     if (fileName && !selectedFiles.includes(fileName)) {
         selectedFiles.push(fileName);
     }
+
+    // Track this as the last selected node for range selection
+    lastSelectedNode = node;
+
     updateDownloadButton();
 }
 
@@ -301,10 +333,15 @@ function handleFileNodeClick(event, node) {
                 selectFileNode(node);
             }
         } else if (event.shiftKey) {
-            // Shift+Click: range selection (future enhancement)
-            // For now, just select this item
-            clearSelectedFiles();
-            selectFileNode(node);
+            // Shift+Click: range selection
+            if (lastSelectedNode && lastSelectedNode !== node) {
+                // Select range from last selected to current
+                selectRange(lastSelectedNode, node);
+            } else {
+                // No previous selection, just select this item
+                clearSelectedFiles();
+                selectFileNode(node);
+            }
         } else {
             // Regular click: select only this item
             clearSelectedFiles();
@@ -1030,10 +1067,10 @@ document.addEventListener('DOMContentLoaded', function() {
 function updateBackButton() {
     const backBtn = document.getElementById('nav-back-btn');
     if (!backBtn) return;
-    
+
     const currentPath = window.location.pathname;
     const isAtRoot = currentPath === '/files' || currentPath === '/files/';
-    
+
     if (isAtRoot) {
         backBtn.disabled = true;
     } else {
@@ -1046,12 +1083,12 @@ function updateBackButton() {
  */
 function navigateBack() {
     const currentPath = window.location.pathname;
-    
+
     // Calculate parent directory
     let parentPath = currentPath.replace(/\/$/, ''); // Remove trailing slash
     const lastSlashIndex = parentPath.lastIndexOf('/');
     parentPath = parentPath.substring(0, lastSlashIndex) || '/files';
-    
+
     // Navigate to parent
     window.history.pushState({}, '', parentPath);
     htmx.ajax('GET', parentPath, {
