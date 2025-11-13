@@ -329,20 +329,17 @@ function handleFileNodeDoubleClick(event, node) {
     const fileType = node.dataset.fileType;
 
     if (fileType === 'folder') {
-        // Navigate to folder
-        const href = node.querySelector('[data-href]')?.dataset.href;
+        // Navigate to folder - use the stored href
+        const contentCell = node.querySelector('[data-href]');
+        const href = contentCell?.dataset.href;
         if (href) {
-            // Use HTMX to navigate
-            htmx.ajax('GET', href, {
-                target: '#file-explorer-view-content',
-                swap: 'innerHTML'
-            });
-            // Update browser URL
-            window.history.pushState({}, '', href);
+            // Use window.location to navigate (simplest approach)
+            window.location.href = href;
         }
     } else {
         // Open file viewer
-        const viewerPath = node.querySelector('[data-viewer-path]')?.dataset.viewerPath;
+        const viewerCell = node.querySelector('[data-viewer-path]');
+        const viewerPath = viewerCell?.dataset.viewerPath;
         if (viewerPath) {
             const fileViewer = document.getElementById('file-viewer');
             if (fileViewer) {
@@ -399,17 +396,32 @@ function dropOnNode(event, returnDir) {
 
 function downloadSelectedFiles(event, rootDir) {
     preventDefault(event);
+    
+    console.log('Download requested. Root dir:', rootDir, 'Selected files:', selectedFiles);
+    
     if (!rootDir) rootDir = '';
     
     selectedFiles.forEach(fileName => {
         const link = document.createElement('a');
-        while (fileName.endsWith('/')) {
-            fileName = fileName.slice(0, -1);
+        let cleanFileName = fileName;
+        while (cleanFileName.endsWith('/')) {
+            cleanFileName = cleanFileName.slice(0, -1);
         }
-        // Construct the proper path
-        const filePath = rootDir ? `/api/v1/files/${rootDir}/${fileName}` : `/api/v1/files/${fileName}`;
+        
+        // Construct the proper path - ensure no double slashes
+        let filePath;
+        if (rootDir && rootDir !== '/') {
+            // Remove leading slash from rootDir if present
+            const cleanRootDir = rootDir.startsWith('/') ? rootDir.slice(1) : rootDir;
+            filePath = `/api/v1/files/${cleanRootDir}/${cleanFileName}`;
+        } else {
+            filePath = `/api/v1/files/${cleanFileName}`;
+        }
+        
+        console.log('Downloading:', filePath);
+        
         link.href = filePath;
-        link.download = fileName;
+        link.download = cleanFileName;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

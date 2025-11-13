@@ -8,7 +8,7 @@ templ Component(pageState types.PageState) {
 		disabled
 		type="button"
 		class="btn btn--icon btn--disabled"
-		onclick="downloadSelectedFiles(event, this.dataset.rootDir)"
+		onclick="(function(e){ downloadSelectedFiles(e, this.getAttribute('data-root-dir')); }).call(this, event)"
 		title="Download selected files"
 		data-root-dir={ pageState.RootDir }
 	>
