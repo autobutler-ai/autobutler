@@ -542,62 +542,6 @@ function navigateToParentAndPreview(event, parentPath, previewPath) {
     history.pushState({}, '', parentPath);
 }
 
-// SELECTO
-
-var SELECTABLE_TARGETS = ['.file-node'];
-
-function clearSelectedFiles() {
-    setSelectedFiles([]);
-    const fileNodes = document.querySelectorAll('.file-node');
-    fileNodes.forEach(node => {
-        node.classList.remove(...selectoClasses);
-    });
-}
-
-function setSelectedFiles(fileNames) {
-    selectedFiles = fileNames;
-    const hasSelectedFiles = selectedFiles.length > 0;
-    document.getElementById('file-delete-button').disabled = !hasSelectedFiles;
-    document.getElementById('file-download-button').disabled = !hasSelectedFiles;
-}
-
-// SELECTO
-var selectoClasses = ["bg-gray-100", "dark:bg-gray-800"];
-var selectedFiles = [];
-var selecto = new Selecto({
-    // The container to add a selection element
-    container: document.body,
-    // Selecto's root container (No transformed container. (default: null)
-    rootContainer: null,
-    // The area to drag selection element (default: container)
-    dragContainer: document.getElementById('file-explorer-selectable'),
-    // Targets to select. You can register a queryselector or an Element.
-    selectableTargets: SELECTABLE_TARGETS,
-    // Whether to select by click (default: true)
-    selectByClick: false,
-    // Whether to select from the target inside (default: true)
-    selectFromInside: true,
-    // After the select, whether to select the next target with the selected target (deselected if the target is selected again).
-    continueSelect: false,
-    // Determines which key to continue selecting the next target via keydown and keyup.
-    toggleContinueSelect: "shift",
-    // The container for keydown and keyup events
-    keyContainer: window,
-    // The rate at which the target overlaps the drag area to be selected. (default: 100)
-    // NOTE: Percentage of target area that must be enclosed by selection box to be selected.
-    hitRate: 1,
-});
-selecto.on("select", e => {
-    e.added.forEach(el => {
-        el.classList.add(...selectoClasses);
-    });
-    e.removed.forEach(el => {
-        el.classList.remove(...selectoClasses);
-    });
-});
-selecto.on('selectEnd', e => {
-    setSelectedFiles(e.selected.map(el => el.dataset.name));
-});
 
 // SORTING
 

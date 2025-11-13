@@ -19,7 +19,6 @@ templ Component(pageState types.PageState, files []fs.FileInfo, view string) {
 	// TODO: This works on firefox, but not on chrome as it will rapidly open and close the upload area.
 	{{ fileDir := util.GetFilesDir() }}
 	{{ availableBytes := util.GetAvailableSpaceInBytes(fileDir) }}
-	<script src="/public/vendor/selecto/selecto.min.js"></script>
 	<div
 		id="file-explorer"
 		class="file-explorer"

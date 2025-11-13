@@ -103,13 +103,6 @@ test.describe('Files Page', () => {
         await expect(statusArea).toBeAttached();
     });
 
-    test('loads Selecto library for multi-select', async ({ page }) => {
-        await page.goto('/files');
-
-        const selectoScript = page.locator('script[src="/public/vendor/selecto/selecto.min.js"]');
-        await expect(selectoScript).toBeAttached();
-    });
-
     test('loads file explorer script', async ({ page }) => {
         await page.goto('/files');
 
