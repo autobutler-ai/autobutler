@@ -162,7 +162,7 @@ test.describe('Files Page - File Upload', () => {
         const fileInput = page.locator('input[type="file"]');
 
         // Upload the first file
-        await fileInput.setInputFiles('./tests/e2e/fixtures/test-image.png');
+        await fileInput.setInputFiles('./tests/e2e/data/test-image.png');
         await page.waitForTimeout(100);
 
         // Verify the first file appears
@@ -170,7 +170,7 @@ test.describe('Files Page - File Upload', () => {
         await expect(firstFile).toBeVisible({ timeout: 10000 });
 
         // Upload the same file again
-        await fileInput.setInputFiles('./tests/e2e/fixtures/test-image.png');
+        await fileInput.setInputFiles('./tests/e2e/data/test-image.png');
         await page.waitForTimeout(100);
 
         // Verify the second file appears with _(1) suffix
@@ -178,7 +178,7 @@ test.describe('Files Page - File Upload', () => {
         await expect(secondFile).toBeVisible({ timeout: 10000 });
 
         // Upload the same file a third time
-        await fileInput.setInputFiles('./tests/e2e/fixtures/test-image.png');
+        await fileInput.setInputFiles('./tests/e2e/data/test-image.png');
         await page.waitForTimeout(100);
 
         // Verify the third file appears with _(2) suffix
@@ -203,7 +203,7 @@ test.describe('Files Page - File Upload', () => {
         const fileInput = page.locator('input[type="file"]');
 
         // Upload a file without extension first time
-        await fileInput.setInputFiles('./tests/e2e/fixtures/data.json');
+        await fileInput.setInputFiles('./tests/e2e/data/data.json');
         await page.waitForTimeout(1000);
 
         // Verify the first file appears
@@ -211,7 +211,7 @@ test.describe('Files Page - File Upload', () => {
         await expect(firstFile).toBeVisible({ timeout: 10000 });
 
         // Upload the same file again
-        await fileInput.setInputFiles('./tests/e2e/fixtures/data.json');
+        await fileInput.setInputFiles('./tests/e2e/data/data.json');
         await page.waitForTimeout(1000);
 
         // Verify the second file appears with _(1) suffix before extension
