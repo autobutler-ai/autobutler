@@ -137,7 +137,7 @@ func parseTimestamp(ts string) (int64, error) {
 
 func executeRangeQuery(ctx context.Context, query string, start, end, step int64) ([]QueryResult, error) {
 	// Parse the query to extract metric name and aggregation
-	metricName, aggregation, groupBy := parsePromQLQuery(query)
+	metricName, aggregation, groupBy, labelFilters := parsePromQLQuery(query)
 
 	if metricName == "" {
 		return nil, fmt.Errorf("could not parse metric name from query")
@@ -146,6 +146,31 @@ func executeRangeQuery(ctx context.Context, query string, start, end, step int64
 	// Convert timestamps to nanoseconds
 	startNano := start * 1e9
 	endNano := end * 1e9
+
+	// Build label filter SQL
+	labelFilterSQL := ""
+	labelFilterArgs := []interface{}{}
+	if len(labelFilters) > 0 {
+		for key, filter := range labelFilters {
+			if filter.operator == "=~" {
+				labelFilterSQL += ` AND EXISTS (
+					SELECT 1 FROM metric_attributes ma2
+					WHERE ma2.metric_id = m.id
+					AND ma2.key = ?
+					AND ma2.value LIKE ?
+				)`
+				labelFilterArgs = append(labelFilterArgs, key, filter.value)
+			} else if filter.operator == "!~" {
+				labelFilterSQL += ` AND NOT EXISTS (
+					SELECT 1 FROM metric_attributes ma2
+					WHERE ma2.metric_id = m.id
+					AND ma2.key = ?
+					AND ma2.value LIKE ?
+				)`
+				labelFilterArgs = append(labelFilterArgs, key, filter.value)
+			}
+		}
+	}
 
 	// Build SQL query based on aggregation
 	var sqlQuery string
@@ -163,10 +188,12 @@ func executeRangeQuery(ctx context.Context, query string, start, end, step int64
 			WHERE m.name = ?
 				AND m.timestamp >= ?
 				AND m.timestamp <= ?
+				` + labelFilterSQL + `
 			GROUP BY label_value, ts / (? * 1000000000)
 			ORDER BY ts
 		`
-		args = []interface{}{groupBy, metricName, startNano, endNano, step}
+		args = append([]interface{}{groupBy, metricName, startNano, endNano}, labelFilterArgs...)
+		args = append(args, step)
 	} else if aggregation != "" {
 		// Aggregated query without grouping
 		sqlQuery = `
@@ -275,7 +302,7 @@ func executeRangeQuery(ctx context.Context, query string, start, end, step int64
 }
 
 func executeInstantQuery(ctx context.Context, query string, queryTime time.Time) ([]QueryResult, error) {
-	metricName, aggregation, groupBy := parsePromQLQuery(query)
+	metricName, aggregation, groupBy, _ := parsePromQLQuery(query)
 
 	if metricName == "" {
 		return nil, fmt.Errorf("could not parse metric name from query")
@@ -381,8 +408,14 @@ func executeInstantQuery(ctx context.Context, query string, queryTime time.Time)
 	return results, nil
 }
 
-func parsePromQLQuery(query string) (metricName, aggregation, groupBy string) {
+type labelFilter struct {
+	operator string
+	value    string
+}
+
+func parsePromQLQuery(query string) (metricName, aggregation, groupBy string, labelFilters map[string]labelFilter) {
 	query = strings.TrimSpace(query)
+	labelFilters = make(map[string]labelFilter)
 
 	// Check for aggregation functions: sum, avg, min, max, count
 	aggregations := []string{"sum", "avg", "min", "max", "count"}
@@ -405,13 +438,40 @@ func parsePromQLQuery(query string) (metricName, aggregation, groupBy string) {
 		}
 	}
 
-	// Extract metric name (remove parentheses and brackets)
+	// Extract metric name and label selectors
 	query = strings.Trim(query, "()")
 	query = strings.TrimSpace(query)
 
-	// Remove label selectors like {job="something"}
+	// Extract label selectors like {http.route=~"/api.*"}
 	if idx := strings.Index(query, "{"); idx >= 0 {
 		metricName = strings.TrimSpace(query[:idx])
+		endIdx := strings.LastIndex(query, "}")
+		if endIdx > idx {
+			labelSelector := query[idx+1 : endIdx]
+			// Parse label filters
+			for _, filter := range strings.Split(labelSelector, ",") {
+				filter = strings.TrimSpace(filter)
+				if strings.Contains(filter, "=~") {
+					parts := strings.SplitN(filter, "=~", 2)
+					if len(parts) == 2 {
+						key := strings.TrimSpace(parts[0])
+						value := strings.Trim(strings.TrimSpace(parts[1]), `"`)
+						// Convert regex to SQL LIKE pattern
+						value = strings.ReplaceAll(value, ".*", "%")
+						labelFilters[key] = labelFilter{operator: "=~", value: value}
+					}
+				} else if strings.Contains(filter, "!~") {
+					parts := strings.SplitN(filter, "!~", 2)
+					if len(parts) == 2 {
+						key := strings.TrimSpace(parts[0])
+						value := strings.Trim(strings.TrimSpace(parts[1]), `"`)
+						// Convert regex to SQL LIKE pattern
+						value = strings.ReplaceAll(value, ".*", "%")
+						labelFilters[key] = labelFilter{operator: "!~", value: value}
+					}
+				}
+			}
+		}
 	} else {
 		metricName = query
 	}

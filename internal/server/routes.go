@@ -75,11 +75,11 @@ func setupStaticRoutes(router *gin.Engine) error {
 }
 
 func setupUiRoutes(router *gin.Engine) {
+	ui.SetupHealthRoutes(router)
 	ui.SetupIndexRoutes(router)
 	ui.SetupCalendarRoutes(router)
 	ui.SetupDevicesRoutes(router)
 	ui.SetupFileRoutes(router)
 	ui.SetupPhotoRoutes(router)
 	ui.SetupBookRoutes(router)
-	ui.SetupObservabilityRoutes(router)
 }
