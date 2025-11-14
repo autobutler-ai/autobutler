@@ -54,7 +54,7 @@ func Component(pageState types.PageState, photos []util.RecursivePhotoInfo, tota
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div id=\"mobile-photos-arrival-location\"></div><div id=\"photos-main\" class=\"photos-main\"><div class=\"photos-header\"><h2 class=\"photos-title\" onclick=\"console.error('📍 Scrolling to sidebar'); const sidebar = document.querySelector('.photos-sidebar'); if (sidebar) { sidebar.scrollIntoView({ behavior: 'smooth', block: 'start' }); } console.error('📍 Done'); return false;\" style=\"cursor: pointer;\">All Photos</h2><div class=\"photos-count\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div id=\"mobile-photos-arrival-location\"></div><div id=\"photos-main\" class=\"photos-main\"><div class=\"photos-header\"><h2 class=\"photos-title\" onclick=\"const arrival = document.getElementById('mobile-photos-arrival-location'); if (arrival) { arrival.scrollIntoView({ behavior: 'smooth', block: 'start' }); } return false;\" style=\"cursor: pointer;\">All Photos</h2><div class=\"photos-count\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -19,7 +19,7 @@ templ Component(pageState types.PageState, photos []util.RecursivePhotoInfo, tot
 				<div class="photos-header">
 					<h2 
 						class="photos-title" 
-						onclick="console.error('📍 Scrolling to sidebar'); const sidebar = document.querySelector('.photos-sidebar'); if (sidebar) { sidebar.scrollIntoView({ behavior: 'smooth', block: 'start' }); } console.error('📍 Done'); return false;" 
+						onclick="const arrival = document.getElementById('mobile-photos-arrival-location'); if (arrival) { arrival.scrollIntoView({ behavior: 'smooth', block: 'start' }); } return false;" 
 						style="cursor: pointer;"
 					>All Photos</h2>
 					<div class="photos-count">{ formatPhotoCount(totalPhotos) }</div>
