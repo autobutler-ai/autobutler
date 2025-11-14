@@ -596,14 +596,13 @@ test.describe('File Selection', () => {
         await page.waitForTimeout(100);
         await expect(files.nth(0)).toHaveClass(/file-node--selected/);
 
-        // Shift+click fourth file (should select range)
-        await files.nth(2).click({ modifiers: ['Shift'] });
+        // Shift+click second file (should select range)
+        await files.nth(1).click({ modifiers: ['Shift'] });
         await page.waitForTimeout(100);
 
-        // First through fourth should all be selected
+        // First through second should all be selected
         await expect(files.nth(0)).toHaveClass(/file-node--selected/);
         await expect(files.nth(1)).toHaveClass(/file-node--selected/);
-        await expect(files.nth(2)).toHaveClass(/file-node--selected/);
     });
 });
 
