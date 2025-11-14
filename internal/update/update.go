@@ -2,6 +2,7 @@ package update
 
 import (
 	"archive/tar"
+	"autobutler/internal/version"
 	"compress/gzip"
 	"fmt"
 	"io"
@@ -9,8 +10,33 @@ import (
 	"os"
 	"runtime"
 	"strings"
+	"syscall"
 	"time"
 )
+
+func ListPossibleUpdates() ([]GitHubRelease, error) {
+	releases, err := FetchGitHubReleases()
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch releases: %w", err)
+	}
+	currentVersion := version.GetVersion()
+	if currentVersion.Semver == "" {
+		return releases, nil
+	}
+	var possibleUpdates []GitHubRelease
+	for _, release := range releases {
+		comparison := version.CompareVersions(
+			version.Version{
+				Semver: release.TagName,
+			},
+			currentVersion,
+		)
+		if comparison > 0 {
+			possibleUpdates = append(possibleUpdates, release)
+		}
+	}
+	return possibleUpdates, nil
+}
 
 func Update(version string) error {
 	// Copy the current binary to some temporary system location
@@ -47,7 +73,12 @@ func Update(version string) error {
 
 func RestartAutobutler(delay time.Duration) {
 	time.Sleep(delay)
-	os.Exit(0)
+	executable, err := os.Executable()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Failed to get executable path for restart: %v\n", err)
+	} else {
+		syscall.Exec(executable, os.Args, os.Environ())
+	}
 }
 
 const binaryName = "autobutler"
