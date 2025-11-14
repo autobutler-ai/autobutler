@@ -18,7 +18,7 @@ func NewPageState() PageState {
 			newPage(PageCalendar, "/calendar"),
 			newPage(PagePhotos, "/photos"),
 			newPage(PageBooks, "/books"),
-			newPage(PageBooks, "/health"),
+			newPage(PageHealth, "/health"),
 		},
 	}
 }
