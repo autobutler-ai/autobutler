@@ -8,6 +8,12 @@ var contextMenuPosition = {
 var navigationListener = null;
 var loadedBook = null;
 
+// SELECTION STATE
+var selectedFiles = [];
+var clickTimer = null;
+var DOUBLE_CLICK_DELAY = 300; // ms
+var lastSelectedNode = null; // Track last selected node for range selection
+
 // VIEW STATE MANAGEMENT
 var VIEW_STORAGE_KEY = 'fileExplorerView';
 
@@ -200,6 +206,197 @@ function closeFileViewer(event) {
     clearFileViewer();
 }
 
+// SELECTION MANAGEMENT (Google Drive style)
+
+/**
+ * Get all file nodes in the current view in DOM order
+ */
+function getAllFileNodes() {
+    return Array.from(document.querySelectorAll('.file-node'));
+}
+
+/**
+ * Select a range of file nodes between two nodes (inclusive)
+ */
+function selectRange(startNode, endNode) {
+    const allNodes = getAllFileNodes();
+    const startIndex = allNodes.indexOf(startNode);
+    const endIndex = allNodes.indexOf(endNode);
+
+    if (startIndex === -1 || endIndex === -1) return;
+
+    // Determine the range direction
+    const minIndex = Math.min(startIndex, endIndex);
+    const maxIndex = Math.max(startIndex, endIndex);
+
+    // Select all nodes in the range
+    for (let i = minIndex; i <= maxIndex; i++) {
+        selectFileNode(allNodes[i]);
+    }
+}
+
+/**
+ * Clear all selected files and remove visual selection
+ */
+function clearSelectedFiles() {
+    document.querySelectorAll('.file-node--selected').forEach(node => {
+        node.classList.remove('file-node--selected');
+    });
+    selectedFiles = [];
+    updateDownloadButton();
+}
+
+/**
+ * Select a single file node
+ */
+function selectFileNode(node) {
+    if (!node) return;
+
+    // Add selection class with temporary logging for debugging
+    node.classList.add('file-node--selected');
+
+    // Temporarily log for debugging
+    if (window.location.search.includes('debug=1')) {
+        console.log('Selected node:', node, 'Classes:', node.className);
+    }
+
+    const fileName = node.dataset.name;
+    if (fileName && !selectedFiles.includes(fileName)) {
+        selectedFiles.push(fileName);
+    }
+
+    // Track this as the last selected node for range selection
+    lastSelectedNode = node;
+
+    updateDownloadButton();
+}
+
+/**
+ * Deselect a single file node
+ */
+function deselectFileNode(node) {
+    if (!node) return;
+    node.classList.remove('file-node--selected');
+    const fileName = node.dataset.name;
+    if (fileName) {
+        selectedFiles = selectedFiles.filter(name => name !== fileName);
+    }
+    updateDownloadButton();
+}
+
+/**
+ * Update the download button state based on selection
+ */
+function updateDownloadButton() {
+    const downloadBtn = document.getElementById('file-download-button');
+    if (!downloadBtn) return;
+
+    if (selectedFiles.length > 0) {
+        downloadBtn.disabled = false;
+        downloadBtn.classList.remove('btn--disabled');
+        downloadBtn.classList.add('btn--secondary');
+    } else {
+        downloadBtn.disabled = true;
+        downloadBtn.classList.remove('btn--secondary');
+        downloadBtn.classList.add('btn--disabled');
+    }
+}
+
+/**
+ * Handle single click on a file node
+ * Single click = select the file (Google Drive style)
+ */
+function handleFileNodeClick(event, node) {
+    // Ignore if clicking on context menu trigger
+    if (event.target.closest('.context-menu-trigger') ||
+        event.target.closest('.grid-view-context-trigger') ||
+        event.target.closest('.column-view-context-trigger')) {
+        return;
+    }
+
+    // Clear any pending double-click timer
+    if (clickTimer) {
+        clearTimeout(clickTimer);
+        clickTimer = null;
+    }
+
+    // Wait to see if this becomes a double-click
+    clickTimer = setTimeout(() => {
+        clickTimer = null;
+
+        // Single click behavior - toggle selection
+        if (event.ctrlKey || event.metaKey) {
+            // Ctrl/Cmd+Click: toggle this item's selection
+            if (node.classList.contains('file-node--selected')) {
+                deselectFileNode(node);
+            } else {
+                selectFileNode(node);
+            }
+        } else if (event.shiftKey) {
+            // Shift+Click: range selection
+            if (lastSelectedNode && lastSelectedNode !== node) {
+                // Select range from last selected to current
+                selectRange(lastSelectedNode, node);
+            } else {
+                // No previous selection, just select this item
+                clearSelectedFiles();
+                selectFileNode(node);
+            }
+        } else {
+            // Regular click: select only this item
+            clearSelectedFiles();
+            selectFileNode(node);
+        }
+    }, DOUBLE_CLICK_DELAY);
+}
+
+/**
+ * Handle double-click on a file node
+ * Double-click = navigate/open the file (Google Drive style)
+ */
+function handleFileNodeDoubleClick(event, node) {
+    // Cancel the single-click timer
+    if (clickTimer) {
+        clearTimeout(clickTimer);
+        clickTimer = null;
+    }
+
+    preventDefault(event);
+
+    const fileType = node.dataset.fileType;
+
+    if (fileType === 'folder') {
+        // Navigate to folder - use the stored href
+        const contentCell = node.querySelector('[data-href]');
+        const href = contentCell?.dataset.href;
+        if (href) {
+            // Use HTMX for smooth navigation without page reload
+            htmx.ajax('GET', href, {
+                target: '#file-explorer-view-content',
+                swap: 'innerHTML'
+            }).then(() => {
+                // Update the browser URL after successful navigation
+                window.history.pushState({}, '', href);
+                updateBackButton();
+            });
+        }
+    } else {
+        // Open file viewer
+        const viewerCell = node.querySelector('[data-viewer-path]');
+        const viewerPath = viewerCell?.dataset.viewerPath;
+        if (viewerPath) {
+            const fileViewer = document.getElementById('file-viewer');
+            if (fileViewer) {
+                fileViewer.showModal();
+                htmx.ajax('GET', viewerPath, {
+                    target: '#file-viewer-content',
+                    swap: 'innerHTML'
+                });
+            }
+        }
+    }
+}
+
 function supportsDirectoryUpload() {
     const supportsFileSystemAccessAPI = 'getAsFileSystemHandle' in DataTransferItem.prototype;
     const supportsWebkitGetAsEntry = 'webkitGetAsEntry' in DataTransferItem.prototype;
@@ -243,13 +440,32 @@ function dropOnNode(event, returnDir) {
 
 function downloadSelectedFiles(event, rootDir) {
     preventDefault(event);
+
+    console.log('Download requested. Root dir:', rootDir, 'Selected files:', selectedFiles);
+
+    if (!rootDir) rootDir = '';
+
     selectedFiles.forEach(fileName => {
         const link = document.createElement('a');
-        while (fileName.endsWith('/')) {
-            fileName = fileName.slice(0, -1);
+        let cleanFileName = fileName;
+        while (cleanFileName.endsWith('/')) {
+            cleanFileName = cleanFileName.slice(0, -1);
         }
-        link.href = `/api/v1/files${rootDir}/${fileName}`;
-        link.download = fileName;
+
+        // Construct the proper path - ensure no double slashes
+        let filePath;
+        if (rootDir && rootDir !== '/') {
+            // Remove leading slash from rootDir if present
+            const cleanRootDir = rootDir.startsWith('/') ? rootDir.slice(1) : rootDir;
+            filePath = `/api/v1/files/${cleanRootDir}/${cleanFileName}`;
+        } else {
+            filePath = `/api/v1/files/${cleanFileName}`;
+        }
+
+        console.log('Downloading:', filePath);
+
+        link.href = filePath;
+        link.download = cleanFileName;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -542,62 +758,6 @@ function navigateToParentAndPreview(event, parentPath, previewPath) {
     history.pushState({}, '', parentPath);
 }
 
-// SELECTO
-
-var SELECTABLE_TARGETS = ['.file-node'];
-
-function clearSelectedFiles() {
-    setSelectedFiles([]);
-    const fileNodes = document.querySelectorAll('.file-node');
-    fileNodes.forEach(node => {
-        node.classList.remove(...selectoClasses);
-    });
-}
-
-function setSelectedFiles(fileNames) {
-    selectedFiles = fileNames;
-    const hasSelectedFiles = selectedFiles.length > 0;
-    document.getElementById('file-delete-button').disabled = !hasSelectedFiles;
-    document.getElementById('file-download-button').disabled = !hasSelectedFiles;
-}
-
-// SELECTO
-var selectoClasses = ["bg-gray-100", "dark:bg-gray-800"];
-var selectedFiles = [];
-var selecto = new Selecto({
-    // The container to add a selection element
-    container: document.body,
-    // Selecto's root container (No transformed container. (default: null)
-    rootContainer: null,
-    // The area to drag selection element (default: container)
-    dragContainer: document.getElementById('file-explorer-selectable'),
-    // Targets to select. You can register a queryselector or an Element.
-    selectableTargets: SELECTABLE_TARGETS,
-    // Whether to select by click (default: true)
-    selectByClick: false,
-    // Whether to select from the target inside (default: true)
-    selectFromInside: true,
-    // After the select, whether to select the next target with the selected target (deselected if the target is selected again).
-    continueSelect: false,
-    // Determines which key to continue selecting the next target via keydown and keyup.
-    toggleContinueSelect: "shift",
-    // The container for keydown and keyup events
-    keyContainer: window,
-    // The rate at which the target overlaps the drag area to be selected. (default: 100)
-    // NOTE: Percentage of target area that must be enclosed by selection box to be selected.
-    hitRate: 1,
-});
-selecto.on("select", e => {
-    e.added.forEach(el => {
-        el.classList.add(...selectoClasses);
-    });
-    e.removed.forEach(el => {
-        el.classList.remove(...selectoClasses);
-    });
-});
-selecto.on('selectEnd', e => {
-    setSelectedFiles(e.selected.map(el => el.dataset.name));
-});
 
 // SORTING
 
@@ -899,6 +1059,61 @@ document.addEventListener('DOMContentLoaded', function() {
     scrollColumnViewToRight();
 });
 
+// NAVIGATION MANAGEMENT
+
+/**
+ * Update the back button state based on current path
+ */
+function updateBackButton() {
+    const backBtn = document.getElementById('nav-back-btn');
+    if (!backBtn) return;
+
+    const currentPath = window.location.pathname;
+    const isAtRoot = currentPath === '/files' || currentPath === '/files/';
+
+    if (isAtRoot) {
+        backBtn.disabled = true;
+    } else {
+        backBtn.disabled = false;
+    }
+}
+
+/**
+ * Navigate back to previous folder
+ */
+function navigateBack() {
+    const currentPath = window.location.pathname;
+
+    // Calculate parent directory
+    let parentPath = currentPath.replace(/\/$/, ''); // Remove trailing slash
+    const lastSlashIndex = parentPath.lastIndexOf('/');
+    parentPath = parentPath.substring(0, lastSlashIndex) || '/files';
+
+    // Navigate to parent
+    window.history.pushState({}, '', parentPath);
+    htmx.ajax('GET', parentPath, {
+        target: '#file-explorer-view-content',
+        swap: 'innerHTML'
+    });
+    updateBackButton();
+}
+
+// Handle browser back/forward buttons
+window.addEventListener('popstate', function(event) {
+    // Reload the file explorer content for the current URL
+    const currentPath = window.location.pathname;
+    htmx.ajax('GET', currentPath, {
+        target: '#file-explorer-view-content',
+        swap: 'innerHTML'
+    });
+    updateBackButton();
+});
+
+// Update back button on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updateBackButton();
+});
+
 // CONTEXT MENU GLOBAL HANDLERS
 // Close context menus when clicking outside
 document.addEventListener('click', function(event) {
@@ -907,5 +1122,12 @@ document.addEventListener('click', function(event) {
         document.querySelectorAll('.context-menu:not(.hidden)').forEach(menu => {
             menu.classList.add('hidden');
         });
+    }
+
+    // Clear file selection when clicking on empty space (not on a file node)
+    if (!event.target.closest('.file-node') &&
+        !event.target.closest('.context-menu') &&
+        !event.target.closest('dialog')) {
+        clearSelectedFiles();
     }
 });
