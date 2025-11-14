@@ -21,6 +21,7 @@ func init() {
 	}
 
 	dataFilePath := filepath.Join(dataDir, "autobutler.db")
+	healthFilePath := filepath.Join(dataDir, "autobutler.health.db")
 
 	Instance.Db, err = sql.Open("sqlite", dataFilePath)
 	if err != nil {
@@ -37,6 +38,12 @@ func init() {
 	}
 	if err := seedData(); err != nil {
 		panic(fmt.Sprintf("failed to seed database: %v", err))
+	}
+
+	// Initialize health database for OTEL traces (no migrations needed)
+	HealthInstance.Db, err = sql.Open("sqlite", healthFilePath)
+	if err != nil {
+		panic(fmt.Sprintf("failed to open health database: %v", err))
 	}
 }
 
