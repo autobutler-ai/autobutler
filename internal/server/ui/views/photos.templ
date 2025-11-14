@@ -29,7 +29,7 @@ templ Photos(pageState types.PageState, summary storage.Summary) {
 						firstPage = photoFiles[:pageSize]
 					}
 				}}
-				<div 
+				<div
 					id="photo-debug-initial"
 					data-total={ fmt.Sprintf("%d", totalPhotos) }
 					data-first-page={ fmt.Sprintf("%d", len(firstPage)) }
