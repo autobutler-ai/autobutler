@@ -10,7 +10,6 @@ import (
 	"os"
 	"runtime"
 	"strings"
-	"syscall"
 )
 
 func ListPossibleUpdates() ([]GitHubRelease, error) {
@@ -71,19 +70,8 @@ func Update(version string) error {
 }
 
 func RestartAutobutler() {
-	executable, err := os.Executable()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to get executable path for restart: %v\n", err)
-		os.Exit(1)
-		return
-	}
-
-	fmt.Println("Restarting autobutler...")
-	// Replace the current process with a new instance
-	if err := syscall.Exec(executable, os.Args, os.Environ()); err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to restart autobutler: %v\n", err)
-		os.Exit(1)
-	}
+	fmt.Println("Update complete. Exiting to allow process manager (launchctl/systemd) to restart...")
+	os.Exit(0)
 }
 
 const binaryName = "autobutler"
