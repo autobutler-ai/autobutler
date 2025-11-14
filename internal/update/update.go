@@ -8,10 +8,10 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"os/exec"
 	"runtime"
 	"strings"
 	"syscall"
-	"time"
 )
 
 func ListPossibleUpdates() ([]GitHubRelease, error) {
@@ -71,14 +71,38 @@ func Update(version string) error {
 	return nil
 }
 
-func RestartAutobutler(delay time.Duration) {
-	time.Sleep(delay)
+func RestartAutobutler() {
 	executable, err := os.Executable()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to get executable path for restart: %v\n", err)
-	} else {
-		syscall.Exec(executable, os.Args, os.Environ())
+		os.Exit(1)
+		return
 	}
+
+	helperCmd := fmt.Sprintf("sleep 2 && %s %s", executable, strings.Join(os.Args[1:], " "))
+	cmd := exec.Command("sh", "-c", helperCmd)
+	cmd.Env = os.Environ()
+
+	// Fully detach the helper process
+	cmd.SysProcAttr = &syscall.SysProcAttr{
+		Setpgid: true,
+		Pgid:    0,
+	}
+
+	// Start the helper process
+	if err := cmd.Start(); err != nil {
+		fmt.Fprintf(os.Stderr, "Failed to schedule restart: %v\n", err)
+		os.Exit(1)
+		return
+	}
+
+	// Detach from the helper process
+	cmd.Process.Release()
+
+	fmt.Println("Restart scheduled. Exiting current process...")
+
+	// Exit immediately to release the port
+	os.Exit(0)
 }
 
 const binaryName = "autobutler"

@@ -26,10 +26,10 @@ func GetVersion() Version {
 
 // CompareVersions compares two Version structs based on their Semver fields.
 // It returns -1 if v1 < v2, 0 if v1 == v2, and 1 if v1 > v2.
-// If either version has NoSemver, it returns 0.
+// If either version has NoSemver, it returns 2.
 func CompareVersions(v1, v2 Version) int {
 	if v1.Semver == NoSemver || v2.Semver == NoSemver {
-		return 0
+		return 2
 	}
 	v1Parts := strings.Split(strings.TrimPrefix(v1.Semver, "v"), ".")
 	v2Parts := strings.Split(strings.TrimPrefix(v2.Semver, "v"), ".")
