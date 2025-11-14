@@ -8,7 +8,6 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"os/exec"
 	"runtime"
 	"strings"
 	"syscall"
@@ -79,30 +78,12 @@ func RestartAutobutler() {
 		return
 	}
 
-	helperCmd := fmt.Sprintf("sleep 2 && %s %s", executable, strings.Join(os.Args[1:], " "))
-	cmd := exec.Command("sh", "-c", helperCmd)
-	cmd.Env = os.Environ()
-
-	// Fully detach the helper process
-	cmd.SysProcAttr = &syscall.SysProcAttr{
-		Setpgid: true,
-		Pgid:    0,
-	}
-
-	// Start the helper process
-	if err := cmd.Start(); err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to schedule restart: %v\n", err)
+	fmt.Println("Restarting autobutler...")
+	// Replace the current process with a new instance
+	if err := syscall.Exec(executable, os.Args, os.Environ()); err != nil {
+		fmt.Fprintf(os.Stderr, "Failed to restart autobutler: %v\n", err)
 		os.Exit(1)
-		return
 	}
-
-	// Detach from the helper process
-	cmd.Process.Release()
-
-	fmt.Println("Restart scheduled. Exiting current process...")
-
-	// Exit immediately to release the port
-	os.Exit(0)
 }
 
 const binaryName = "autobutler"
