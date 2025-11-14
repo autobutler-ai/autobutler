@@ -240,9 +240,13 @@
 		flex-direction: column;
 	}
 	
-	/* Hide sidebar on mobile by default */
+	/* Show sidebar on mobile - render it normally at the top */
 	.photos-sidebar {
-		display: none;
+		display: block;
+		width: 100%;
+		height: auto;
+		border-right: none;
+		border-bottom: 1px solid var(--color-gray-800);
 	}
 	
 	.photos-main {

@@ -12,7 +12,7 @@ templ Component(pageState types.PageState, photos []util.RecursivePhotoInfo) {
 		@file_viewer.Component()
 		<div class="photos-container">
 			@Sidebar()
-			<div class="photos-main">
+			<div id="photos-main" class="photos-main">
 				<div class="photos-header">
 					<h2 class="photos-title">All Photos</h2>
 					<div class="photos-count">{ formatPhotoCount(len(photos)) }</div>
@@ -22,6 +22,16 @@ templ Component(pageState types.PageState, photos []util.RecursivePhotoInfo) {
 		</div>
 	</div>
 	<script src="/public/scripts/file_explorer.js"></script>
+	<script>
+		// On mobile, scroll to start at photos section
+		if (window.innerWidth <= 768) {
+			const photosMain = document.getElementById('photos-main');
+			if (photosMain) {
+				// Scroll to the photos section immediately
+				photosMain.scrollIntoView({ behavior: 'instant', block: 'start' });
+			}
+		}
+	</script>
 }
 
 templ PhotoGrid(pageState types.PageState, photos []util.RecursivePhotoInfo) {
