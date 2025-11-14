@@ -58,14 +58,14 @@ func VersionDropdown(releases []update.GitHubRelease) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\" hx-target=\"#update-status\" hx-swap=\"innerHTML\"><span>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\" hx-target=\"#update-status\" hx-swap=\"innerHTML\" hx-on::after-request=\"window.location.reload()\"><span>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(release.TagName)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/landing_nav/version_dropdown.templ`, Line: 24, Col: 29}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/landing_nav/version_dropdown.templ`, Line: 25, Col: 29}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
