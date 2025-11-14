@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strconv"
 
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/sdk/metric"
@@ -313,10 +314,16 @@ func (e *MetricsExporter) insertAttributes(ctx context.Context, tx *sql.Tx, metr
 	iter := attrs.Iter()
 	for iter.Next() {
 		attr := iter.Attribute()
+		valueType := attr.Value.Type()
+		value := attr.Value.AsString()
+		switch valueType {
+		case attribute.INT64:
+			value = strconv.Itoa(int(attr.Value.AsInt64()))
+		}
 		_, err := tx.ExecContext(ctx, `
 			INSERT INTO metric_attributes (metric_id, key, value)
 			VALUES (?, ?, ?)
-		`, metricID, string(attr.Key), attr.Value.AsString())
+		`, metricID, string(attr.Key), value)
 		if err != nil {
 			return err
 		}
