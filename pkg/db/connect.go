@@ -8,7 +8,8 @@ import (
 )
 
 var (
-	Instance Database
+	Instance       Database
+	HealthInstance Database
 )
 
 type Database struct {
