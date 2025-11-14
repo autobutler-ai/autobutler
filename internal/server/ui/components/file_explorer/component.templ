@@ -1,6 +1,7 @@
 package file_explorer
 
 import (
+	"autobutler/internal/server/ui/components/file_explorer/file_download"
 	"autobutler/internal/server/ui/components/file_explorer/file_navigation"
 	"autobutler/internal/server/ui/components/file_explorer/file_upload"
 	"autobutler/internal/server/ui/components/file_explorer/file_viewer"
@@ -19,7 +20,6 @@ templ Component(pageState types.PageState, files []fs.FileInfo, view string) {
 	// TODO: This works on firefox, but not on chrome as it will rapidly open and close the upload area.
 	{{ fileDir := util.GetFilesDir() }}
 	{{ availableBytes := util.GetAvailableSpaceInBytes(fileDir) }}
-	<script src="/public/vendor/selecto/selecto.min.js"></script>
 	<div
 		id="file-explorer"
 		class="file-explorer"
@@ -30,7 +30,10 @@ templ Component(pageState types.PageState, files []fs.FileInfo, view string) {
 				<h2 class="file-explorer-title">File Explorer</h2>
 				<div class="file-explorer-space-info">Available Space: { fmt.Sprintf("%.2fGB", util.BytesToGB(availableBytes)) }</div>
 			</div>
-			@file_navigation.Component(pageState)
+			<div style="display: flex; gap: 0.5rem; align-items: center;">
+				@file_navigation.Component(pageState)
+				@file_download.Component(pageState)
+			</div>
 			@file_upload.Component(pageState)
 			@dnd(pageState)
 		</div>
