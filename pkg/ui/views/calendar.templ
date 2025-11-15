@@ -1,0 +1,36 @@
+package views
+
+import (
+	"autobutler/pkg/calendar"
+	"autobutler/pkg/ui/components/body"
+	cal "autobutler/pkg/ui/components/calendar"
+	"autobutler/pkg/ui/components/header"
+	"autobutler/pkg/ui/types"
+	"time"
+)
+
+templ Calendar(pageState types.PageState) {
+	{{ pageState.CurrentPageName = types.PageCalendar }}
+	<!DOCTYPE html>
+	<html lang="en">
+		@header.Component()
+		@body.Component(pageState) {
+			@cal.Component(calendar.CalendarViewMonth)
+		}
+	</html>
+}
+
+templ CalendarWithTime(pageState types.PageState, targetTime *time.Time) {
+	{{ pageState.CurrentPageName = types.PageCalendar }}
+	<!DOCTYPE html>
+	<html lang="en">
+		@header.Component()
+		@body.Component(pageState) {
+			if targetTime != nil {
+				@cal.ComponentWithTime(calendar.CalendarViewMonth, *targetTime)
+			} else {
+				@cal.Component(calendar.CalendarViewMonth)
+			}
+		}
+	</html>
+}

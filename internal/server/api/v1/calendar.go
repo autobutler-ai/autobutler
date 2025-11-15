@@ -2,10 +2,10 @@ package v1
 
 import (
 	"autobutler/internal/db"
-	cal "autobutler/internal/server/ui/components/calendar"
-	"autobutler/internal/server/ui/components/calendar/event_editor"
 	"autobutler/pkg/api"
 	"autobutler/pkg/calendar"
+	cal "autobutler/pkg/ui/components/calendar"
+	"autobutler/pkg/ui/components/calendar/event_editor"
 	"autobutler/pkg/util/serverutil"
 	"context"
 	"strconv"
