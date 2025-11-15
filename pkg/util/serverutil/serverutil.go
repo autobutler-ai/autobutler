@@ -1,6 +1,7 @@
 package serverutil
 
 import (
+	"autobutler/internal/db"
 	"autobutler/pkg/api"
 	"autobutler/pkg/util/stringutil"
 	"fmt"
@@ -10,6 +11,31 @@ import (
 	"github.com/a-h/templ"
 	"github.com/gin-gonic/gin"
 )
+
+type Dependencies interface {
+	Database() *db.Database
+	HealthDatabase() *db.Database
+}
+
+type dependencies struct {
+	database       *db.Database
+	healthDatabase *db.Database
+}
+
+func NewDependencies(db *db.Database, healthDb *db.Database) Dependencies {
+	return &dependencies{
+		database:       db,
+		healthDatabase: healthDb,
+	}
+}
+
+func (d *dependencies) Database() *db.Database {
+	return d.database
+}
+
+func (d *dependencies) HealthDatabase() *db.Database {
+	return d.healthDatabase
+}
 
 func wrapApiRoute(handler func(c *gin.Context) *api.Response) gin.HandlerFunc {
 	return func(c *gin.Context) {

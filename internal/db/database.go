@@ -13,8 +13,8 @@ import (
 )
 
 var (
-	Instance       Database
-	HealthInstance Database
+	Instance       *Database
+	HealthInstance *Database
 )
 
 type Database struct {

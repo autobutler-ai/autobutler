@@ -7,29 +7,30 @@ import (
 	"autobutler/pkg/ui/components/header"
 	"autobutler/pkg/ui/types"
 	"time"
+	"autobutler/pkg/util/serverutil"
 )
 
-templ Calendar(pageState types.PageState) {
+templ Calendar(pageState types.PageState, dependencies serverutil.Dependencies) {
 	{{ pageState.CurrentPageName = types.PageCalendar }}
 	<!DOCTYPE html>
 	<html lang="en">
 		@header.Component()
 		@body.Component(pageState) {
-			@cal.Component(calendar.CalendarViewMonth)
+			@cal.Component(calendar.CalendarViewMonth, dependencies)
 		}
 	</html>
 }
 
-templ CalendarWithTime(pageState types.PageState, targetTime *time.Time) {
+templ CalendarWithTime(pageState types.PageState, targetTime *time.Time, dependencies serverutil.Dependencies) {
 	{{ pageState.CurrentPageName = types.PageCalendar }}
 	<!DOCTYPE html>
 	<html lang="en">
 		@header.Component()
 		@body.Component(pageState) {
 			if targetTime != nil {
-				@cal.ComponentWithTime(calendar.CalendarViewMonth, *targetTime)
+				@cal.ComponentWithTime(calendar.CalendarViewMonth, *targetTime, dependencies)
 			} else {
-				@cal.Component(calendar.CalendarViewMonth)
+				@cal.Component(calendar.CalendarViewMonth, dependencies)
 			}
 		}
 	</html>

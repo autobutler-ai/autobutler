@@ -12,7 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SetupCalendarRoutes(router *gin.Engine) {
+func SetupCalendarRoutes(router *gin.Engine, dependencies serverutil.Dependencies) {
 	serverutil.UiRoute(router, "/calendar", func(c *gin.Context) templ.Component {
 		yearStr := c.Query("year")
 		monthStr := c.Query("month")
@@ -29,6 +29,6 @@ func SetupCalendarRoutes(router *gin.Engine) {
 				}
 			}
 		}
-		return views.CalendarWithTime(types.NewPageState(), targetTime)
+		return views.CalendarWithTime(types.NewPageState(), targetTime, dependencies)
 	})
 }

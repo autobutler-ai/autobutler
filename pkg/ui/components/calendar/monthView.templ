@@ -7,10 +7,11 @@ import "autobutler/pkg/calendar"
 import "autobutler/internal/db"
 import "autobutler/pkg/ui/components/icons/left_arrow"
 import "autobutler/pkg/ui/components/icons/right_arrow"
+import "autobutler/pkg/util/serverutil"
 
-templ monthView(now time.Time) {
+templ monthView(now time.Time, dependencies serverutil.Dependencies) {
 	{{ monthInfo := calendar.NewMonthInfoFromTime(now) }}
-	{{ events, err := db.Instance.QueryCalendarEventsForMonth(db.DefaultCalendarId, now.Year(), now.Month(), true) }}
+	{{ events, err := dependencies.Database().QueryCalendarEventsForMonth(db.DefaultCalendarId, now.Year(), now.Month(), true) }}
 	if err != nil {
 		<p class="error-text">Error loading events: { err.Error() }</p>
 	}

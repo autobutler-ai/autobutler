@@ -7,6 +7,7 @@ import (
 	"autobutler/pkg/ui"
 	"autobutler/pkg/ui/types"
 	"autobutler/pkg/ui/views"
+	"autobutler/pkg/util/serverutil"
 
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
@@ -15,18 +16,18 @@ import (
 //go:embed public
 var public embed.FS
 
-func setupRoutes(router *gin.Engine) {
-	setupApiRoutes(router)
+func setupRoutes(router *gin.Engine, dependencies serverutil.Dependencies) {
+	setupApiRoutes(router, dependencies)
 	setupStaticRoutes(router)
-	setupUiRoutes(router)
+	setupUiRoutes(router, dependencies)
 }
 
-func setupApiRoutes(router *gin.Engine) {
+func setupApiRoutes(router *gin.Engine, dependencies serverutil.Dependencies) {
 	apiV1Group := router.Group("/api/v1")
 	v1.SetupMetricsRoutes(apiV1Group, metricsExporter)
 	v1.SetupDocRoutes(apiV1Group)
 	v1.SetupFilesRoutes(apiV1Group)
-	v1.SetupCalendarRoutes(apiV1Group)
+	v1.SetupCalendarRoutes(apiV1Group, dependencies)
 	v1.SetupStorageRoutes(apiV1Group)
 	v1.SetupUpdateRoutes(apiV1Group)
 	v1.SetupHealthRoutes(apiV1Group)
@@ -52,10 +53,10 @@ func setupStaticRoutes(router *gin.Engine) error {
 	return nil
 }
 
-func setupUiRoutes(router *gin.Engine) {
+func setupUiRoutes(router *gin.Engine, dependencies serverutil.Dependencies) {
 	ui.SetupHealthRoutes(router)
 	ui.SetupIndexRoutes(router)
-	ui.SetupCalendarRoutes(router)
+	ui.SetupCalendarRoutes(router, dependencies)
 	ui.SetupDevicesRoutes(router)
 	ui.SetupFileRoutes(router)
 	ui.SetupPhotoRoutes(router)

@@ -3,15 +3,16 @@ package calendar
 import (
 	"autobutler/pkg/calendar"
 	"autobutler/pkg/ui/components/calendar/event_editor"
+	"autobutler/pkg/util/serverutil"
 	"time"
 )
 
-templ Component(calendarView calendar.CalendarView) {
+templ Component(calendarView calendar.CalendarView, dependencies serverutil.Dependencies) {
 	{{ now := time.Now() }}
-	<div id="calendar" class="calendar">
+	<div id="calendar" class="calendar">s
 		switch calendarView {
 			case calendar.CalendarViewMonth:
-				@monthView(now)
+				@monthView(now, dependencies)
 			case calendar.CalendarViewWeek:
 				<p>Week View - Coming Soon</p>
 			case calendar.CalendarViewDay:
@@ -33,11 +34,11 @@ templ Component(calendarView calendar.CalendarView) {
 	<script src="/public/scripts/calendar.js"></script>
 }
 
-templ ComponentWithTime(calendarView calendar.CalendarView, targetTime time.Time) {
+templ ComponentWithTime(calendarView calendar.CalendarView, targetTime time.Time, dependencies serverutil.Dependencies) {
 	<div id="calendar" class="calendar">
 		switch calendarView {
 			case calendar.CalendarViewMonth:
-				@monthView(targetTime)
+				@monthView(targetTime, dependencies)
 			case calendar.CalendarViewWeek:
 				<p>Week View - Coming Soon</p>
 			case calendar.CalendarViewDay:

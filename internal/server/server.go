@@ -3,6 +3,7 @@ package server
 import (
 	"autobutler/internal/db"
 	"autobutler/pkg/botel/exporters/botelsqlite"
+	"autobutler/pkg/util/serverutil"
 	"context"
 	"fmt"
 	"log"
@@ -80,10 +81,12 @@ func StartServer() error {
 		}
 	}()
 
+	dependencies := serverutil.NewDependencies(db.Instance, db.HealthInstance)
+
 	router := gin.Default()
 	// IMPORTANT: UseMiddleware MUST be called before setupRoutes
 	useMiddleware(router)
-	setupRoutes(router)
+	setupRoutes(router, dependencies)
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"

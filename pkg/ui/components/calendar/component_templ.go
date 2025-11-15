@@ -11,10 +11,11 @@ import templruntime "github.com/a-h/templ/runtime"
 import (
 	"autobutler/pkg/calendar"
 	"autobutler/pkg/ui/components/calendar/event_editor"
+	"autobutler/pkg/util/serverutil"
 	"time"
 )
 
-func Component(calendarView calendar.CalendarView) templ.Component {
+func Component(calendarView calendar.CalendarView, dependencies serverutil.Dependencies) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -36,13 +37,13 @@ func Component(calendarView calendar.CalendarView) templ.Component {
 		}
 		ctx = templ.ClearChildren(ctx)
 		now := time.Now()
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"calendar\" class=\"calendar\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"calendar\" class=\"calendar\">s ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		switch calendarView {
 		case calendar.CalendarViewMonth:
-			templ_7745c5c3_Err = monthView(now).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = monthView(now, dependencies).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -69,7 +70,7 @@ func Component(calendarView calendar.CalendarView) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(now.Year())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pkg/ui/components/calendar/component.templ`, Line: 25, Col: 30}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pkg/ui/components/calendar/component.templ`, Line: 26, Col: 30}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -82,7 +83,7 @@ func Component(calendarView calendar.CalendarView) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(calendar.MonthToInt(now.Month()))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pkg/ui/components/calendar/component.templ`, Line: 26, Col: 53}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pkg/ui/components/calendar/component.templ`, Line: 27, Col: 53}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -104,7 +105,7 @@ func Component(calendarView calendar.CalendarView) templ.Component {
 	})
 }
 
-func ComponentWithTime(calendarView calendar.CalendarView, targetTime time.Time) templ.Component {
+func ComponentWithTime(calendarView calendar.CalendarView, targetTime time.Time, dependencies serverutil.Dependencies) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -131,7 +132,7 @@ func ComponentWithTime(calendarView calendar.CalendarView, targetTime time.Time)
 		}
 		switch calendarView {
 		case calendar.CalendarViewMonth:
-			templ_7745c5c3_Err = monthView(targetTime).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = monthView(targetTime, dependencies).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -158,7 +159,7 @@ func ComponentWithTime(calendarView calendar.CalendarView, targetTime time.Time)
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(targetTime.Year())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pkg/ui/components/calendar/component.templ`, Line: 51, Col: 37}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pkg/ui/components/calendar/component.templ`, Line: 52, Col: 37}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -171,7 +172,7 @@ func ComponentWithTime(calendarView calendar.CalendarView, targetTime time.Time)
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(calendar.MonthToInt(targetTime.Month()))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pkg/ui/components/calendar/component.templ`, Line: 52, Col: 60}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pkg/ui/components/calendar/component.templ`, Line: 53, Col: 60}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {

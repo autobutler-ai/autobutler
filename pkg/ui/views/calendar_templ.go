@@ -14,10 +14,11 @@ import (
 	cal "autobutler/pkg/ui/components/calendar"
 	"autobutler/pkg/ui/components/header"
 	"autobutler/pkg/ui/types"
+	"autobutler/pkg/util/serverutil"
 	"time"
 )
 
-func Calendar(pageState types.PageState) templ.Component {
+func Calendar(pageState types.PageState, dependencies serverutil.Dependencies) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -59,7 +60,7 @@ func Calendar(pageState types.PageState) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = cal.Component(calendar.CalendarViewMonth).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = cal.Component(calendar.CalendarViewMonth, dependencies).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -77,7 +78,7 @@ func Calendar(pageState types.PageState) templ.Component {
 	})
 }
 
-func CalendarWithTime(pageState types.PageState, targetTime *time.Time) templ.Component {
+func CalendarWithTime(pageState types.PageState, targetTime *time.Time, dependencies serverutil.Dependencies) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -120,12 +121,12 @@ func CalendarWithTime(pageState types.PageState, targetTime *time.Time) templ.Co
 			}
 			ctx = templ.InitializeContext(ctx)
 			if targetTime != nil {
-				templ_7745c5c3_Err = cal.ComponentWithTime(calendar.CalendarViewMonth, *targetTime).Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = cal.ComponentWithTime(calendar.CalendarViewMonth, *targetTime, dependencies).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = cal.Component(calendar.CalendarViewMonth).Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = cal.Component(calendar.CalendarViewMonth, dependencies).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
