@@ -2,7 +2,10 @@ import { test, expect } from '@playwright/test';
 import * as path from 'path';
 
 test.describe('Photo Thumbnails - EXIF Orientation', () => {
-    test('thumbnail API respects EXIF orientation and does not rotate images incorrectly', async ({ page, request }) => {
+    test('thumbnail API respects EXIF orientation and does not rotate images incorrectly', async ({
+        page,
+        request,
+    }) => {
         // First, upload a test image with EXIF orientation data
         await page.goto('/files');
 
@@ -43,7 +46,7 @@ test.describe('Photo Thumbnails - EXIF Orientation', () => {
                 width: img.naturalWidth,
                 height: img.naturalHeight,
                 displayWidth: img.width,
-                displayHeight: img.height
+                displayHeight: img.height,
             };
         });
 
@@ -69,16 +72,19 @@ test.describe('Photo Thumbnails - EXIF Orientation', () => {
 
             // Wait for image to load
             await firstImage.evaluate((img: HTMLImageElement) => {
-                return img.complete || new Promise((resolve) => {
-                    img.onload = resolve;
-                    img.onerror = resolve;
-                });
+                return (
+                    img.complete ||
+                    new Promise((resolve) => {
+                        img.onload = resolve;
+                        img.onerror = resolve;
+                    })
+                );
             });
 
             const dimensions = await firstImage.evaluate((img: HTMLImageElement) => {
                 return {
                     width: img.naturalWidth,
-                    height: img.naturalHeight
+                    height: img.naturalHeight,
                 };
             });
 
@@ -139,7 +145,7 @@ test.describe('Photo Thumbnails - EXIF Orientation', () => {
                 const dimensions = await viewerImage.evaluate((img: HTMLImageElement) => {
                     return {
                         width: img.naturalWidth,
-                        height: img.naturalHeight
+                        height: img.naturalHeight,
                     };
                 });
 
