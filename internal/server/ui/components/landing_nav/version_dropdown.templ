@@ -2,7 +2,7 @@ package landing_nav
 
 import (
 	"autobutler/internal/update"
-	"autobutler/internal/version"
+	"autobutler/pkg/util/versionutil"
 )
 
 templ VersionDropdown(releases []update.GitHubRelease) {
@@ -23,7 +23,7 @@ templ VersionDropdown(releases []update.GitHubRelease) {
 						hx-on::after-request="setTimeout(() => window.location.reload(), 5000)"
 					>
 						<span>{ release.TagName }</span>
-						if release.TagName == version.Semver {
+						if release.TagName == versionutil.Semver {
 							<span class="version-current">(current)</span>
 						}
 					</button>

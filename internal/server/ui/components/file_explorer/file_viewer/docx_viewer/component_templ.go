@@ -8,14 +8,14 @@ package docx_viewer
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "autobutler/internal/quill"
+import "autobutler/pkg/quill"
 import "fmt"
-import "autobutler/pkg/util"
+import "autobutler/pkg/util/fileutil"
 import "path/filepath"
 
 func getQuillData(filePath string) quill.Delta {
 	// Load the DOCX file and convert it to a Quill Delta
-	fullPath := filepath.Join(util.GetFilesDir(), filePath)
+	fullPath := filepath.Join(fileutil.GetFilesDir(), filePath)
 	delta, err := quill.FromDocx(fullPath)
 	if err != nil {
 		fmt.Printf("Error loading DOCX file: %v", err)
