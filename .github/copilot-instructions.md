@@ -1,9 +1,10 @@
 Purpose
 -------
-These instructions tell GitHub Copilot how to handle styling and CSS when generating or modifying UI, templates, HTML, and static assets for this repository.
+These instructions tell GitHub Copilot how to handle programming in this repository.
 
 Key rule (always)
 -----------------
+- Respect the linting and formatting conventions of the various linting and formatting configurations and tools being used.
 - Always use the repository's canonical stylesheet located at `internal/server/public/styles/site.css` for site-specific styling.
 - When adding or changing styles for the application UI, prefer adding new rules to `internal/server/public/styles/site.css` instead of creating new top-level CSS files or embedding inline styles.
 
