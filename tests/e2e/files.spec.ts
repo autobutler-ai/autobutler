@@ -670,3 +670,138 @@ test.describe('Files Page - Mobile Responsiveness', () => {
         await expect(columnViewBtn).toBeVisible();
     });
 });
+
+test.describe('Column View Navigation', () => {
+    test.beforeEach(async ({ page }) => {
+        // Set viewport to desktop size for column view
+        await page.setViewportSize({ width: 1280, height: 720 });
+        await page.goto('/files?view=column');
+
+        // Ensure we start with a clean slate - create test folder if it doesn't exist
+        const folderExists = await page.locator('.column-view-item[data-name="test-column-nav/"]').count() > 0;
+        if (!folderExists) {
+            // Create test folder
+            const addFolderBtn = page.locator('#add-folder-btn');
+            await addFolderBtn.click();
+            await page.waitForTimeout(100);
+            const folderInput = page.locator('#folder-input');
+            await folderInput.fill('test-column-nav');
+            await folderInput.press('Enter');
+            await page.waitForTimeout(500);
+        }
+    });
+
+    test.afterEach(async ({ page }) => {
+        // Cleanup - delete test folder
+        await page.goto('/files?view=list'); // Switch to list view for easier deletion
+        await page.waitForTimeout(100);
+        const folderRow = page.locator('tr.file-table-row[data-name="test-column-nav/"]');
+        if (await folderRow.count() > 0) {
+            await folderRow.locator('.context-menu-trigger').click();
+            await page.waitForTimeout(100);
+            await folderRow.locator('.context-menu-item--danger:has-text("Delete")').dispatchEvent('click');
+            await page.waitForTimeout(500);
+        }
+    });
+
+    test('single-clicking folder in column view navigates without page reload', async ({ page }) => {
+        // Track page loads
+        let pageLoadCount = 0;
+        page.on('load', () => {
+            pageLoadCount++;
+        });
+
+        // Find and single-click the test folder
+        const folder = page.locator('.column-view-item[data-name="test-column-nav/"]');
+        await expect(folder).toBeVisible();
+        await folder.click();
+
+        // Wait for navigation to complete
+        await page.waitForTimeout(500);
+
+        // Verify URL changed
+        await expect(page).toHaveURL(/\/files\/test-column-nav/);
+
+        // Verify no page reload occurred (pageLoadCount should still be 0 after initial page load)
+        expect(pageLoadCount).toBe(0);
+
+        // Verify we're still in column view
+        const columnViewContainer = page.locator('.column-view-container');
+        await expect(columnViewContainer).toBeVisible();
+    });
+
+    test('column view maintains state during folder navigation', async ({ page }) => {
+        // Find and single-click the test folder
+        const folder = page.locator('.column-view-item[data-name="test-column-nav/"]');
+        await folder.click();
+        await page.waitForTimeout(500);
+
+        // Verify column view is still active
+        const columnViewContainer = page.locator('.column-view-container');
+        await expect(columnViewContainer).toBeVisible();
+
+        // Verify the folder is now selected/highlighted in the parent column
+        const selectedItem = page.locator('.column-view-item--selected[data-name="test-column-nav/"]');
+        await expect(selectedItem).toBeVisible();
+    });
+
+    test('back button works correctly after column view navigation', async ({ page }) => {
+        // Navigate into folder with single click
+        const folder = page.locator('.column-view-item[data-name="test-column-nav/"]');
+        await folder.click();
+        await page.waitForTimeout(500);
+
+        // Verify we're in the subfolder
+        await expect(page).toHaveURL(/\/files\/test-column-nav/);
+
+        // Click back button
+        const backButton = page.locator('#nav-back-btn');
+        await expect(backButton).toBeVisible();
+        await expect(backButton).not.toBeDisabled();
+        await backButton.click();
+        await page.waitForTimeout(500);
+
+        // Verify we're back at root
+        await expect(page).toHaveURL(/^.*\/files\/?$/);
+
+        // Verify still in column view
+        const columnViewContainer = page.locator('.column-view-container');
+        await expect(columnViewContainer).toBeVisible();
+    });
+
+    test('single-clicking file in column view loads preview', async ({ page }) => {
+        // Find and single-click the sample.txt file
+        const file = page.locator('.column-view-item[data-name="sample.txt"]');
+        await expect(file).toBeVisible();
+        await file.click();
+        await page.waitForTimeout(500);
+
+        // Verify preview pane has content (not the placeholder)
+        const previewContent = page.locator('#column-preview-content');
+        await expect(previewContent).toBeVisible();
+
+        // The placeholder should be replaced with actual content
+        const placeholder = page.locator('.column-view-preview-placeholder');
+        await expect(placeholder).not.toBeVisible();
+
+        // Verify the file viewer modal did NOT open
+        const fileViewerModal = page.locator('#file-viewer[open]');
+        await expect(fileViewerModal).not.toBeVisible();
+    });
+
+    test('double-clicking file in column view opens full viewer', async ({ page }) => {
+        // Find and double-click the sample.txt file
+        const file = page.locator('.column-view-item[data-name="sample.txt"]');
+        await expect(file).toBeVisible();
+        await file.dblclick();
+        await page.waitForTimeout(500);
+
+        // Verify file viewer modal opened
+        const fileViewerModal = page.locator('#file-viewer[open]');
+        await expect(fileViewerModal).toBeVisible();
+
+        // Verify modal has content
+        const modalContent = page.locator('#file-viewer-content');
+        await expect(modalContent).not.toBeEmpty();
+    });
+});
