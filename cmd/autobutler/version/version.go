@@ -1,14 +1,14 @@
-package cmd
+package version
 
 import (
 	"fmt"
 
-	"autobutler/internal/version"
+	"autobutler/pkg/util/versionutil"
 
 	"github.com/spf13/cobra"
 )
 
-func Version() *cobra.Command {
+func Cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "version",
 		Short: "Display version information for Autobutler CLI",
@@ -16,7 +16,7 @@ func Version() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			// Here you would typically retrieve the version information from a variable or a configuration file.
 			// For demonstration purposes, we'll use a hardcoded version string.
-			version := version.GetVersion()
+			version := versionutil.GetVersion()
 			fmt.Println(version.VersionString())
 		},
 	}

@@ -8,7 +8,7 @@ package docx_viewer
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "autobutler/internal/quill"
+import "autobutler/pkg/quill"
 import "fmt"
 import "autobutler/pkg/util/fileutil"
 import "path/filepath"

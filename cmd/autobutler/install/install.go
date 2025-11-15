@@ -1,4 +1,4 @@
-package cmd
+package install
 
 import (
 	"autobutler/internal/install"
@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func Install() *cobra.Command {
+func Cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "install",
 		Short: "Install Autobutler's system service",

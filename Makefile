@@ -11,6 +11,8 @@ ifneq (,$(wildcard ./.env))
     export
 endif
 
+MAIN := ./cmd/autobutler/main.go
+
 clean: clean/build clean/tests
 
 clean/build:
@@ -76,19 +78,19 @@ generate/templ: ## Generate templ files
 
 build: generate ## Build backend
 	mkdir -p ./build
-	go build -o ./build/autobutler
+	go build -o ./build/autobutler $(MAIN)
 
 build/all: build/linux build/mac ## Build all backends
 
 build/linux: build/linux/amd64 build/linux/arm64 ## Build linux backends
 build/linux/amd64: ## Build linux backends
-	GOOS=linux GOARCH=amd64 go build -o ./build/autobutler-linux-amd64 main.go
+	GOOS=linux GOARCH=amd64 go build -o ./build/autobutler-linux-amd64 $(MAIN)
 build/linux/arm64: ## Build linux backends
-	GOOS=linux GOARCH=arm64 go build -o ./build/autobutler-linux-arm64 main.go
+	GOOS=linux GOARCH=arm64 go build -o ./build/autobutler-linux-arm64 $(MAIN)
 
 build/mac: build/mac/amd64 build/mac/arm64 ## Build macOS backends
 build/mac/arm64: ## Build macOS backends
-	GOOS=darwin GOARCH=arm64 go build -o ./build/autobutler-mac-arm64 main.go
+	GOOS=darwin GOARCH=arm64 go build -o ./build/autobutler-mac-arm64 $(MAIN)
 
 test: test/e2e
 test/e2e:
@@ -165,17 +167,17 @@ tidy: ## Tidy go mod
 	go mod tidy
 
 serve: generate ## Serve backend
-	go run main.go serve
+	go run $(MAIN) serve
 
 watch: ## Watch backend for changes
 	templ generate \
 		-watch \
 		-watch-pattern='(.+\.go$$)|(.+\.templ$$)|(.+_templ\.txt$$)|(.+\.js$$)|(.+\.css$$)' \
 		-proxy="http://localhost:8080" \
-		-cmd="go run . serve"
+		-cmd="go run $(MAIN) serve"
 
 version: ## Print version
-	go run main.go version
+	go run $(MAIN) version
 
 env-%: ## Check for env var
 	if [ -z "$($*)" ]; then \

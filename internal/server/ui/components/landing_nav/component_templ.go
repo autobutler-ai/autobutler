@@ -8,7 +8,7 @@ package landing_nav
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "autobutler/internal/version"
+import "autobutler/pkg/util/versionutil"
 import "autobutler/internal/server/ui/components/icons/book"
 import "autobutler/internal/server/ui/components/icons/settings"
 import "autobutler/internal/server/ui/types"
@@ -84,9 +84,9 @@ func Component(pageState types.PageState) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var4 string
-		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs("Version " + version.Semver)
+		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs("Version " + versionutil.Semver)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/landing_nav/component.templ`, Line: 26, Col: 40}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/landing_nav/component.templ`, Line: 26, Col: 44}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -96,16 +96,16 @@ func Component(pageState types.PageState) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if version.Semver == version.NoSemver {
+		if versionutil.Semver == versionutil.NoSemver {
 			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "vX.Y.Z ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
 			var templ_7745c5c3_Var5 string
-			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(version.Semver)
+			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(versionutil.Semver)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/landing_nav/component.templ`, Line: 36, Col: 22}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/landing_nav/component.templ`, Line: 36, Col: 26}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
@@ -152,7 +152,7 @@ func Component(pageState types.PageState) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if version.Semver == version.NoSemver {
+		if versionutil.Semver == versionutil.NoSemver {
 			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "Version: vX.Y.Z")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -163,9 +163,9 @@ func Component(pageState types.PageState) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var6 string
-			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(version.Semver)
+			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(versionutil.Semver)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/landing_nav/component.templ`, Line: 110, Col: 31}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/server/ui/components/landing_nav/component.templ`, Line: 110, Col: 35}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {

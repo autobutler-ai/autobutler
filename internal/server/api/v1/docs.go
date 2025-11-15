@@ -7,7 +7,7 @@ import (
 	"html"
 	"path/filepath"
 
-	"autobutler/internal/quill"
+	"autobutler/pkg/quill"
 	"autobutler/pkg/util/serverutil"
 
 	"github.com/gin-gonic/gin"

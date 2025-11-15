@@ -1,6 +1,6 @@
 package landing_nav
 
-import "autobutler/internal/version"
+import "autobutler/pkg/util/versionutil"
 import "autobutler/internal/server/ui/components/icons/book"
 import "autobutler/internal/server/ui/components/icons/settings"
 import "autobutler/internal/server/ui/types"
@@ -23,17 +23,17 @@ templ Component(pageState types.PageState) {
 			<div class="version-container" id="version-container">
 				<button
 					class="landing-nav-version version-display"
-					title={ "Version " + version.Semver }
+					title={ "Version " + versionutil.Semver }
 					hx-get="/api/v1/versions"
 					hx-trigger="click"
 					hx-target="#version-dropdown-container"
 					hx-swap="innerHTML"
 					onclick="event.stopPropagation()"
 				>
-					if version.Semver == version.NoSemver {
+					if versionutil.Semver == versionutil.NoSemver {
 						vX.Y.Z
 					} else {
-						{ version.Semver }
+						{ versionutil.Semver }
 					}
 					<span style="margin-left: 0.25rem;">▾</span>
 				</button>
@@ -104,10 +104,10 @@ templ Component(pageState types.PageState) {
 				</button>
 				<div class="mobile-menu-divider"></div>
 				<span class="mobile-menu-version">
-					if version.Semver == version.NoSemver {
+					if versionutil.Semver == versionutil.NoSemver {
 						Version: vX.Y.Z
 					} else {
-						Version: { version.Semver }
+						Version: { versionutil.Semver }
 					}
 				</span>
 			</div>

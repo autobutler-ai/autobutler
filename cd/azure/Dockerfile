@@ -13,7 +13,7 @@ COPY . .
 # Build the application with the same flags as goreleaser
 ARG VERSION=dev
 RUN CGO_ENABLED=0 GOOS=linux go build \
-    -ldflags="-s -w -X autobutler/internal/version.Semver=${VERSION}" \
+    -ldflags="-s -w -X autobutler/pkg/util/versionutil.Semver=${VERSION}" \
     -o autobutler .
 
 # Runtime stage

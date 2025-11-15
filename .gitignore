@@ -2,7 +2,7 @@
 .DS_Store
 
 # Binaries for programs and plugins
-autobutler
+./autobutler
 # Datlinks
 datalinks/mac
 

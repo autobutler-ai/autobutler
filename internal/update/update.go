@@ -2,7 +2,7 @@ package update
 
 import (
 	"archive/tar"
-	"autobutler/internal/version"
+	"autobutler/pkg/util/versionutil"
 	"compress/gzip"
 	"fmt"
 	"io"
@@ -17,14 +17,14 @@ func ListPossibleUpdates() ([]GitHubRelease, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch releases: %w", err)
 	}
-	currentVersion := version.GetVersion()
+	currentVersion := versionutil.GetVersion()
 	if currentVersion.Semver == "" {
 		return releases, nil
 	}
 	var possibleUpdates []GitHubRelease
 	for _, release := range releases {
-		comparison := version.CompareVersions(
-			version.Version{
+		comparison := versionutil.CompareVersions(
+			versionutil.Version{
 				Semver: release.TagName,
 			},
 			currentVersion,

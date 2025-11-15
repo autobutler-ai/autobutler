@@ -10,7 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import (
 	"autobutler/internal/update"
-	"autobutler/internal/version"
+	"autobutler/pkg/util/versionutil"
 )
 
 func VersionDropdown(releases []update.GitHubRelease) templ.Component {
@@ -75,7 +75,7 @@ func VersionDropdown(releases []update.GitHubRelease) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				if release.TagName == version.Semver {
+				if release.TagName == versionutil.Semver {
 					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<span class=\"version-current\">(current)</span>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err

@@ -28,7 +28,6 @@
     "Lanczos",
     "linecap",
     "modernc",
-    "imageutil",
     "reflectutil",
     "rwcarlsen",
     "serverutil",
@@ -38,6 +37,7 @@
     "strs",
     "templ",
     "toastr",
+    "versionutil",
     "webp"
   ],
 }
