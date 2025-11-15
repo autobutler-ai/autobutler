@@ -95,8 +95,6 @@ test.describe('Devices Page', () => {
     const cardCount = await deviceCards.count();
 
     if (cardCount > 0) {
-      // Check if any health or status indicators exist
-      const healthElements = page.locator('.device-card-health, .device-card-status, [class*="health"], [class*="status"]');
       // Health indicators are optional, just verify structure exists
       await expect(deviceCards.first()).toBeVisible();
     }

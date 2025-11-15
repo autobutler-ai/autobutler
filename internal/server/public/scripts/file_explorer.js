@@ -1,9 +1,5 @@
 var MAX_FILE_NAME_LENGTH = 255;
 
-var contextMenuPosition = {
-    x: null,
-    y: null,
-};
 // NOTE: Must be global so that it can be removed when the file viewer is closed.
 var navigationListener = null;
 var loadedBook = null;
@@ -32,6 +28,7 @@ function setViewPreference(view) {
     document.cookie = `fileExplorerView=${view}; path=/; max-age=31536000`; // 1 year
 }
 
+// eslint-disable-next-line no-unused-vars
 function switchView(view) {
     setViewPreference(view);
 
@@ -88,6 +85,7 @@ function preventDefault(event) {
     }
 }
 
+// eslint-disable-next-line no-unused-vars
 function debounce(func, wait) {
     let timeout;
     return (...args) => {
@@ -96,10 +94,12 @@ function debounce(func, wait) {
     };
 }
 
-function showFileDetails(event, fileName) {
+// eslint-disable-next-line no-unused-vars
+function showFileDetails(fileName) {
     alert(fileName);
 }
 
+// eslint-disable-next-line no-unused-vars
 function closeContextMenu(event, parentNode) {
     preventDefault(event);
     for (const contextMenu of parentNode.querySelectorAll('.context-menu')) {
@@ -109,6 +109,7 @@ function closeContextMenu(event, parentNode) {
     }
 }
 
+// eslint-disable-next-line no-unused-vars
 function closeContextMenuFromItem(event) {
     const contextMenu = event.target.closest('.context-menu');
     if (contextMenu) {
@@ -118,6 +119,7 @@ function closeContextMenuFromItem(event) {
     }
 }
 
+// eslint-disable-next-line no-unused-vars
 function openContextMenu(event, parentNode) {
     preventDefault(event);
     clearSelectedFiles();
@@ -128,6 +130,7 @@ function openContextMenu(event, parentNode) {
     return contextMenu;
 }
 
+// eslint-disable-next-line no-unused-vars
 function toggleFloatingContextMenu(event, parentNode) {
     preventDefault(event);
     const contextMenu = parentNode.querySelector('.context-menu');
@@ -171,6 +174,7 @@ function toggleFloatingContextMenu(event, parentNode) {
     }
 }
 
+// eslint-disable-next-line no-unused-vars
 function toggleFolderInput(event) {
     event.preventDefault();
     const folderInput = document.getElementById('folder-input');
@@ -204,6 +208,7 @@ function clearFileViewer() {
     }
 }
 
+// eslint-disable-next-line no-unused-vars
 function closeFileViewer(event) {
     preventDefault(event);
     const fileViewer = document.getElementById('file-viewer');
@@ -312,6 +317,7 @@ function updateDownloadButton() {
  * Single click = select the file (Google Drive style)
  * In column view: single click navigates/opens immediately (Finder style)
  */
+// eslint-disable-next-line no-unused-vars
 function handleFileNodeClick(event, node) {
     // Ignore if clicking on context menu trigger
     if (event.target.closest('.context-menu-trigger') ||
@@ -351,7 +357,7 @@ function handleFileNodeClick(event, node) {
                 if (previewContent) {
                     previewContent.innerHTML = '';
                 }
-                
+
                 // Load the new preview content
                 htmx.ajax('GET', viewerPath, {
                     target: '#column-preview-content',
@@ -450,6 +456,7 @@ function handleFileNodeDoubleClick(event, node) {
  * Handle touch events for mobile double-tap detection
  * On mobile, double-tap opens files (since dblclick doesn't work reliably)
  */
+// eslint-disable-next-line no-unused-vars
 function handleFileNodeTouch(event, node) {
     const currentTime = new Date().getTime();
     const tapInterval = currentTime - lastTapTime;
@@ -478,6 +485,7 @@ function handleFileNodeTouch(event, node) {
     }
 }
 
+// eslint-disable-next-line no-unused-vars
 function supportsDirectoryUpload() {
     const supportsFileSystemAccessAPI = 'getAsFileSystemHandle' in DataTransferItem.prototype;
     const supportsWebkitGetAsEntry = 'webkitGetAsEntry' in DataTransferItem.prototype;
@@ -486,6 +494,7 @@ function supportsDirectoryUpload() {
     return supportsFileSystemAccessAPI || supportsWebkitGetAsEntry;
 }
 
+// eslint-disable-next-line no-unused-vars
 function activateDropZone(event) {
     preventDefault(event);
     const fileUploadArea = document.getElementById('file-upload-area');
@@ -493,6 +502,7 @@ function activateDropZone(event) {
     fileUploadArea.classList.remove('bg-gray-800');
 }
 
+// eslint-disable-next-line no-unused-vars
 function deactivateDropZone(event) {
     preventDefault(event);
     const fileUploadArea = document.getElementById('file-upload-area');
@@ -500,25 +510,29 @@ function deactivateDropZone(event) {
     fileUploadArea.classList.add('bg-gray-800');
 }
 
+// eslint-disable-next-line no-unused-vars
 function activateDropZoneOnNode(event) {
     preventDefault(event);
     event.currentTarget.classList.add('bg-blue-600');
 }
 
+// eslint-disable-next-line no-unused-vars
 function deactivateDropZoneOnNode(event) {
     preventDefault(event);
     event.currentTarget.classList.remove('bg-blue-600');
 }
 
+// eslint-disable-next-line no-unused-vars
 function dropOnNode(event, returnDir) {
     preventDefault(event);
     event.currentTarget.classList.remove('bg-blue-600');
     const li = event.currentTarget.closest('li');
     const dropDir = li.dataset.name;
     console.log(`Drop on node: ${dropDir}`);
-    return dropFiles(event, `/${dropDir}`, !!returnDir ? returnDir : "/");
+    return dropFiles(event, `/${dropDir}`, returnDir ? returnDir : '/');
 }
 
+// eslint-disable-next-line no-unused-vars
 function downloadSelectedFiles(event, rootDir) {
     preventDefault(event);
 
@@ -555,8 +569,8 @@ function downloadSelectedFiles(event, rootDir) {
 }
 
 function dropFiles(event, rootDir, returnDir) {
-    rootDir = rootDir || "";
-    returnDir = returnDir || "";
+    rootDir = rootDir || '';
+    returnDir = returnDir || '';
     preventDefault(event);
     const files = event.dataTransfer.files;
     if (files.length > 0) {
@@ -568,15 +582,16 @@ function dropFiles(event, rootDir, returnDir) {
         // NOTE: https://flaviocopes.com/htmx-send-files-using-htmxajax-call/
         htmx.ajax('POST',
             uploadForm.getAttribute('hx-post') + rootDir, {
-            values: {
-                files: formData.getAll('files'),
-                returnDir: returnDir,
-            },
-            source: uploadForm,
-        });
+                values: {
+                    files: formData.getAll('files'),
+                    returnDir: returnDir,
+                },
+                source: uploadForm,
+            });
     }
 }
 
+// eslint-disable-next-line no-unused-vars
 function saveQuill(filePath) {
     const delta = quill.getContents();
     fetch(`/api/v1/docs${filePath}`, {
@@ -599,6 +614,7 @@ function saveQuill(filePath) {
     });
 }
 
+// eslint-disable-next-line no-unused-vars
 function saveAceEditor(filePath, content) {
     fetch(`/api/v1/files${filePath}`, {
         method: 'POST',
@@ -622,6 +638,7 @@ function saveAceEditor(filePath, content) {
     });
 }
 
+// eslint-disable-next-line no-unused-vars
 function moveFile(event, rootDir, fileName) {
     preventDefault(event);
     while (rootDir && rootDir[0] == '/') {
@@ -785,18 +802,19 @@ function moveFile(event, rootDir, fileName) {
 
         htmx.ajax('PUT',
             `/api/v1/files/${filePath}`, {
-            values: {
-                newFilePath: newFilePath,
-            },
-            target: '#file-explorer',
-            swap: 'outerHTML',
-        });
+                values: {
+                    newFilePath: newFilePath,
+                },
+                target: '#file-explorer',
+                swap: 'outerHTML',
+            });
     });
 }
 
+// eslint-disable-next-line no-unused-vars
 function newFile(event, rootDir) {
     preventDefault(event);
-    const fileName = prompt("Enter the new file name (including extension):");
+    const fileName = prompt('Enter the new file name (including extension):');
     if (fileName) {
         if (fileName.length > MAX_FILE_NAME_LENGTH) {
             alert(`File name must be ${MAX_FILE_NAME_LENGTH} characters or less`);
@@ -808,20 +826,22 @@ function newFile(event, rootDir) {
         formData.append('files', new Blob([''], { type: 'text/plain' }), fileName);
         htmx.ajax('POST',
             uploadForm.getAttribute('hx-post') + rootDir, {
-            values: {
-                files: formData.getAll('files'),
-                returnDir: rootDir,
-            },
-            source: uploadForm,
-        });
+                values: {
+                    files: formData.getAll('files'),
+                    returnDir: rootDir,
+                },
+                source: uploadForm,
+            });
     }
 }
 
+// eslint-disable-next-line no-unused-vars
 function showFolderDetails(event) {
     preventDefault(event);
-    alert("Folder details to be implemented.");
+    alert('Folder details to be implemented.');
 }
 
+// eslint-disable-next-line no-unused-vars
 function navigateToParentAndPreview(event, parentPath, previewPath) {
     preventDefault(event);
     // Use HTMX to navigate to parent (removes child columns) without full page reload
@@ -1162,6 +1182,7 @@ function updateBackButton() {
 /**
  * Navigate back to previous folder
  */
+// eslint-disable-next-line no-unused-vars
 function navigateBack() {
     const currentPath = window.location.pathname;
 
@@ -1180,7 +1201,7 @@ function navigateBack() {
 }
 
 // Handle browser back/forward buttons
-window.addEventListener('popstate', function(event) {
+window.addEventListener('popstate', function() {
     // Reload the file explorer content for the current URL
     const currentPath = window.location.pathname;
     htmx.ajax('GET', currentPath, {

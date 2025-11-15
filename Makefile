@@ -94,17 +94,62 @@ test: test/e2e
 test/e2e:
 	npm run test/e2e
 
-format: ## Format code
+format: format/go format/templ format/js format/ts format/css ## Format code
+
+format/go: ## Format Go code
+	go fmt ./...
+
+format/templ: ## Format templ files
+	templ fmt .
+
+format/js: ## Format JavaScript files
+	npm run format:js
+
+format/ts: ## Format TypeScript files
+	npm run format:ts
+
+format/css: ## Format CSS files
+	npm run format:css
+
+lint: lint/go lint/sqlc lint/templ lint/js lint/ts lint/css lint/yaml ## Lint code
+
+lint/go: ## Lint Go code
+	gofmt -s -w .
+	go vet ./...
+
+lint/sqlc: ## Lint sqlc
+	sqlc vet
+
+lint/templ: ## Lint templ files
+	templ fmt -fail .
+
+lint/js: ## Lint JavaScript files
+	npm run lint:js
+
+lint/ts: ## Lint TypeScript files
+	npm run lint:ts
+
+lint/css: ## Lint CSS files
+	npm run lint:css
+
+lint/yaml: ## Lint YAML files
+	which yamllint > /dev/null 2>&1 && yamllint -c .yamllint.yml . || echo "yamllint not installed, skipping YAML linting. Install with: pip install yamllint"
+
+fix: fix/go fix/js fix/ts fix/css ## Fix code issues
+
+fix/go: ## Fix Go code issues
+	go mod tidy
 	go fmt ./...
 	templ fmt .
 
-lint: ## Lint code
-	gofmt -s -w .
-	go vet ./...
-	sqlc vet
-	templ fmt -fail .
+fix/js: ## Fix JavaScript code issues
+	npm run format:js
 
-fix: tidy format ## Fix code issues
+fix/ts: ## Fix TypeScript code issues
+	npm run format:ts
+
+fix/css: ## Fix CSS code issues
+	npm run format:css
 
 upgrade: ## Upgrade dependencies
 	go get -u ./...

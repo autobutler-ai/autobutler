@@ -1,11 +1,12 @@
+// eslint-disable-next-line no-unused-vars
 function createGoldenSignalCharts() {
     Chart.registry.plugins.register(ChartDatasourcePrometheusPlugin);
     Chart.defaults.color = '#FFF';
 
     const prometheus = {
-        endpoint: "/api/v1",
-        baseURL: "/metrics",
-    }
+        endpoint: '/api/v1',
+        baseURL: '/metrics',
+    };
 
     const backgroundColorPlugin = {
         id: 'customCanvasBackgroundColor',
@@ -47,6 +48,7 @@ function createGoldenSignalCharts() {
         end: 0
     };
 
+    // eslint-disable-next-line no-unused-vars
     const errorCharts = {
         page: new Chart(document.getElementById('errorsPageChart').getContext('2d'), {
             type: 'line',
@@ -116,6 +118,7 @@ function createGoldenSignalCharts() {
         })
     };
 
+    // eslint-disable-next-line no-unused-vars
     const latencyCharts = {
         page: new Chart(document.getElementById('latencyPageChart').getContext('2d'), {
             type: 'line',
@@ -227,6 +230,7 @@ function createGoldenSignalCharts() {
         })
     };
 
+    // eslint-disable-next-line no-unused-vars
     const trafficCharts = {
         page: new Chart(document.getElementById('trafficPageChart').getContext('2d'), {
             type: 'line',
@@ -272,6 +276,7 @@ function createGoldenSignalCharts() {
         })
     };
 
+    // eslint-disable-next-line no-unused-vars
     const saturationCharts = {
         memory: new Chart(document.getElementById('saturationChart').getContext('2d'), {
             type: 'line',
@@ -309,6 +314,7 @@ function createGoldenSignalCharts() {
     };
 }
 
+// eslint-disable-next-line no-unused-vars
 function initializeHealthTabs() {
     document.querySelectorAll('.tab-button').forEach(button => {
         button.addEventListener('click', function () {
