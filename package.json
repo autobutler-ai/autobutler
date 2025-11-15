@@ -13,7 +13,8 @@
     "lint:yaml": "yamllint '**/*.{yaml,yml}'",
     "format:js": "eslint --fix internal/server/public/scripts/**/*.js",
     "format:ts": "eslint --fix tests/e2e/**/*.ts",
-    "format:css": "prettier --write internal/server/public/styles/**/*.css"
+    "format:css": "prettier --write internal/server/public/styles/**/*.css",
+    "check-updates": "ncu -u"
   },
   "keywords": [],
   "author": "",

@@ -34,7 +34,7 @@ setup/sqlc: ## Install sqlc tool
 	go install github.com/sqlc-dev/sqlc/cmd/sqlc@v1.30.0
 
 setup/templ: ## Install templ tool
-	go install github.com/a-h/templ/cmd/templ@v0.3.943
+	go install github.com/a-h/templ/cmd/templ@latest
 
 export INSTALL_VERSION?=$(shell git describe --tags --abbrev=0)
 export GOPROXY ?= https://proxy.golang.org,direct
@@ -151,9 +151,15 @@ fix/ts: ## Fix TypeScript code issues
 fix/css: ## Fix CSS code issues
 	npm run format:css
 
-upgrade: ## Upgrade dependencies
+upgrade: upgrade/go upgrade/js ## Upgrade dependencies
+
+upgrade/go: generate ## Upgrade dependencies (go)
 	go get -u ./...
 	$(MAKE) tidy
+
+upgrade/js: ## Upgrade dependencies (js)
+	npm run check-updates
+	npm install
 
 tidy: ## Tidy go mod
 	go mod tidy
