@@ -5,7 +5,6 @@ import (
 	"autobutler/pkg/api"
 	"autobutler/pkg/util"
 	"fmt"
-	"image"
 	"image/jpeg"
 	"image/png"
 	"net/http"
@@ -13,7 +12,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/KononK/resize"
 	"github.com/gin-gonic/gin"
 )
 
@@ -32,30 +30,15 @@ func getThumbnailRoute(apiV1Group *gin.RouterGroup) {
 		filesDir := util.GetFilesDir()
 		fullPath := filepath.Join(filesDir, filePath)
 
-		// Check if file exists
 		if _, err := os.Stat(fullPath); os.IsNotExist(err) {
 			return api.NewResponse().WithStatusCode(http.StatusNotFound)
 		}
 
-		// Open the original image
-		file, err := os.Open(fullPath)
+		thumbnail, format, err := util.ImageToThumbnail(fullPath, thumbnailWidth, thumbnailHeight)
 		if err != nil {
-			return api.NewResponse().WithStatusCode(http.StatusInternalServerError)
-		}
-		defer file.Close()
-
-		// Decode the image
-		img, format, err := image.Decode(file)
-		if err != nil {
-			// If we can't decode it, just serve the original file
-			c.File(fullPath)
-			return api.Ok()
+			return api.NewResponse().WithStatusCode(http.StatusInternalServerError).WithError(err)
 		}
 
-		// Generate thumbnail
-		thumbnail := resize.Thumbnail(thumbnailWidth, thumbnailHeight, img, resize.Lanczos3)
-
-		// Set appropriate content type
 		ext := strings.ToLower(filepath.Ext(filePath))
 		switch ext {
 		case ".png":
