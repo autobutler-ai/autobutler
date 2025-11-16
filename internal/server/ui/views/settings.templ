@@ -152,120 +152,120 @@ templ Settings(pageState types.PageState) {
 											</label>
 										</div>
 										<div class="settings-form-group">
-												<label>
-													<span>Endpoint</span>
-													<select>
-														<option>http://otel-collector:4317</option>
-													</select>
-												</label>
-											</div>
-											<div class="settings-form-group">
-												<label>
-													<span>Protocol</span>
-													<select>
-														<option>gRPC</option>
-													</select>
-												</label>
-											</div>
-											<div class="settings-form-group">
-												<label>
-													<span>Auth Token</span>
-													<input type="password" value="••••••••••••"/>
-												</label>
-											</div>
-											<div class="settings-form-group">
-												<label>
-													<span>Batch Size</span>
-													<select>
-														<option>512 KB</option>
-													</select>
-												</label>
-											</div>
-											<div class="settings-form-group">
-												<label>
-													<span>Interval</span>
-													<select>
-														<option>5 s</option>
-													</select>
-												</label>
-											</div>
-											<div class="settings-form-group">
-												<label>
-													<span>Resource Attributes</span>
-													<input type="text" value="service.name=nas-app, env=prod"/>
-												</label>
-											</div>
-											<div class="settings-card-actions">
-												<button>
-													<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-														<polygon points="5 3 19 12 5 21 5 3"></polygon>
-													</svg>
-													Test Export
-												</button>
-												<button>
-													<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-														<path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"></path>
-														<polyline points="17 21 17 13 7 13 7 21"></polyline>
-														<polyline points="7 3 7 8 15 8"></polyline>
-													</svg>
-													Save
-												</button>
-												<button>
-													<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-														<polyline points="1 4 1 10 7 10"></polyline>
-														<polyline points="23 20 23 14 17 14"></polyline>
-														<path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"></path>
-													</svg>
-													Reset
-												</button>
-											</div>
+											<label>
+												<span>Endpoint</span>
+												<select>
+													<option>http://otel-collector:4317</option>
+												</select>
+											</label>
 										</div>
-										<div class="settings-config-card">
-											<h3>Filter & Sampling</h3>
-											<p>Reduce noise with include/exclude rules and rates</p>
-											<div class="settings-form-group">
-												<label>
-													<span>Sampling Rate</span>
-													<select>
-														<option>100% (Always)</option>
-													</select>
-												</label>
-											</div>
-											<div class="settings-form-group">
-												<label>
-													<span>Include Namespaces</span>
-													<input type="text" value="files, storage, network"/>
-												</label>
-											</div>
-											<div class="settings-form-group">
-												<label>
-													<span>Exclude Paths</span>
-													<input type="text" value="/tmp, /cache"/>
-												</label>
-											</div>
-											<div class="settings-checkbox-group">
-												<input type="checkbox" id="metrics-enabled"/>
-												<label for="metrics-enabled">
-													<span>Metrics Enabled</span>
-													<span>System metrics collection</span>
-												</label>
-											</div>
-											<div class="settings-checkbox-group">
-												<input type="checkbox" id="traces-enabled"/>
-												<label for="traces-enabled">
-													<span>Traces Enabled</span>
-													<span>File ops spans</span>
-												</label>
-											</div>
-											<div class="settings-checkbox-group">
-												<input type="checkbox" id="logs-enabled"/>
-												<label for="logs-enabled">
-													<span>Logs Enabled</span>
-													<span>Structured JSON logs</span>
-												</label>
-											</div>
+										<div class="settings-form-group">
+											<label>
+												<span>Protocol</span>
+												<select>
+													<option>gRPC</option>
+												</select>
+											</label>
+										</div>
+										<div class="settings-form-group">
+											<label>
+												<span>Auth Token</span>
+												<input type="password" value="••••••••••••"/>
+											</label>
+										</div>
+										<div class="settings-form-group">
+											<label>
+												<span>Batch Size</span>
+												<select>
+													<option>512 KB</option>
+												</select>
+											</label>
+										</div>
+										<div class="settings-form-group">
+											<label>
+												<span>Interval</span>
+												<select>
+													<option>5 s</option>
+												</select>
+											</label>
+										</div>
+										<div class="settings-form-group">
+											<label>
+												<span>Resource Attributes</span>
+												<input type="text" value="service.name=nas-app, env=prod"/>
+											</label>
+										</div>
+										<div class="settings-card-actions">
+											<button>
+												<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+													<polygon points="5 3 19 12 5 21 5 3"></polygon>
+												</svg>
+												Test Export
+											</button>
+											<button>
+												<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+													<path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"></path>
+													<polyline points="17 21 17 13 7 13 7 21"></polyline>
+													<polyline points="7 3 7 8 15 8"></polyline>
+												</svg>
+												Save
+											</button>
+											<button>
+												<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+													<polyline points="1 4 1 10 7 10"></polyline>
+													<polyline points="23 20 23 14 17 14"></polyline>
+													<path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"></path>
+												</svg>
+												Reset
+											</button>
 										</div>
 									</div>
+									<div class="settings-config-card">
+										<h3>Filter & Sampling</h3>
+										<p>Reduce noise with include/exclude rules and rates</p>
+										<div class="settings-form-group">
+											<label>
+												<span>Sampling Rate</span>
+												<select>
+													<option>100% (Always)</option>
+												</select>
+											</label>
+										</div>
+										<div class="settings-form-group">
+											<label>
+												<span>Include Namespaces</span>
+												<input type="text" value="files, storage, network"/>
+											</label>
+										</div>
+										<div class="settings-form-group">
+											<label>
+												<span>Exclude Paths</span>
+												<input type="text" value="/tmp, /cache"/>
+											</label>
+										</div>
+										<div class="settings-checkbox-group">
+											<input type="checkbox" id="metrics-enabled"/>
+											<label for="metrics-enabled">
+												<span>Metrics Enabled</span>
+												<span>System metrics collection</span>
+											</label>
+										</div>
+										<div class="settings-checkbox-group">
+											<input type="checkbox" id="traces-enabled"/>
+											<label for="traces-enabled">
+												<span>Traces Enabled</span>
+												<span>File ops spans</span>
+											</label>
+										</div>
+										<div class="settings-checkbox-group">
+											<input type="checkbox" id="logs-enabled"/>
+											<label for="logs-enabled">
+												<span>Logs Enabled</span>
+												<span>Structured JSON logs</span>
+											</label>
+										</div>
+									</div>
+								</div>
 								<section class="settings-metrics-section">
 									<h3>OpenTelemetry Metrics</h3>
 									<p>Live instrumentation snapshots for the NAS and file browser.</p>

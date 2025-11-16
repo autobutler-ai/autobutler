@@ -395,8 +395,8 @@
     }
 }
 
-.settings-form-group input[type="text"],
-.settings-form-group input[type="password"],
+.settings-form-group input[type='text'],
+.settings-form-group input[type='password'],
 .settings-form-group select {
     padding: var(--spacing-md);
     background: rgba(0, 0, 0, 0.2);
@@ -407,8 +407,8 @@
 }
 
 @media (prefers-color-scheme: light) {
-    .settings-form-group input[type="text"],
-    .settings-form-group input[type="password"],
+    .settings-form-group input[type='text'],
+    .settings-form-group input[type='password'],
     .settings-form-group select {
         background: var(--color-gray-50);
         border-color: var(--color-gray-300);
@@ -424,7 +424,7 @@
     margin-bottom: var(--spacing-xl);
 }
 
-.settings-checkbox-group input[type="checkbox"] {
+.settings-checkbox-group input[type='checkbox'] {
     width: 20px;
     height: 20px;
 }

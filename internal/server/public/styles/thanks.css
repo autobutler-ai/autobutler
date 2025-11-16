@@ -57,42 +57,43 @@
 }
 
 @media (max-width: 768px) {
-.thanks-item {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: var(--border-radius);
-    padding: var(--spacing-xl) var(--spacing-lg);
-    text-align: center;
-    color: white;
-    text-decoration: none;
-    font-size: var(--font-size-base);
-    font-weight: 500;
-    transition: all 0.2s ease;
-    display: block;
-}
-
-.thanks-item:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.3);
-    color: var(--color-primary-400);
-    transform: translateY(-2px);
-}
-
-@media (prefers-color-scheme: light) {
     .thanks-item {
-        background: white;
-        border-color: var(--color-gray-300);
-        color: var(--color-gray-900);
-        box-shadow: var(--shadow-sm);
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: var(--border-radius);
+        padding: var(--spacing-xl) var(--spacing-lg);
+        text-align: center;
+        color: white;
+        text-decoration: none;
+        font-size: var(--font-size-base);
+        font-weight: 500;
+        transition: all 0.2s ease;
+        display: block;
     }
 
     .thanks-item:hover {
-        border-color: var(--color-primary-400);
-        color: var(--color-primary-600);
-        box-shadow: var(--shadow-md);
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.3);
+        color: var(--color-primary-400);
         transform: translateY(-2px);
     }
-}   .thanks-item {
+
+    @media (prefers-color-scheme: light) {
+        .thanks-item {
+            background: white;
+            border-color: var(--color-gray-300);
+            color: var(--color-gray-900);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .thanks-item:hover {
+            border-color: var(--color-primary-400);
+            color: var(--color-primary-600);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+    }
+    .thanks-item {
         background: white;
         border-color: var(--color-gray-200);
         color: var(--color-gray-900);
@@ -130,5 +131,3 @@
         color: var(--color-gray-700);
     }
 }
-
-
