@@ -1,0 +1,174 @@
+package views
+
+import (
+	"autobutler/internal/server/ui/components/gradient_overlays"
+	"autobutler/internal/server/ui/components/header"
+	"autobutler/internal/server/ui/components/landing_nav"
+	"autobutler/internal/server/ui/types"
+)
+
+templ Thanks(pageState types.PageState) {
+	{{ pageState.CurrentPageName = types.PageSettings }}
+	<!DOCTYPE html>
+	<html lang="en">
+		@header.Component()
+		<body class="landing-body">
+			<main class="landing-main">
+				@gradient_overlays.Component()
+				<div class="landing-container">
+					@landing_nav.Component(pageState)
+					<div class="thanks-page">
+						<div class="thanks-header">
+							<h1>Thank You</h1>
+							<p class="thanks-subtitle">This project is built on the shoulders of giants. We're grateful to these amazing open source projects and their contributors.</p>
+						</div>
+						<div class="thanks-grid">
+							<div class="thanks-card">
+								<div class="thanks-card-icon">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+										<polyline points="16 18 22 12 16 6"></polyline>
+										<polyline points="8 6 2 12 8 18"></polyline>
+									</svg>
+								</div>
+								<h3>Go</h3>
+								<p>Fast, statically typed programming language</p>
+								<a href="https://golang.org" target="_blank" rel="noopener noreferrer">golang.org →</a>
+							</div>
+							<div class="thanks-card">
+								<div class="thanks-card-icon">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+										<path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path>
+									</svg>
+								</div>
+								<h3>Gin</h3>
+								<p>HTTP web framework for Go</p>
+								<a href="https://gin-gonic.com" target="_blank" rel="noopener noreferrer">gin-gonic.com →</a>
+							</div>
+							<div class="thanks-card">
+								<div class="thanks-card-icon">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+										<rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+										<line x1="8" y1="21" x2="16" y2="21"></line>
+										<line x1="12" y1="17" x2="12" y2="21"></line>
+									</svg>
+								</div>
+								<h3>Templ</h3>
+								<p>Type-safe HTML templating</p>
+								<a href="https://templ.guide" target="_blank" rel="noopener noreferrer">templ.guide →</a>
+							</div>
+							<div class="thanks-card">
+								<div class="thanks-card-icon">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+										<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+									</svg>
+								</div>
+								<h3>HTMX</h3>
+								<p>High power tools for HTML</p>
+								<a href="https://htmx.org" target="_blank" rel="noopener noreferrer">htmx.org →</a>
+							</div>
+							<div class="thanks-card">
+								<div class="thanks-card-icon">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+										<ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+										<path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+										<path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+									</svg>
+								</div>
+								<h3>SQLite</h3>
+								<p>Embedded SQL database engine</p>
+								<a href="https://sqlite.org" target="_blank" rel="noopener noreferrer">sqlite.org →</a>
+							</div>
+							<div class="thanks-card">
+								<div class="thanks-card-icon">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+										<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+									</svg>
+								</div>
+								<h3>Feather Icons</h3>
+								<p>Beautiful open source icons</p>
+								<a href="https://feathericons.com" target="_blank" rel="noopener noreferrer">feathericons.com →</a>
+							</div>
+							<div class="thanks-card">
+								<div class="thanks-card-icon">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+										<path d="M14.5 10c-.83 0-1.5-.67-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5z"></path>
+										<path d="M20.5 10H19V8.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path>
+										<path d="M9.5 14c.83 0 1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5S8 21.33 8 20.5v-5c0-.83.67-1.5 1.5-1.5z"></path>
+										<path d="M3.5 14H5v1.5c0 .83-.67 1.5-1.5 1.5S2 16.33 2 15.5 2.67 14 3.5 14z"></path>
+										<path d="M14 14.5c0-.83.67-1.5 1.5-1.5h5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-5c-.83 0-1.5-.67-1.5-1.5z"></path>
+										<path d="M15.5 19H14v1.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z"></path>
+										<path d="M10 9.5C10 8.67 9.33 8 8.5 8h-5C2.67 8 2 8.67 2 9.5S2.67 11 3.5 11h5c.83 0 1.5-.67 1.5-1.5z"></path>
+										<path d="M8.5 5H10V3.5C10 2.67 9.33 2 8.5 2S7 2.67 7 3.5 7.67 5 8.5 5z"></path>
+									</svg>
+								</div>
+								<h3>Tailwind CSS</h3>
+								<p>Utility-first CSS framework</p>
+								<a href="https://tailwindcss.com" target="_blank" rel="noopener noreferrer">tailwindcss.com →</a>
+							</div>
+							<div class="thanks-card">
+								<div class="thanks-card-icon">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+										<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+									</svg>
+								</div>
+								<h3>OpenTelemetry</h3>
+								<p>Observability framework</p>
+								<a href="https://opentelemetry.io" target="_blank" rel="noopener noreferrer">opentelemetry.io →</a>
+							</div>
+							<div class="thanks-card">
+								<div class="thanks-card-icon">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+										<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+										<path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+									</svg>
+								</div>
+								<h3>PDF.js</h3>
+								<p>PDF rendering in browsers</p>
+								<a href="https://mozilla.github.io/pdf.js" target="_blank" rel="noopener noreferrer">mozilla.github.io/pdf.js →</a>
+							</div>
+							<div class="thanks-card">
+								<div class="thanks-card-icon">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+										<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+										<polyline points="14 2 14 8 20 8"></polyline>
+										<line x1="16" y1="13" x2="8" y2="13"></line>
+										<line x1="16" y1="17" x2="8" y2="17"></line>
+										<polyline points="10 9 9 9 8 9"></polyline>
+									</svg>
+								</div>
+								<h3>ePub.js</h3>
+								<p>JavaScript ePub renderer</p>
+								<a href="https://github.com/futurepress/epub.js" target="_blank" rel="noopener noreferrer">futurepress/epub.js →</a>
+							</div>
+							<div class="thanks-card">
+								<div class="thanks-card-icon">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+										<circle cx="12" cy="12" r="10"></circle>
+										<path d="M12 16v-4"></path>
+										<path d="M12 8h.01"></path>
+									</svg>
+								</div>
+								<h3>Toastr</h3>
+								<p>Simple toast notifications</p>
+								<a href="https://github.com/CodeSeven/toastr" target="_blank" rel="noopener noreferrer">CodeSeven/toastr →</a>
+							</div>
+							<div class="thanks-card">
+								<div class="thanks-card-icon">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+										<path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+									</svg>
+								</div>
+								<h3>Many More</h3>
+								<p>And countless other OSS projects</p>
+								<a href="https://github.com" target="_blank" rel="noopener noreferrer">Explore on GitHub →</a>
+							</div>
+						</div>
+						<div class="thanks-footer">
+							<p>Built with ❤️ and open source</p>
+						</div>
+					</div>
+				</div>
+			</main>
+		</body>
+	</html>
+}

@@ -1,0 +1,200 @@
+/**
+ * Thanks Page Styles
+ * Styles for the acknowledgments/credits page
+ */
+
+.thanks-page {
+    padding: var(--spacing-3xl) var(--spacing-2xl);
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.thanks-header {
+    text-align: center;
+    margin-bottom: var(--spacing-6xl);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.thanks-header h1 {
+    font-size: var(--font-size-5xl);
+    font-weight: 700;
+    color: white;
+    margin: 0 0 var(--spacing-xl);
+}
+
+@media (prefers-color-scheme: light) {
+    .thanks-header h1 {
+        color: var(--color-gray-900);
+    }
+}
+
+.thanks-subtitle {
+    font-size: var(--font-size-lg);
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+    line-height: 1.6;
+}
+
+@media (prefers-color-scheme: light) {
+    .thanks-subtitle {
+        color: var(--color-gray-600);
+    }
+}
+
+.thanks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-xl);
+    margin-bottom: var(--spacing-6xl);
+}
+
+@media (max-width: 768px) {
+    .thanks-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.thanks-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-2xl);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--spacing-lg);
+}
+
+.thanks-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+@media (prefers-color-scheme: light) {
+    .thanks-card {
+        background: white;
+        border-color: var(--color-gray-200);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .thanks-card:hover {
+        background: white;
+        border-color: var(--color-primary-300);
+        box-shadow: 0 12px 24px rgba(37, 99, 235, 0.1);
+    }
+}
+
+.thanks-card-icon {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: var(--border-radius-lg);
+    margin-bottom: var(--spacing-sm);
+}
+
+@media (prefers-color-scheme: light) {
+    .thanks-card-icon {
+        background: var(--color-primary-50);
+    }
+}
+
+.thanks-card-icon svg {
+    width: 32px;
+    height: 32px;
+    color: var(--color-primary-400);
+}
+
+@media (prefers-color-scheme: light) {
+    .thanks-card-icon svg {
+        color: var(--color-primary-600);
+    }
+}
+
+.thanks-card h3 {
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    color: white;
+    margin: 0;
+}
+
+@media (prefers-color-scheme: light) {
+    .thanks-card h3 {
+        color: var(--color-gray-900);
+    }
+}
+
+.thanks-card p {
+    font-size: var(--font-size-sm);
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0;
+    line-height: 1.5;
+    flex-grow: 1;
+}
+
+@media (prefers-color-scheme: light) {
+    .thanks-card p {
+        color: var(--color-gray-600);
+    }
+}
+
+.thanks-card a {
+    color: var(--color-primary-400);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    transition: all 0.2s ease;
+    padding: var(--spacing-sm) 0;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.thanks-card a:hover {
+    color: var(--color-primary-300);
+    gap: var(--spacing-sm);
+}
+
+@media (prefers-color-scheme: light) {
+    .thanks-card a {
+        color: var(--color-primary-600);
+    }
+
+    .thanks-card a:hover {
+        color: var(--color-primary-700);
+    }
+}
+
+.thanks-footer {
+    text-align: center;
+    padding-top: var(--spacing-3xl);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@media (prefers-color-scheme: light) {
+    .thanks-footer {
+        border-top-color: var(--color-gray-200);
+    }
+}
+
+.thanks-footer p {
+    font-size: var(--font-size-xl);
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+    font-weight: 500;
+}
+
+@media (prefers-color-scheme: light) {
+    .thanks-footer p {
+        color: var(--color-gray-700);
+    }
+}
+
