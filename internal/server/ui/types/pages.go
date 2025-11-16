@@ -10,6 +10,7 @@ const (
 	PageHome     PageName = "Home"
 	PagePhotos   PageName = "Photos"
 	PageHealth   PageName = "Health"
+	PageSettings PageName = "Settings"
 )
 
 type Page struct {

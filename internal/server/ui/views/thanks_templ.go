@@ -11,14 +11,11 @@ import templruntime "github.com/a-h/templ/runtime"
 import (
 	"autobutler/internal/server/ui/components/gradient_overlays"
 	"autobutler/internal/server/ui/components/header"
-	"autobutler/internal/server/ui/components/hero"
 	"autobutler/internal/server/ui/components/landing_nav"
-	"autobutler/internal/server/ui/components/storage_bar"
 	"autobutler/internal/server/ui/types"
-	"autobutler/pkg/storage"
 )
 
-func Home(pageState types.PageState, summary storage.Summary) templ.Component {
+func Thanks(pageState types.PageState) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -39,7 +36,7 @@ func Home(pageState types.PageState, summary storage.Summary) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		pageState.CurrentPageName = types.PageHome
+		pageState.CurrentPageName = types.PageSettings
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html lang=\"en\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -64,15 +61,7 @@ func Home(pageState types.PageState, summary storage.Summary) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = hero.Component().Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = storage_bar.Component(summary).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div></main></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"thanks-page\"><div class=\"thanks-header\"><h1>Thank You</h1><p class=\"thanks-subtitle\">This project is built on the shoulders of giants. We're grateful to these amazing open source projects and their contributors.</p></div><div class=\"thanks-grid\"><a href=\"https://golang.org\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"thanks-item\">Go</a> <a href=\"https://gin-gonic.com\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"thanks-item\">Gin</a> <a href=\"https://templ.guide\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"thanks-item\">Templ</a> <a href=\"https://htmx.org\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"thanks-item\">HTMX</a> <a href=\"https://sqlite.org\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"thanks-item\">SQLite</a> <a href=\"https://feathericons.com\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"thanks-item\">Feather Icons</a> <a href=\"https://tailwindcss.com\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"thanks-item\">Tailwind CSS</a> <a href=\"https://opentelemetry.io\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"thanks-item\">OpenTelemetry</a> <a href=\"https://mozilla.github.io/pdf.js\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"thanks-item\">PDF.js</a> <a href=\"https://github.com/futurepress/epub.js\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"thanks-item\">ePub.js</a> <a href=\"https://github.com/CodeSeven/toastr\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"thanks-item\">Toastr</a> <a href=\"https://github.com/sqlc-dev/sqlc\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"thanks-item\">sqlc</a> <a href=\"https://github.com/a-h/templ\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"thanks-item\">a-h/templ</a> <a href=\"https://alpinejs.dev\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"thanks-item\">Alpine.js</a> <a href=\"https://github.com\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"thanks-item\">GitHub</a></div><div class=\"thanks-footer\"><p>Built with ❤️ and open source</p></div></div></div></main></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
